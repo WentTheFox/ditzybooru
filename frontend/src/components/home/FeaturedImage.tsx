@@ -10,8 +10,8 @@ export function FeaturedImage() {
   const { data: image } = useSuspenseQuery(featuredMediaQuery(useDataSource()));
 
   return (
-    <SidebarBlock title="Featured" className="featured-block">
-      <MediaBox className="media-box--bare" image={image} src={image.representations.medium} />
+    <SidebarBlock title="Featured">
+      <MediaBox bar={false} image={image} src={image.representations.medium} />
     </SidebarBlock>
   );
 }

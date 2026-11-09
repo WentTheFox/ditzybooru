@@ -24,13 +24,21 @@ export function BurgerHeader({ className, ...props }: PropsOf<'div'>) {
   return <div className={cn('burger-header', className)} {...props} />;
 }
 
+export function burgerCloseClass(): string {
+  return 'burger-close';
+}
+
 /** A label for the toggle, or give it `onClick` and render it as a button through the `as` of your own. */
 export function BurgerClose({ className, ...props }: PropsOf<'label'>) {
-  return <label className={cn('burger-close', className)} {...props} />;
+  return <label className={cn(burgerCloseClass(), className)} {...props} />;
+}
+
+export function burgerItemClass(current = false): string {
+  return cn('burger-item', current && 'current');
 }
 
 export function BurgerItem({ current = false, className, ...props }: PropsOf<'a'> & { current?: boolean }) {
-  return <a className={cn('burger-item', current && 'current', className)} {...props} />;
+  return <a className={cn(burgerItemClass(current), className)} {...props} />;
 }
 
 export function BurgerIcon({ className, ...props }: PropsOf<'span'>) {

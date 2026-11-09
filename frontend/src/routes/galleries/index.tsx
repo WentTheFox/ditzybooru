@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 
 import { Pagination } from '#/components/ui/Pagination';
-import { Panel, PanelBody, PanelHeader } from '#/components/ui/Panel';
+import { ContentContainer } from '#/components/philomena/Content';
+import { Flex } from '#/components/philomena/Layout';
+import { Card, CardHeader } from '#/components/philomena/Surfaces';
 import { QueryState } from '#/components/ui/QueryState';
 import { useLiveQuery } from '#/hooks/use-live-query';
 import { prefetchLive } from '#/lib/api/prefetch';
@@ -25,8 +27,8 @@ function GalleriesPage() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(galleriesQuery(page, GALLERIES_PER_PAGE));
 
   return (
-    <div className="content-page">
-      <h1 className="content-page__title">Galleries</h1>
+    <ContentContainer>
+      <h1>Galleries</h1>
       <QueryState
         kind={kind}
         data={data}
@@ -36,19 +38,17 @@ function GalleriesPage() {
         what="list of galleries"
       >
         {list => (
-          <>
+          <Flex column gap="lg">
             {list.items.map(gallery => (
-              <Panel key={gallery.id}>
-                <PanelHeader>
+              <Card key={gallery.id}>
+                <CardHeader>
                   <Link to="/galleries/$id" params={{ id: gallery.id }} search={{ page: 1 }}>
                     {gallery.title}
                   </Link>
-                </PanelHeader>
-                <PanelBody>
-                  <p className="content-page__meta">by {gallery.user}</p>
-                  {gallery.description === '' ? null : <p>{gallery.description}</p>}
-                </PanelBody>
-              </Panel>
+                </CardHeader>
+                <p className="muted-text">by {gallery.user}</p>
+                {gallery.description === '' ? null : <p>{gallery.description}</p>}
+              </Card>
             ))}
             {list.total > GALLERIES_PER_PAGE ? (
               <Pagination
@@ -60,9 +60,9 @@ function GalleriesPage() {
                 }}
               />
             ) : null}
-          </>
+          </Flex>
         )}
       </QueryState>
-    </div>
+    </ContentContainer>
   );
 }

@@ -4,7 +4,6 @@ import type { PropsOf } from './props';
 
 type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
-type FlexAlign = 'start' | 'center' | 'end' | 'between';
 
 /** A flex row with the stylesheet's helpers. */
 export function Flex({
@@ -12,6 +11,7 @@ export function Flex({
   wrap = false,
   gap,
   justify,
+  center = false,
   middle = false,
   grow = false,
   className,
@@ -20,9 +20,11 @@ export function Flex({
   column?: boolean;
   wrap?: boolean;
   gap?: Gap;
-  /** Main-axis alignment: `flex-center`, `flex-end`, `flex-between`. */
-  justify?: Exclude<FlexAlign, 'start'>;
-  /** Cross-axis centering (`flex-middle`). */
+  /** Main-axis alignment: `flex-between` or `flex-end`. */
+  justify?: 'between' | 'end';
+  /** Centers the items on the cross axis (`flex-center`). */
+  center?: boolean;
+  /** Centers the items on both axes (`flex-middle`). */
   middle?: boolean;
   grow?: boolean;
 }) {
@@ -34,6 +36,7 @@ export function Flex({
         wrap && 'flex-wrap',
         gap !== undefined && `gap-${gap}`,
         justify !== undefined && `flex-${justify}`,
+        center && 'flex-center',
         middle && 'flex-middle',
         grow && 'flex-grow',
         className,

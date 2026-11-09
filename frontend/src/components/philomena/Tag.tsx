@@ -2,19 +2,12 @@ import { cn } from '#/lib/utils';
 
 import type { PropsOf } from './props';
 
-/** The tag categories the stylesheet has a color for, as `.tag-{category}`. */
+/**
+ * The tag categories the stylesheet has a color for, as `.tag-{category}`. A
+ * plain `general` tag is just no category.
+ */
 export type TagCategory =
-  | 'general'
-  | 'rating'
-  | 'spoiler'
-  | 'origin'
-  | 'oc'
-  | 'error'
-  | 'character'
-  | 'content-official'
-  | 'content-fanmade'
-  | 'species'
-  | 'body-type';
+  'rating' | 'spoiler' | 'origin' | 'oc' | 'error' | 'character' | 'official' | 'fanmade' | 'species' | 'body';
 
 export function Tag({
   category,

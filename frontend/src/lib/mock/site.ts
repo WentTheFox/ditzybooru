@@ -7,7 +7,6 @@ import { GalleryVerticalEnd, MessageSquare, MessagesSquare, Palette, Radio, Tags
 import type { LucideIcon } from 'lucide-react';
 
 import { liveChannelCount } from '#/lib/mock/data';
-import type { Tone } from '#/lib/tone';
 
 interface NavLink {
   label: string;
@@ -17,7 +16,6 @@ interface NavLink {
 export interface NavItem extends NavLink {
   /** Rendered before the label in the section strip and the mobile drawer. */
   icon: LucideIcon;
-  tone: Tone;
   /** Dropdown entries revealed on hover/focus. */
   children?: Array<NavLink>;
   /** A live counter rendered next to the label (e.g. live channel count). */
@@ -29,7 +27,6 @@ export const primaryNav: Array<NavItem> = [
     label: 'Forums',
     href: '/forums',
     icon: MessagesSquare,
-    tone: 'forums',
     children: [
       { label: 'Art Chat', href: '/forums/art' },
       { label: 'General Discussion', href: '/forums/dis' },
@@ -39,17 +36,16 @@ export const primaryNav: Array<NavItem> = [
       { label: 'Post Search', href: '/posts' },
     ],
   },
-  { label: 'Comments', href: '/comments', icon: MessageSquare, tone: 'comments' },
+  { label: 'Comments', href: '/comments', icon: MessageSquare },
   {
     label: 'Tags',
     href: '/tags',
     icon: Tags,
-    tone: 'tags',
     children: [{ label: 'Tag Changes', href: '/tag_changes' }],
   },
-  { label: 'Galleries', href: '/galleries', icon: GalleryVerticalEnd, tone: 'galleries' },
-  { label: 'Streams', href: '/channels', icon: Radio, tone: 'streams', counter: liveChannelCount },
-  { label: 'Commissions', href: '/commissions', icon: Palette, tone: 'commissions' },
+  { label: 'Galleries', href: '/galleries', icon: GalleryVerticalEnd },
+  { label: 'Streams', href: '/channels', icon: Radio, counter: liveChannelCount },
+  { label: 'Commissions', href: '/commissions', icon: Palette },
 ];
 
 interface FooterColumn {

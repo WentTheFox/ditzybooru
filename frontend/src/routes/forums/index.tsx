@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 
-import { Panel } from '#/components/ui/Panel';
+import { Table, TableWrap } from '#/components/philomena/Surfaces';
+import { LayoutNarrow } from '#/components/philomena/Layout';
 import { QueryState } from '#/components/ui/QueryState';
-import { Table, TableScroll } from '#/components/ui/Table';
 import { useLiveQuery } from '#/hooks/use-live-query';
 import { prefetchLive } from '#/lib/api/prefetch';
 import { forumsQuery } from '#/lib/api/queries';
@@ -17,39 +17,37 @@ function Forums() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(forumsQuery());
 
   return (
-    <div className="content-page">
-      <h1 className="content-page__title">Discussion Forums</h1>
+    <LayoutNarrow center>
+      <h1>Discussion Forums</h1>
       <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="page">
         {forums => (
-          <Panel>
-            <TableScroll>
-              <Table numeric>
-                <thead>
-                  <tr>
-                    <th>Forum</th>
-                    <th>Topics</th>
-                    <th>Posts</th>
+          <TableWrap responsive>
+            <Table striped hover>
+              <thead>
+                <tr>
+                  <th>Forum</th>
+                  <th className="numeric">Topics</th>
+                  <th className="numeric">Posts</th>
+                </tr>
+              </thead>
+              <tbody>
+                {forums.map(forum => (
+                  <tr key={forum.slug}>
+                    <td>
+                      <Link to="/forums/$forum" params={{ forum: forum.slug }}>
+                        {forum.name}
+                      </Link>
+                      <div className="muted-text">{forum.description}</div>
+                    </td>
+                    <td className="numeric">{forum.topicCount}</td>
+                    <td className="numeric">{forum.postCount}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {forums.map(forum => (
-                    <tr key={forum.slug}>
-                      <td>
-                        <Link to="/forums/$forum" params={{ forum: forum.slug }}>
-                          {forum.name}
-                        </Link>
-                        <div className="content-page__meta">{forum.description}</div>
-                      </td>
-                      <td>{forum.topicCount}</td>
-                      <td>{forum.postCount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </TableScroll>
-          </Panel>
+                ))}
+              </tbody>
+            </Table>
+          </TableWrap>
         )}
       </QueryState>
-    </div>
+    </LayoutNarrow>
   );
 }

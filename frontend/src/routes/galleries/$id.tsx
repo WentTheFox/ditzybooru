@@ -3,9 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Images } from 'lucide-react';
 
 import { MediaGrid } from '#/components/home/MediaGrid';
-import { useComponentSettings } from '#/hooks/use-component-settings';
+import { ContentContainer } from '#/components/philomena/Content';
+import { Flex } from '#/components/philomena/Layout';
 import { useDataSource } from '#/hooks/use-data-source';
 import { galleryQuery } from '#/lib/api/queries';
+import { MEDIA_PER_PAGE } from '#/lib/media';
 
 interface GalleryParams {
   page: number;
@@ -32,39 +34,40 @@ function GalleryPage() {
   const { page } = Route.useSearch();
   const navigate = Route.useNavigate();
   const kind = useDataSource();
-  const { mediaPerPage } = useComponentSettings();
   const valid = Number.isInteger(id) && id >= 1;
-  const { data: gallery, isError } = useQuery({ ...galleryQuery(kind, id, page, mediaPerPage), enabled: valid });
+  const { data: gallery, isError } = useQuery({ ...galleryQuery(kind, id, page, MEDIA_PER_PAGE), enabled: valid });
 
   if (gallery === undefined) {
     return (
-      <div className="search-page">
+      <ContentContainer>
         <p>{isError || !valid ? 'This gallery could not be loaded. It may not exist.' : 'Loading…'}</p>
-      </div>
+      </ContentContainer>
     );
   }
 
   return (
-    <div className="search-page">
-      <header>
-        <h1>{gallery.title}</h1>
-        <p>A gallery by {gallery.creator}</p>
-        {gallery.description === '' ? null : <p>{gallery.description}</p>}
-      </header>
-      <MediaGrid
-        headingLevel={2}
-        size="large"
-        label="Images"
-        icon={<Images size={16} />}
-        images={gallery.images}
-        total={gallery.imageTotal}
-        paging={{
-          page,
-          onPageChange: nextPage => {
-            void navigate({ search: { page: nextPage } });
-          },
-        }}
-      />
-    </div>
+    <ContentContainer>
+      <Flex column gap="lg">
+        <header>
+          <h1>{gallery.title}</h1>
+          <p className="muted-text">A gallery by {gallery.creator}</p>
+          {gallery.description === '' ? null : <p>{gallery.description}</p>}
+        </header>
+        <MediaGrid
+          headingLevel={2}
+          size="large"
+          label="Images"
+          icon={<Images size={16} />}
+          images={gallery.images}
+          total={gallery.imageTotal}
+          paging={{
+            page,
+            onPageChange: nextPage => {
+              void navigate({ search: { page: nextPage } });
+            },
+          }}
+        />
+      </Flex>
+    </ContentContainer>
   );
 }

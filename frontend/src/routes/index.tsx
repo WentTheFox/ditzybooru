@@ -1,13 +1,15 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Clock } from 'lucide-react';
 
-import { ActivityFeeds, ActivitySpotlight } from '#/components/home/ActivitySidebar';
+import { ActivitySidebar } from '#/components/home/ActivitySidebar';
 import { RECENT_COMMENT_COUNT } from '#/components/home/RecentCommentsBlock';
 import { TRENDING_COUNT } from '#/components/home/TrendingImages';
 import { MediaGrid, SEARCH_RESULTS_TRANSITION } from '#/components/home/MediaGrid';
 import { WatchedImages } from '#/components/home/WatchedImages';
+import { LayoutColumns, LayoutMain, LayoutSide } from '#/components/philomena/Layout';
 import { useMediaSearch } from '#/hooks/use-media-search';
 import { featuredMediaQuery, mediaSearchQuery, recentCommentsQuery, trendingMediaQuery } from '#/lib/api/queries';
+import { MEDIA_PER_PAGE } from '#/lib/media';
 import { animationsEnabled } from '#/lib/motion';
 
 /** What the "Recent" grid is a first page of: every image, newest first. */
@@ -25,7 +27,7 @@ export const Route = createFileRoute('/')({
 
     const queries = [
       queryClient.query({
-        ...mediaSearchQuery(kind, { query: RECENT_QUERY, page: 1, perPage: settings.components.mediaPerPage }),
+        ...mediaSearchQuery(kind, { query: RECENT_QUERY, page: 1, perPage: MEDIA_PER_PAGE }),
         staleTime: 'static',
       }),
       queryClient.query({ ...featuredMediaQuery(kind), staleTime: 'static' }),
@@ -37,17 +39,16 @@ export const Route = createFileRoute('/')({
   },
 });
 
-// Source order is the phone's reading order: featured and trending images, the
-// recent grid, watched images, then the text feeds. The two-column desktop
-// layout is a grid rearrangement of exactly this, in `index.css`.
+// The package's two-column layout: the grid first, the activity column after it.
+// Below the `md` breakpoint the columns stack in this order, so on a phone the
+// feeds follow the grid.
 function Home() {
   const navigate = useNavigate();
   const { images, total } = useMediaSearch(RECENT_QUERY, 1);
 
   return (
-    <div className="home">
-      <ActivitySpotlight />
-      <div className="home__main">
+    <LayoutColumns>
+      <LayoutMain>
         <MediaGrid
           headingLevel={1}
           size="large"
@@ -75,8 +76,10 @@ function Home() {
           }}
         />
         <WatchedImages />
-      </div>
-      <ActivityFeeds />
-    </div>
+      </LayoutMain>
+      <LayoutSide aria-label="Site activity">
+        <ActivitySidebar />
+      </LayoutSide>
+    </LayoutColumns>
   );
 }

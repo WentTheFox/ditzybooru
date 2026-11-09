@@ -22,9 +22,15 @@ interface ButtonOwnProps {
   sizeInput?: boolean;
   /** The size and shape of a `Badge`, for toolbars and list rows. */
   sizeBadge?: boolean;
+  /** Makes a plain `<button>` submit its form. Without it a button never does by accident. */
+  submit?: boolean;
 }
 
-function buttonClasses({
+/**
+ * The classes of a button. For a router `Link` or an `a`, where `Button`'s `as`
+ * cannot keep the route typed: `<Link className={buttonClass({ type: 'primary' })}>`.
+ */
+export function buttonClass({
   type,
   pressed,
   loading,
@@ -81,6 +87,11 @@ export function LoadingIcon({ className, ...props }: PropsOf<'span'>) {
   );
 }
 
+/** The inner wrapper `Button` renders; for a link built with `buttonClass`. */
+export function ButtonContent({ className, ...props }: PropsOf<'span'>) {
+  return <span className={cn('button-content', className)} {...props} />;
+}
+
 export function ButtonIcon({ className, ...props }: PropsOf<'span'>) {
   return <span className={cn('button-icon', className)} aria-hidden="true" {...props} />;
 }
@@ -111,6 +122,7 @@ export function Button<TElement extends ElementType = 'button'>({
   allowOverflow,
   sizeInput,
   sizeBadge,
+  submit = false,
   className,
   children,
   ...props
@@ -118,10 +130,7 @@ export function Button<TElement extends ElementType = 'button'>({
   const Component: ElementType = as ?? 'button';
   const extra: { type?: string; 'aria-busy'?: boolean; 'aria-pressed'?: boolean } = {};
   if (Component === 'button') {
-    // A button inside a form never submits it by accident; `submit` is opt-in
-    // through the `submit` prop of a plain `<button>`.
-    extra.type = (props as { submit?: boolean }).submit === true ? 'submit' : 'button';
-    delete (props as { submit?: boolean }).submit;
+    extra.type = submit ? 'submit' : 'button';
   }
   if (loading) extra['aria-busy'] = true;
   if (pressed !== undefined) extra['aria-pressed'] = pressed;
@@ -129,14 +138,14 @@ export function Button<TElement extends ElementType = 'button'>({
   return (
     <Component
       className={cn(
-        buttonClasses({ type, pressed, loading, iconOnly, fullWidth, justify, allowOverflow, sizeInput, sizeBadge }),
+        buttonClass({ type, pressed, loading, iconOnly, fullWidth, justify, allowOverflow, sizeInput, sizeBadge }),
         className,
       )}
       {...extra}
       {...props}
     >
       {loading && <LoadingIcon />}
-      <span className="button-content">{children}</span>
+      <ButtonContent>{children}</ButtonContent>
     </Component>
   );
 }

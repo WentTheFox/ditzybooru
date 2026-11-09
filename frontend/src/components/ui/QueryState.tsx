@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { Button } from '#/components/ui/Button';
-import { Notice, NoticeTitle } from '#/components/ui/Notice';
+import { Alert, AlertActions, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { Button } from '#/components/philomena/Button';
 import { HttpError } from '#/lib/http/http-client';
 import type { DataSourceKind } from '#/lib/api/types';
 
@@ -16,6 +16,28 @@ interface QueryStateProps<TData> {
   children: (data: TData) => ReactNode;
 }
 
+function StateAlert({
+  type,
+  title,
+  actions,
+  children,
+}: {
+  type?: 'warning' | 'danger';
+  title: string;
+  actions?: ReactNode;
+  children?: ReactNode;
+}) {
+  return (
+    <Alert type={type}>
+      <AlertContent>
+        <AlertTitle>{title}</AlertTitle>
+        {children === undefined ? null : <AlertText>{children}</AlertText>}
+      </AlertContent>
+      {actions === undefined ? null : <AlertActions>{actions}</AlertActions>}
+    </Alert>
+  );
+}
+
 /**
  * Everything a page that reads from the live source can be instead of its
  * content: on mock data, loading, missing, or failed.
@@ -26,42 +48,42 @@ export function QueryState<TData>({ kind, data, error, isPending, refetch, what,
   }
   if (kind !== 'live') {
     return (
-      <Notice>
-        <NoticeTitle>Mock data is on</NoticeTitle>
+      <StateAlert title="Mock data is on">
         This page comes from the site itself, so it needs the live data source. Switch to it in the developer settings.
-      </Notice>
+      </StateAlert>
     );
   }
   if (error instanceof HttpError && error.response.status === 404) {
     return (
-      <Notice variant="warning">
-        <NoticeTitle>Not found</NoticeTitle>
+      <StateAlert type="warning" title="Not found">
         There is no such {what}.
-      </Notice>
+      </StateAlert>
     );
   }
   if (error instanceof HttpError && error.response.status === 501) {
     return (
-      <Notice variant="warning">
-        <NoticeTitle>Not available here</NoticeTitle>
+      <StateAlert type="warning" title="Not available here">
         This site does not offer this page.
-      </Notice>
+      </StateAlert>
     );
   }
   if (error !== null) {
     return (
-      <Notice variant="danger">
-        <NoticeTitle>Could not load this {what}</NoticeTitle>
-        <Button
-          onClick={() => {
-            void refetch();
-          }}
-        >
-          Retry
-        </Button>
-      </Notice>
+      <StateAlert
+        type="danger"
+        title={`Could not load this ${what}`}
+        actions={
+          <Button
+            onClick={() => {
+              void refetch();
+            }}
+          >
+            Retry
+          </Button>
+        }
+      />
     );
   }
 
-  return <p className="content-page__status">{isPending ? 'Loading…' : null}</p>;
+  return <p className="muted-text">{isPending ? 'Loading…' : null}</p>;
 }

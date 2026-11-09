@@ -2,6 +2,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { TrendingUp } from 'lucide-react';
 
 import { useDataSource } from '#/hooks/use-data-source';
+import { MediaList } from '#/components/philomena/MediaBox';
 import { trendingMediaQuery } from '#/lib/api/queries';
 import { TRENDING_WINDOW, searchSorts } from '#/lib/api/sorts';
 import { SidebarBlock } from './SidebarBlock';
@@ -16,10 +17,12 @@ export function TrendingImages() {
   const { data: images } = useSuspenseQuery(trendingMediaQuery(useDataSource(), TRENDING_COUNT));
 
   return (
-    <SidebarBlock title="Trending" href={trendingQuery} icon={<TrendingUp size={16} />} bodyClassName="trending-grid">
-      {images.map(image => (
-        <MediaBox key={image.id} image={image} src={image.representations.thumbSmall} />
-      ))}
+    <SidebarBlock title="Trending" href={trendingQuery} icon={<TrendingUp size={16} />}>
+      <MediaList className="small">
+        {images.map(image => (
+          <MediaBox key={image.id} image={image} src={image.representations.thumbSmall} />
+        ))}
+      </MediaList>
     </SidebarBlock>
   );
 }

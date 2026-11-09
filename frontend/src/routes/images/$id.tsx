@@ -2,10 +2,14 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowDown, ArrowUp, ChevronLeft, ChevronRight, EyeOff, MessageSquare, Shuffle, Star } from 'lucide-react';
 
-import { Button } from '#/components/ui/Button';
+import { Button, ButtonContent, ButtonGroup, ButtonIcon, ButtonText, buttonClass } from '#/components/philomena/Button';
+import { Counter } from '#/components/philomena/Badge';
+import { Flex, LayoutColumns, LayoutMain, LayoutSide } from '#/components/philomena/Layout';
+import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
+import { Tag, TagCount, TagList, TagName } from '#/components/philomena/Tag';
+import type { TagCategory } from '#/components/philomena/Tag';
 import { CommunityPost } from '#/components/ui/CommunityPost';
 import { Pagination } from '#/components/ui/Pagination';
-import { Panel, PanelBody, PanelHeader } from '#/components/ui/Panel';
 import { Prose } from '#/components/ui/Prose';
 import { QueryState } from '#/components/ui/QueryState';
 import { RelativeTime } from '#/components/ui/RelativeTime';
@@ -50,7 +54,7 @@ function ImageMedia({ image }: { image: ImagePage }) {
   if (image.mimeType.startsWith('video/')) {
     return (
       <video
-        className="image-page__media"
+        style={{ height: 'auto' }}
         src={reprs.full}
         poster={reprs.large}
         width={image.width}
@@ -66,7 +70,7 @@ function ImageMedia({ image }: { image: ImagePage }) {
 
   return (
     <a href={reprs.full} rel="nofollow">
-      <img className="image-page__media" src={still} width={image.width} height={image.height} alt="" />
+      <img style={{ height: 'auto' }} src={still} width={image.width} height={image.height} alt="" />
     </a>
   );
 }
@@ -81,27 +85,44 @@ function Navigation({ id }: { id: number }) {
   const search = q === '*' ? {} : { q };
 
   return (
-    <nav className="image-page__navigation" aria-label="Image navigation">
-      {prev.data === undefined || prev.data === null ? null : (
-        <Link to="/images/$id" params={{ id: prev.data }} search={search} rel="prev">
-          <ChevronLeft size={16} /> Previous
-        </Link>
-      )}
-      <Button
-        onClick={() => {
-          // Fetched on the click, not ahead of it: a random pick is worth nothing once seen.
-          void queryClient
-            .query({ ...neighbourQuery(id, q, 'random'), staleTime: 0 })
-            .then(pick => (pick === null ? undefined : navigate({ to: '/images/$id', params: { id: pick }, search })));
-        }}
-      >
-        <Shuffle size={16} /> Random
-      </Button>
-      {next.data === undefined || next.data === null ? null : (
-        <Link to="/images/$id" params={{ id: next.data }} search={search} rel="next">
-          Next <ChevronRight size={16} />
-        </Link>
-      )}
+    <nav aria-label="Image navigation">
+      <ButtonGroup separated aria-label="Browse images">
+        {prev.data === undefined || prev.data === null ? null : (
+          <Link to="/images/$id" params={{ id: prev.data }} search={search} rel="prev" className={buttonClass({})}>
+            <ButtonContent>
+              <ButtonIcon>
+                <ChevronLeft size={16} />
+              </ButtonIcon>
+              <ButtonText>Previous</ButtonText>
+            </ButtonContent>
+          </Link>
+        )}
+        <Button
+          onClick={() => {
+            // Fetched on the click, not ahead of it: a random pick is worth nothing once seen.
+            void queryClient
+              .query({ ...neighbourQuery(id, q, 'random'), staleTime: 0 })
+              .then(pick =>
+                pick === null ? undefined : navigate({ to: '/images/$id', params: { id: pick }, search }),
+              );
+          }}
+        >
+          <ButtonIcon>
+            <Shuffle size={16} />
+          </ButtonIcon>
+          <ButtonText>Random</ButtonText>
+        </Button>
+        {next.data === undefined || next.data === null ? null : (
+          <Link to="/images/$id" params={{ id: next.data }} search={search} rel="next" className={buttonClass({})}>
+            <ButtonContent>
+              <ButtonText>Next</ButtonText>
+              <ButtonIcon>
+                <ChevronRight size={16} />
+              </ButtonIcon>
+            </ButtonContent>
+          </Link>
+        )}
+      </ButtonGroup>
     </nav>
   );
 }
@@ -112,69 +133,79 @@ function Interactions({ image }: { image: ImagePage }) {
 
   return (
     // `data-ready`: the site has said what the visitor did before, so the buttons show it.
-    <div className="image-page__interactions" data-ready={activity !== undefined}>
+    <Flex center wrap gap="md" data-ready={activity !== undefined}>
       <Button
-        icon
+        iconOnly
         title={signedIn ? 'Upvote' : 'Sign in to vote'}
         aria-label="Upvote"
-        aria-pressed={activity?.voted === 'up'}
+        pressed={activity?.voted === 'up'}
         disabled={!signedIn || busy}
         onClick={() => {
           act(activity?.voted === 'up' ? 'unvote' : 'upvote');
         }}
       >
-        <ArrowUp size={16} />
+        <ButtonIcon>
+          <ArrowUp size={16} />
+        </ButtonIcon>
       </Button>
-      <span className="image-page__score" title="Score">
+      <Counter subtle title="Score">
         {counters.score}
-      </span>
+      </Counter>
       <Button
-        icon
+        iconOnly
         title={signedIn ? 'Downvote' : 'Sign in to vote'}
         aria-label="Downvote"
-        aria-pressed={activity?.voted === 'down'}
+        pressed={activity?.voted === 'down'}
         disabled={!signedIn || busy}
         onClick={() => {
           act(activity?.voted === 'down' ? 'unvote' : 'downvote');
         }}
       >
-        <ArrowDown size={16} />
+        <ButtonIcon>
+          <ArrowDown size={16} />
+        </ButtonIcon>
       </Button>
       <Button
         title={signedIn ? 'Fave' : 'Sign in to fave'}
         aria-label="Fave"
-        aria-pressed={activity?.faved === true}
+        pressed={activity?.faved === true}
         disabled={!signedIn || busy}
         onClick={() => {
           act(activity?.faved === true ? 'unfave' : 'fave');
         }}
       >
-        <Star size={16} /> {counters.faves}
+        <ButtonIcon>
+          <Star size={16} />
+        </ButtonIcon>
+        <ButtonText>{counters.faves}</ButtonText>
       </Button>
       <Button
         title={signedIn ? 'Hide from your listings' : 'Sign in to hide images'}
         aria-label="Hide"
-        aria-pressed={activity?.hidden === true}
+        pressed={activity?.hidden === true}
         disabled={!signedIn || busy}
         onClick={() => {
           act(activity?.hidden === true ? 'unhide' : 'hide');
         }}
       >
-        <EyeOff size={16} /> Hide
+        <ButtonIcon>
+          <EyeOff size={16} />
+        </ButtonIcon>
+        <ButtonText>Hide</ButtonText>
       </Button>
       {signedIn ? null : (
-        <Link to="/sessions/new" className="content-page__meta">
+        <Link to="/sessions/new" className="muted-text">
           Sign in to vote and fave
         </Link>
       )}
-      {failed ? <span className="content-page__meta">The site did not take that. Try again.</span> : null}
-    </div>
+      {failed ? <span className="muted-text">The site did not take that. Try again.</span> : null}
+    </Flex>
   );
 }
 
 function Details({ image }: { image: ImagePage }) {
   return (
-    <p className="content-page__meta image-page__details">
+    <p className="muted-text text-center">
       Uploaded <RelativeTime dateTime={image.createdAt} />
       {image.uploader === undefined || image.uploader === null ? null : (
         <>
@@ -192,45 +223,61 @@ function Details({ image }: { image: ImagePage }) {
 function Description({ image }: { image: ImagePage }) {
   if (image.descriptionHtml !== undefined && image.descriptionHtml !== null) {
     return (
-      <Panel>
-        <PanelHeader>Description</PanelHeader>
-        <PanelBody>
+      <Block>
+        <BlockHeader>Description</BlockHeader>
+        <BlockContent>
           <Prose html={image.descriptionHtml} />
-        </PanelBody>
-      </Panel>
+        </BlockContent>
+      </Block>
     );
   }
   if (image.description !== undefined && image.description !== '') {
     return (
-      <Panel>
-        <PanelHeader>Description</PanelHeader>
-        <PanelBody>
-          <p className="post__plain">{image.description}</p>
-        </PanelBody>
-      </Panel>
+      <Block>
+        <BlockHeader>Description</BlockHeader>
+        <BlockContent>
+          <p className="plain-text">{image.description}</p>
+        </BlockContent>
+      </Block>
     );
   }
 
   return null;
 }
 
+/** The site's tag categories, as the package's. A tag in none of these is a plain one. */
+const TAG_CATEGORY: Record<string, TagCategory> = {
+  rating: 'rating',
+  spoiler: 'spoiler',
+  origin: 'origin',
+  oc: 'oc',
+  error: 'error',
+  character: 'character',
+  species: 'species',
+  'content-official': 'official',
+  'content-fanmade': 'fanmade',
+  'body-type': 'body',
+};
+
 function Tags({ image }: { image: ImagePage }) {
   return (
-    <Panel>
-      <PanelHeader>Tags</PanelHeader>
-      <PanelBody>
-        <ul className="image-page__tags">
+    <Block>
+      <BlockHeader>Tags</BlockHeader>
+      <BlockContent>
+        <TagList>
           {image.tags.map(tag => (
-            <li key={tag.name}>
-              <Link to="/tags/$slug" params={{ slug: tag.slug ?? tag.name }} className="image-page__tag">
-                {tag.name}
-                {tag.imageCount === undefined ? null : <span className="content-page__meta"> {tag.imageCount}</span>}
-              </Link>
-            </li>
+            <Tag key={tag.name} category={tag.category == null ? undefined : TAG_CATEGORY[tag.category]}>
+              <TagName>
+                <Link to="/tags/$slug" params={{ slug: tag.slug ?? tag.name }}>
+                  {tag.name}
+                </Link>
+              </TagName>
+              {tag.imageCount === undefined ? null : <TagCount>{tag.imageCount}</TagCount>}
+            </Tag>
           ))}
-        </ul>
+        </TagList>
         {image.sourceUrls.length === 0 ? null : (
-          <p className="content-page__meta">
+          <p className="muted-text">
             Source:{' '}
             {image.sourceUrls.map(url => (
               <a key={url} href={url} rel="noreferrer nofollow noopener">
@@ -239,8 +286,8 @@ function Tags({ image }: { image: ImagePage }) {
             ))}
           </p>
         )}
-      </PanelBody>
-    </Panel>
+      </BlockContent>
+    </Block>
   );
 }
 
@@ -250,8 +297,8 @@ function Comments({ id }: { id: number }) {
   const { kind, data, error, isPending, refetch } = useLiveQuery(imageCommentsQuery(id, page));
 
   return (
-    <section id="comments" className="image-page__comments">
-      <h2 className="staff-group__title">
+    <section id="comments">
+      <h2>
         <MessageSquare size={16} /> Comments
       </h2>
       <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="list of comments">
@@ -260,7 +307,7 @@ function Comments({ id }: { id: number }) {
 
           return (
             <>
-              {comments.items.length === 0 ? <p className="content-page__meta">No comments yet.</p> : null}
+              {comments.items.length === 0 ? <p className="muted-text">No comments yet.</p> : null}
               {comments.items.map(comment => (
                 <CommunityPost key={comment.id} post={comment} idPrefix="comment_" />
               ))}
@@ -288,20 +335,24 @@ function ImageRoute() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(imagePageQuery(id));
 
   return (
-    <div className="content-page image-page">
-      <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="image">
-        {image => (
-          <>
-            <Navigation key={image.id} id={image.id} />
-            <Interactions key={image.id} image={image} />
-            <Details image={image} />
-            <ImageMedia image={image} />
-            <Description image={image} />
-            <Tags image={image} />
-            <Comments id={image.id} />
-          </>
-        )}
-      </QueryState>
-    </div>
+    <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="image">
+      {image => (
+        <>
+          <Navigation key={image.id} id={image.id} />
+          <Interactions key={image.id} image={image} />
+          <Details image={image} />
+          <ImageMedia image={image} />
+          <LayoutColumns>
+            <LayoutSide>
+              <Tags image={image} />
+            </LayoutSide>
+            <LayoutMain>
+              <Description image={image} />
+              <Comments id={image.id} />
+            </LayoutMain>
+          </LayoutColumns>
+        </>
+      )}
+    </QueryState>
   );
 }

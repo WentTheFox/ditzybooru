@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 
 import { CommunityPost } from '#/components/ui/CommunityPost';
+import { LayoutNarrow } from '#/components/philomena/Layout';
 import { Pagination } from '#/components/ui/Pagination';
 import { QueryState } from '#/components/ui/QueryState';
 import { RelativeTime } from '#/components/ui/RelativeTime';
@@ -26,21 +27,21 @@ function TopicPage() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(topicPageQuery(forum, topic, page));
 
   return (
-    <div className="content-page">
+    <LayoutNarrow center>
       <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="topic">
         {info => {
           const pageCount = Math.max(1, Math.ceil(info.postCount / POSTS_PER_PAGE));
 
           return (
             <>
-              <p className="content-page__meta">
+              <p className="muted-text">
                 <Link to="/forums">Forums</Link> &raquo;{' '}
                 <Link to="/forums/$forum" params={{ forum: info.forumSlug }}>
                   {info.forumName}
                 </Link>
               </p>
-              <h1 className="content-page__title">{info.title}</h1>
-              <p className="content-page__meta">
+              <h1>{info.title}</h1>
+              <p className="muted-text">
                 Started by {info.author}
                 {info.startedAt === undefined ? null : (
                   <>
@@ -78,6 +79,6 @@ function TopicPage() {
           );
         }}
       </QueryState>
-    </div>
+    </LayoutNarrow>
   );
 }

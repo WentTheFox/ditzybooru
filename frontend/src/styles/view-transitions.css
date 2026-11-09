@@ -5,17 +5,16 @@
  * home page's grid and the search page's, so paging from one to the other morphs
  * the panel into its new place instead of cutting to it.
  *
- * The pseudo-element tree hangs off the root element, so it inherits
- * `--motion-scale` and the "Animations" setting reaches it. The router skips
- * `startViewTransition` outright when that setting is off - see
- * `animationsEnabled` in `lib/motion.ts` - and this is the belt to its braces.
+ * The router skips `startViewTransition` outright when the browser asks for
+ * reduced motion - see `animationsEnabled` in `lib/motion.ts` - and the media
+ * query below is the belt to its braces.
  */
 
 ::view-transition-group(*),
 ::view-transition-old(*),
 ::view-transition-new(*) {
-  animation-duration: calc(100ms * var(--motion-scale));
-  animation-timing-function: var(--ease-out);
+  animation-duration: 100ms;
+  animation-timing-function: ease-out;
 }
 
 /* Groups paint in the DOM order of the elements they came from, which puts the
@@ -43,7 +42,7 @@
  * early leaves the incoming one to resolve against the page instead. */
 ::view-transition-old(search-results) {
   animation-name: view-transition-fade-out;
-  animation-duration: calc(90ms * var(--motion-scale));
+  animation-duration: 90ms;
   animation-fill-mode: both;
 }
 
@@ -61,5 +60,13 @@
 @keyframes view-transition-fade-in {
   from {
     opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s;
   }
 }

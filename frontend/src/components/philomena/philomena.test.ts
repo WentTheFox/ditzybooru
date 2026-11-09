@@ -131,7 +131,11 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['HeaderBrandText', Header.HeaderBrandText, {}],
   ['Nav', Header.Nav, { horizontal: true }],
   ['NavLink', Header.NavLink, { current: true }],
-  ['Flex', Layout.Flex, { column: true, wrap: true, gap: 'md', justify: 'between', middle: true, grow: true }],
+  [
+    'Flex',
+    Layout.Flex,
+    { column: true, wrap: true, gap: 'md', justify: 'between', center: true, middle: true, grow: true },
+  ],
   ['LayoutColumns', Layout.LayoutColumns, {}],
   ['LayoutSide', Layout.LayoutSide, {}],
   ['LayoutMain', Layout.LayoutMain, {}],
@@ -188,6 +192,9 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['TableWrap', Surfaces.TableWrap, { responsive: true }],
   ['Table', Surfaces.Table, { striped: true, hover: true, type: 'danger' }],
   ['Tag', Tag.Tag, { category: 'character', muted: true }],
+  ...(
+    ['rating', 'spoiler', 'origin', 'oc', 'error', 'character', 'official', 'fanmade', 'species', 'body'] as const
+  ).map(category => [`Tag ${category}`, Tag.Tag, { category }] as [string, unknown, Record<string, unknown>]),
   ['TagIcon', Tag.TagIcon, {}],
   ['TagName', Tag.TagName, {}],
   ['TagCount', Tag.TagCount, {}],
@@ -221,5 +228,56 @@ describe('philomena components', () => {
 
   it('never submits a form from a plain button', () => {
     expect(renderToStaticMarkup(createElement(Button.Button, {}, 'x'))).toContain('type="button"');
+  });
+
+  describe('class helpers', () => {
+    const helpers: Array<[name: string, classes: string]> = [
+      [
+        'buttonClass',
+        Button.buttonClass({
+          type: 'primary',
+          pressed: true,
+          iconOnly: true,
+          fullWidth: true,
+          justify: 'end',
+          sizeBadge: true,
+        }),
+      ],
+      ['navLinkClass', Header.navLinkClass(true)],
+      ['headerBrandClass', Header.headerBrandClass()],
+      ['burgerItemClass', Burger.burgerItemClass(true)],
+      ['burgerCloseClass', Burger.burgerCloseClass()],
+      ['mediaBoxActionClass', MediaBox.mediaBoxActionClass('upvote', true, true)],
+      ['mediaBoxContentClass', MediaBox.mediaBoxContentClass()],
+    ];
+
+    it.each(helpers)('%s only produces classes the package stylesheet defines', (_name, classes) => {
+      expect(classes.split(/\s+/).filter(name => !knownClasses.has(name))).toEqual([]);
+    });
+
+    it('components render the same classes as their helpers', () => {
+      const classesFor = (component: unknown, props: Record<string, unknown>) =>
+        classesOf(renderToStaticMarkup(createElement(component as AnyComponent, props)));
+      expect(classesFor(Header.NavLink, { current: true })).toEqual(Header.navLinkClass(true).split(' '));
+      expect(classesFor(Header.HeaderBrand, {})).toEqual(Header.headerBrandClass().split(' '));
+      expect(classesFor(Burger.BurgerItem, { current: true })).toEqual(Burger.burgerItemClass(true).split(' '));
+      expect(classesFor(Burger.BurgerClose, {})).toEqual(Burger.burgerCloseClass().split(' '));
+      expect(classesFor(MediaBox.MediaBoxAction, { kind: 'fave', active: true })).toEqual(
+        MediaBox.mediaBoxActionClass('fave', true).split(' '),
+      );
+      expect(classesFor(MediaBox.MediaBoxContent, {})).toEqual(MediaBox.mediaBoxContentClass().split(' '));
+    });
+
+    it('a link built with buttonClass matches the Button component', () => {
+      const html = renderToStaticMarkup(createElement(Button.Button, { type: 'danger', iconOnly: true }, 'x'));
+      expect(classesOf(html)).toEqual([
+        ...Button.buttonClass({ type: 'danger', iconOnly: true }).split(' '),
+        'button-content',
+      ]);
+    });
+
+    it('ButtonContent renders the inner wrapper', () => {
+      expect(classesOf(renderToStaticMarkup(createElement(Button.ButtonContent, {})))).toEqual(['button-content']);
+    });
   });
 });

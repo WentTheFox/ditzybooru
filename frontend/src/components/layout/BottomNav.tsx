@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Bell, Mail, Search, X } from 'lucide-react';
 
+import { Counter, CounterAnchor } from '#/components/philomena/Badge';
+import { navLinkClass } from '#/components/philomena/Header';
+import { cn } from '#/lib/utils';
 import { useCurrentUser } from '#/hooks/use-current-user';
 import { SearchBar } from './SearchBar';
 
@@ -37,17 +40,17 @@ export function BottomNav() {
   const user = useCurrentUser();
 
   return (
-    <nav className="bottom-nav" aria-label="Primary">
+    <nav className="bottom-nav hidden-from-md" aria-label="Primary">
       {searchOpen ? (
-        <div className="bottom-nav__sheet">
+        <div className="p-md">
           <SearchBar inputRef={inputRef} />
         </div>
       ) : null}
 
-      <div className="bottom-nav__bar">
+      <div className="bottom-nav-bar nav horizontal">
         <button
           type="button"
-          className="bottom-nav__item"
+          className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
           aria-expanded={searchOpen}
           onClick={() => {
             setSearchOpen(open => !open);
@@ -62,18 +65,20 @@ export function BottomNav() {
             <Link
               // @ts-expect-error TODO: route not built yet
               to="/notifications"
-              className="bottom-nav__item"
+              className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
             >
-              <span className="bottom-nav__icon">
+              <CounterAnchor>
                 <Bell size={20} />
-                <span className="bottom-nav__badge">3</span>
-              </span>
+                <Counter type="danger" corner>
+                  3
+                </Counter>
+              </CounterAnchor>
               Notifications
             </Link>
             <Link
               // @ts-expect-error TODO: route not built yet
               to="/conversations"
-              className="bottom-nav__item"
+              className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
             >
               <Mail size={20} />
               Conversations

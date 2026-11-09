@@ -8,8 +8,9 @@ const SETTINGS_COOKIE = 'ditzy-settings';
 interface Fixtures {
   /** Whether the mock data comes with a signed-in user. */
   signedIn: boolean;
-  /** Sets the theme (and pins the mock data source) before the first load. */
-  theme: { lightness: 'dark' | 'light'; color: string };
+  /** Sets the light/dark theme (and pins the mock data source) before the first load.
+   *  The accent is the site's own, so it is not a setting. */
+  theme: { lightness: 'dark' | 'light' };
   /** Loads a path and waits until the page can be screenshotted stably. */
   open: (path: string) => Promise<void>;
 }
@@ -56,7 +57,7 @@ async function isolateNetwork(page: Page, origin: string, blocked: Array<string>
 
 export const test = base.extend<Fixtures>({
   signedIn: [true, { option: true }],
-  theme: [{ lightness: 'dark', color: 'blue' }, { option: true }],
+  theme: [{ lightness: 'dark' }, { option: true }],
 
   page: async ({ page, baseURL, theme, signedIn }, run) => {
     const blocked: Array<string> = [];

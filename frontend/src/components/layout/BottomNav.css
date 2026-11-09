@@ -1,115 +1,41 @@
 /**
- * The phone navigation bar, pinned to the bottom of the viewport.
+ * The phone navigation bar, pinned to the bottom of the viewport. The package
+ * has no bottom tab bar, so this is the one navigation piece that is ours.
  *
- * It takes the PAGE colour, a step darker, rather than the top bar's accent. On a phone this
- * strip sits directly under the content for the whole session, and a saturated
- * band there competes with the art above it all the way down the page; the
- * A hairline along its top edge, the shadow it casts upward and its blur are
- * what separate it, not a change of colour. It therefore carries the ordinary
- * text tiers, not `--text-on-nav`.
- *
- * Only exists below `--md`; above it every destination here is back on the top
- * bar, and `--bottom-nav-h` collapses to zero so the shell stops reserving
- * room for it.
+ * Only exists below the package's `md` breakpoint (768px); above it every
+ * destination here is back on the top bar and `--bottom-nav-height` collapses
+ * to zero, so the shell stops reserving room for it.
  */
+
+:root {
+  --bottom-nav-height: 0px;
+}
+
+@media not all and (min-width: 48rem) {
+  :root {
+    --bottom-nav-height: 3.5rem;
+  }
+}
 
 .bottom-nav {
   position: fixed;
   inset-block-end: 0;
   inset-inline: 0;
-  z-index: 40;
-
-  border-block-start: var(--border);
-  /* A step below the page rather than exactly it: the bar has to read as
-   * standing off the content it overlaps, and darkening is the direction that
-   * says "chrome" in both polarities - a lighter strip on a light theme would
-   * disappear into the page it sits on. */
-  background-color: color-mix(in oklab, var(--surface-page), #000 18%);
-  color: var(--text-color);
-  /* Cast upward: the bar sits over the page, and the page scrolls under it. */
-  box-shadow: 0 -2px 8px color-mix(in oklab, #000 22%, transparent);
+  z-index: var(--z-header);
+  background-color: var(--surface-color);
+  border-block-start: var(--border-width) solid var(--tint-color);
+  box-shadow: var(--emphasis-shadow);
 }
 
-/* Same glass as the top bar, so the two ends of the page match. */
-@supports (backdrop-filter: blur(1px)) {
-  .bottom-nav {
-    background-color: color-mix(in oklab, color-mix(in oklab, var(--surface-page), #000 18%) 80%, transparent);
-    backdrop-filter: blur(12px) saturate(1.4);
-  }
-}
-
-@media (--md) {
-  .bottom-nav {
-    display: none;
-  }
-}
-
-.bottom-nav__bar {
-  display: flex;
-  align-items: stretch;
-  block-size: var(--bottom-nav-bar-h);
-  /* The home indicator on a hardware-gesture phone, which would otherwise sit
-   * on top of the row. */
+.bottom-nav-bar {
+  block-size: var(--bottom-nav-height);
+  /* The home indicator on a hardware-gesture phone. */
   padding-block-end: env(safe-area-inset-bottom);
 }
 
-.bottom-nav__item {
-  display: flex;
+/* Equal-width tabs; the rest (flex column, centering, gap, colors on hover) is
+ * the package's `.nav-link` and utilities. */
+.bottom-nav-bar > * {
   flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-0-5);
-
-  border: 0;
-  background-color: transparent;
-
-  color: var(--text-muted);
-  font: inherit;
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-medium);
-
-  transition:
-    background-color var(--duration) var(--ease-out),
-    color var(--duration) var(--ease-out);
-}
-
-.bottom-nav__item:hover,
-.bottom-nav__item:active {
-  background-color: var(--surface-hover);
-  color: var(--text-color);
-}
-
-/* The badge rides the icon, not the whole cell, which is a label tall. */
-.bottom-nav__icon {
-  position: relative;
-  display: inline-flex;
-}
-
-.bottom-nav__badge {
-  position: absolute;
-  inset-block-start: -4px;
-  inset-inline-start: 10px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: 16px;
-  block-size: 16px;
-  padding-inline: var(--space-0-5);
-
-  border-radius: var(--radius-full);
-  background-color: var(--unread);
-
-  color: #000;
-  font-size: var(--text-2xs);
-  font-weight: var(--weight-bold);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The search field, revealed above the row rather than replacing it: the row is
- * the thing that closes the sheet again. */
-.bottom-nav__sheet {
-  padding: var(--space-2);
-  border-block-end: var(--border);
+  font-size: 0.8rem;
 }

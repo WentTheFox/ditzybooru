@@ -6,7 +6,7 @@ import type { Comment } from '#/lib/types';
 import { useDataSource } from '#/hooks/use-data-source';
 import { recentCommentsQuery } from '#/lib/api/queries';
 import { TRENDING_WINDOW, searchSorts } from '#/lib/api/sorts';
-import { PanelList } from '#/components/ui/Panel';
+import { Avatar } from '#/components/philomena/Avatar';
 import { RelativeTime } from '#/components/ui/RelativeTime';
 import { SidebarBlock } from './SidebarBlock';
 import { UserAttribution } from './UserAttribution';
@@ -15,18 +15,20 @@ function CommentStrip({ comment }: { comment: Comment }) {
   const imageId = comment.imageId;
 
   return (
-    <li className="comment-row">
+    <li className="flex flex-center gap-md">
       <Link to="/images/$id" params={{ id: imageId }} aria-label={`Image ${imageId}`}>
-        <img src={comment.imageThumbTiny} alt="" loading="lazy" className="comment-row__thumb" />
+        <Avatar size="xs" square src={comment.imageThumbTiny} />
       </Link>
-      <div className="comment-row__text">
-        <div className="comment-row__head">
-          <Link to="/images/$id" params={{ id: imageId }} hash={`comment_${comment.id}`} className="comment-row__id">
+      <div className="flex-grow">
+        <div className="truncate">
+          <Link to="/images/$id" params={{ id: imageId }} hash={`comment_${comment.id}`}>
             #{imageId}
           </Link>{' '}
-          <span className="comment-row__by">by</span> <UserAttribution author={comment.author} />
+          <span className="muted-text">by</span> <UserAttribution author={comment.author} />
         </div>
-        <RelativeTime className="comment-row__time" dateTime={comment.createdAt} />
+        <div className="muted-text">
+          <RelativeTime dateTime={comment.createdAt} />
+        </div>
       </div>
     </li>
   );
@@ -48,11 +50,11 @@ export function RecentCommentsBlock() {
       icon={<MessageCircle size={16} />}
       footer={{ label: 'Most Commented-on Images', href: mostCommentedQuery }}
     >
-      <PanelList>
+      <ul className="flex flex-column gap-md">
         {comments.map(comment => (
           <CommentStrip key={comment.id} comment={comment} />
         ))}
-      </PanelList>
+      </ul>
     </SidebarBlock>
   );
 }

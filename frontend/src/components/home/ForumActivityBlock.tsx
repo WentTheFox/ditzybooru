@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { MessagesSquare, Pin } from 'lucide-react';
 
-import { Button } from '#/components/ui/Button';
-import { PanelList } from '#/components/ui/Panel';
+import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Button, ButtonText } from '#/components/philomena/Button';
 import { RelativeTime } from '#/components/ui/RelativeTime';
 import { useDataSource } from '#/hooks/use-data-source';
 import { useInView } from '#/hooks/use-in-view';
@@ -16,20 +16,16 @@ const FORUM_TOPIC_COUNT = 6;
 
 function TopicStrip({ topic }: { topic: ForumTopic }) {
   return (
-    <li className="forum-topic">
-      {topic.sticky ? <Pin className="forum-topic__pin" size={12} /> : null}
-      <Link
-        to="/forums/$forum/topics/$topic"
-        params={{ forum: topic.forum.slug, topic: topic.slug }}
-        className="forum-topic__title"
-      >
-        {topic.title}
+    <li>
+      {topic.sticky ? <Pin size={12} /> : null}
+      <Link to="/forums/$forum/topics/$topic" params={{ forum: topic.forum.slug, topic: topic.slug }}>
+        <strong>{topic.title}</strong>
       </Link>{' '}
-      <span className="forum-topic__meta">in</span>{' '}
-      <Link to="/forums/$forum" params={{ forum: topic.forum.slug }} className="forum-topic__meta">
+      <span className="muted-text">in</span>{' '}
+      <Link to="/forums/$forum" params={{ forum: topic.forum.slug }}>
         {topic.forum.name}
       </Link>{' '}
-      <RelativeTime className="forum-topic__meta" dateTime={topic.lastRepliedAt} />
+      <RelativeTime className="muted-text" dateTime={topic.lastRepliedAt} />
     </li>
   );
 }
@@ -54,34 +50,37 @@ export function ForumActivityBlock() {
   let body;
   if (topics !== undefined) {
     body = (
-      <PanelList>
+      <ul className="flex flex-column gap-md">
         {topics.map(topic => (
           <TopicStrip key={`${topic.forum.slug}/${topic.slug}`} topic={topic} />
         ))}
-      </PanelList>
+      </ul>
     );
   } else if (isError) {
     body = (
-      <div className="forum-activity__status">
-        <span className="forum-topic__meta">Could not load forum activity.</span>
-        <Button
-          onClick={() => {
-            void refetch();
-          }}
-        >
-          Retry
-        </Button>
-      </div>
+      <Alert type="danger" compact>
+        <AlertContent>
+          <AlertText>Could not load forum activity.</AlertText>
+        </AlertContent>
+        <AlertActions>
+          <Button
+            sizeBadge
+            onClick={() => {
+              void refetch();
+            }}
+          >
+            <ButtonText>Retry</ButtonText>
+          </Button>
+        </AlertActions>
+      </Alert>
     );
   } else {
-    body = <div className="forum-activity__status forum-topic__meta">Loading&hellip;</div>;
+    body = <p className="muted-text">Loading&hellip;</p>;
   }
 
   return (
-    <div ref={ref}>
-      <SidebarBlock title="Forum Activity" href="/forums" icon={<MessagesSquare size={16} />}>
-        {body}
-      </SidebarBlock>
-    </div>
+    <SidebarBlock ref={ref} title="Forum Activity" href="/forums" icon={<MessagesSquare size={16} />}>
+      {body}
+    </SidebarBlock>
   );
 }

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Check } from 'lucide-react';
 
-import { Button } from '#/components/ui/Button';
-import { Field, FieldLabel } from '#/components/ui/Field';
+import { Alert, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { Button } from '#/components/philomena/Button';
+import { Checkbox, FormControlGroup, FormControlSubmit, FormMessage, InputField } from '#/components/philomena/Forms';
+import { Flex, LayoutNarrow } from '#/components/philomena/Layout';
+import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
 import { HCaptcha } from '#/components/ui/HCaptcha';
-import { Notice, NoticeTitle } from '#/components/ui/Notice';
-import { Panel, PanelBody, PanelHeader } from '#/components/ui/Panel';
 import { SESSION_QUERY_KEY } from '#/hooks/use-session';
 import { useDataSource } from '#/hooks/use-data-source';
 import { useSite } from '#/hooks/use-site';
@@ -21,6 +23,9 @@ import {
 import type { Session } from '#/lib/api/backend/session';
 
 export const Route = createFileRoute('/sessions/new')({ component: SignInPage });
+
+/** `Button` takes its HTML `type` through `submit`, because `type` is its color. */
+const SUBMIT = { submit: true };
 
 function SignInPage() {
   const site = useSite();
@@ -94,111 +99,117 @@ function SignInPage() {
     }, failed);
   };
 
+  const hasProblem = problem !== null || captchaFailed || captchaUnavailable;
+
   return (
-    <div className="developer-page">
-      <h1 className="developer-page__title">Sign in to {site.name}</h1>
+    <LayoutNarrow center>
+      <Flex column gap="lg">
+        <h1>Sign in to {site.name}</h1>
 
-      {kind === 'live' ? null : (
-        <Notice>
-          <NoticeTitle>Mock data is on</NoticeTitle>
-          Signing in needs the live data source. Switch to it in the developer settings.
-        </Notice>
-      )}
+        {kind === 'live' ? null : (
+          <Alert type="warning">
+            <AlertContent>
+              <AlertTitle>Mock data is on</AlertTitle>
+              <AlertText>Signing in needs the live data source. Switch to it in the developer settings.</AlertText>
+            </AlertContent>
+          </Alert>
+        )}
 
-      <Panel>
-        <PanelHeader>Sign in</PanelHeader>
-        <PanelBody>
-          <form className="developer-setting" onSubmit={submit}>
-            {needsCode ? (
-              <div className="developer-setting__text">
-                <FieldLabel htmlFor="sign-in-code">Your 2FA code</FieldLabel>
-                <Field
-                  id="sign-in-code"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  required
-                  autoFocus
-                  value={code}
+        <Block>
+          <BlockHeader>Sign in</BlockHeader>
+          <BlockContent>
+            <form onSubmit={submit}>
+              <FormControlGroup vertical>
+                {needsCode ? (
+                  <>
+                    <label htmlFor="sign-in-code">Your 2FA code</label>
+                    <InputField
+                      id="sign-in-code"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      required
+                      autoFocus
+                      fullWidth
+                      value={code}
+                      onChange={event => {
+                        setCode(event.target.value);
+                      }}
+                    />
+                    <FormMessage>
+                      {site.name} asks for the code from your authenticator app, or one of your backup codes.
+                    </FormMessage>
+                  </>
+                ) : (
+                  <>
+                    <label htmlFor="sign-in-email">Email</label>
+                    <InputField
+                      id="sign-in-email"
+                      type="email"
+                      autoComplete="username"
+                      required
+                      fullWidth
+                      value={email}
+                      onChange={event => {
+                        setEmail(event.target.value);
+                      }}
+                    />
+                    <label htmlFor="sign-in-password">Password</label>
+                    <InputField
+                      id="sign-in-password"
+                      type="password"
+                      autoComplete="current-password"
+                      required
+                      fullWidth
+                      value={password}
+                      onChange={event => {
+                        setPassword(event.target.value);
+                      }}
+                    />
+                  </>
+                )}
+                <Checkbox
+                  label="Remember me"
+                  icon={<Check size={12} />}
+                  checked={rememberMe}
                   onChange={event => {
-                    setCode(event.target.value);
+                    setRememberMe(event.target.checked);
                   }}
                 />
-                <span className="developer-setting__hint">
-                  {site.name} asks for the code from your authenticator app, or one of your backup codes.
-                </span>
-              </div>
-            ) : null}
-            {needsCode ? null : (
-              <>
-                <div className="developer-setting__text">
-                  <FieldLabel htmlFor="sign-in-email">Email</FieldLabel>
-                  <Field
-                    id="sign-in-email"
-                    type="email"
-                    autoComplete="username"
-                    required
-                    value={email}
-                    onChange={event => {
-                      setEmail(event.target.value);
+                {typeof siteKey === 'string' && !needsCode ? (
+                  <HCaptcha
+                    // A new widget after a failed try, as the old token is spent.
+                    key={problem ?? 'first'}
+                    siteKey={siteKey}
+                    onToken={setCaptchaToken}
+                    onError={() => {
+                      setCaptchaFailed(true);
                     }}
                   />
-                </div>
-                <div className="developer-setting__text">
-                  <FieldLabel htmlFor="sign-in-password">Password</FieldLabel>
-                  <Field
-                    id="sign-in-password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={event => {
-                      setPassword(event.target.value);
-                    }}
-                  />
-                </div>
-              </>
-            )}
-            <label className="developer-setting__hint">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={event => {
-                  setRememberMe(event.target.checked);
-                }}
-              />{' '}
-              Remember me
-            </label>
-            {typeof siteKey === 'string' && !needsCode ? (
-              <HCaptcha
-                // A new widget after a failed try, as the old token is spent.
-                key={problem ?? 'first'}
-                siteKey={siteKey}
-                onToken={setCaptchaToken}
-                onError={() => {
-                  setCaptchaFailed(true);
-                }}
-              />
-            ) : null}
-            <span className="developer-setting__hint" role="status">
-              {problem}
-              {siteDown ? (
-                <>
-                  {' '}
-                  Try again later, or <Link to="/settings/account">sign in with an API key</Link> instead, which needs
-                  no captcha.
-                </>
-              ) : null}
-              {captchaFailed ? 'The captcha could not be loaded.' : null}
-              {captchaUnavailable ? `Could not reach ${site.name} to start the sign-in.` : null}
-            </span>
-            <div>
-              <Button type="submit" variant="primary" disabled={!ready || busy}>
-                Sign in
-              </Button>
-            </div>
-          </form>
-        </PanelBody>
-      </Panel>
-    </div>
+                ) : null}
+                <FormMessage kind={hasProblem ? 'error' : 'description'}>
+                  <span role="status">
+                    {problem}
+                    {siteDown ? (
+                      <>
+                        {' '}
+                        Try again later, or <Link to="/settings/account">sign in with an API key</Link> instead, which
+                        needs no captcha.
+                      </>
+                    ) : null}
+                    {captchaFailed ? 'The captcha could not be loaded.' : null}
+                    {captchaUnavailable ? `Could not reach ${site.name} to start the sign-in.` : null}
+                  </span>
+                </FormMessage>
+                <FormControlSubmit>
+                  <Button type="primary" disabled={!ready || busy} {...SUBMIT}>
+                    Sign in
+                  </Button>
+                </FormControlSubmit>
+              </FormControlGroup>
+            </form>
+          </BlockContent>
+        </Block>
+      </Flex>
+    </LayoutNarrow>
   );
 }

@@ -49,7 +49,7 @@ const SETTINGS_COOKIE = 'ditzy-settings';
 
 const LIGHTNESSES = ['dark', 'light'] as const;
 const COLORS = ['red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'gray'] as const;
-const PATHS = ['/', '/search?q=*&page=1', '/settings/display'] as const;
+const PATHS = ['/', '/search?q=*&page=1', '/settings/account'] as const;
 
 type Lightness = (typeof LIGHTNESSES)[number];
 type Color = (typeof COLORS)[number];
@@ -131,16 +131,17 @@ let baseUrl: string;
 /**
  * Loads a path with a theme applied and returns axe's violations for it.
  *
- * The theme is set through the settings cookie rather than by writing the
- * attributes directly, because the cookie is what the server renders from: the
+ * Light or dark is set through the settings cookie rather than by writing the
+ * attribute directly, because the cookie is what the server renders from: the
  * markup arrives in the requested theme, with no window where the page is in
- * one theme and axe is asked about another. Writing the attributes instead
+ * one theme and axe is asked about another. Writing the attribute instead
  * would also race `prefers-color-scheme`, which is what decides the theme
  * whenever nothing is stored.
  *
- * An explicit `lightness` and `color` are sent even where they match the
- * shipped defaults - `parseSettings` takes them either way, and it keeps this
- * from depending on which values happen to be default.
+ * The accent is a site's own (`Site.themeColor`), not a setting, so there is
+ * nothing to send. It is applied by setting `data-accent` on `<html>` after the
+ * load: the accent layer is CSS only, so the page needs no re-render, and React
+ * leaves the attribute alone because its own value has not changed.
  *
  * The mock data source is pinned so the audited markup is the same on every
  * run and the suite needs no network.
@@ -151,11 +152,14 @@ async function audit(path: string, lightness: Lightness, color: Color, options: 
   await context.addCookies([
     {
       name: SETTINGS_COOKIE,
-      value: encodeURIComponent(JSON.stringify({ lightness, color, dataSource: 'mock' })),
+      value: encodeURIComponent(JSON.stringify({ lightness, dataSource: 'mock' })),
       url: baseUrl,
     },
   ]);
   await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle' });
+  await page.evaluate(accent => {
+    document.documentElement.setAttribute('data-accent', accent);
+  }, color);
   await page.evaluate(axeSource);
   const results = await page.evaluate(async ({ opts }) => (window as unknown as AxeWindow).axe.run(document, opts), {
     opts: options,

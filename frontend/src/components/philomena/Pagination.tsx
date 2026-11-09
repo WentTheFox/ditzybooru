@@ -13,6 +13,10 @@ export function Pagination({
   );
 }
 
+function paginationLinkClass(current: boolean, disabled: boolean): string {
+  return cn('pagination-link', current && 'current', disabled && 'disabled');
+}
+
 /**
  * One page link. Without an `href`, or when `disabled`, it renders a `span`:
  * the unavailable state. `current` marks the page being shown.
@@ -25,7 +29,7 @@ export function PaginationLink({
   children,
   ...props
 }: PropsOf<'a'> & { current?: boolean; disabled?: boolean }) {
-  const classes = cn('pagination-link', current && 'current', disabled && 'disabled', className);
+  const classes = cn(paginationLinkClass(current, disabled), className);
   if (href === undefined || disabled) {
     return (
       <span className={classes} aria-disabled={disabled || undefined}>

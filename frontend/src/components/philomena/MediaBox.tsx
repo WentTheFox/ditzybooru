@@ -44,6 +44,11 @@ export function MediaBoxHeader({
 
 type MediaBoxActionKind = 'fave' | 'upvote' | 'downvote' | 'comments' | 'hide';
 
+/** The classes of an action, for a `button` or a router `Link` that cannot be an anchor. */
+export function mediaBoxActionClass(kind: MediaBoxActionKind, active = false, disabled = false): string {
+  return cn('media-box-action', kind, active && 'active', disabled && 'disabled');
+}
+
 export function MediaBoxAction({
   kind,
   active = false,
@@ -53,7 +58,7 @@ export function MediaBoxAction({
 }: PropsOf<'a'> & { kind: MediaBoxActionKind; active?: boolean; disabled?: boolean }) {
   return (
     <a
-      className={cn('media-box-action', kind, active && 'active', disabled && 'disabled', className)}
+      className={cn(mediaBoxActionClass(kind, active, disabled), className)}
       aria-disabled={disabled || undefined}
       {...props}
     />
@@ -65,8 +70,12 @@ export function MediaBoxScore({ className, ...props }: PropsOf<'span'>) {
 }
 
 /** The square picture area holding an `img` or `video`. */
+export function mediaBoxContentClass(): string {
+  return 'media-box-content';
+}
+
 export function MediaBoxContent({ className, ...props }: PropsOf<'div'>) {
-  return <div className={cn('media-box-content', className)} {...props} />;
+  return <div className={cn(mediaBoxContentClass(), className)} {...props} />;
 }
 
 /** A strip over the picture; `bottom` pins it to the bottom edge. */

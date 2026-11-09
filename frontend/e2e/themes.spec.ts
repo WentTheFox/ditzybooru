@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 
 import { test } from './fixtures';
 
-test.use({ theme: { lightness: 'light', color: 'blue' } });
+test.use({ theme: { lightness: 'light' } });
 
 test('home, light', async ({ page, open }) => {
   await open('/');

@@ -12,7 +12,7 @@ interface Props {
  *
  * Not using `Intl`, because it depends on the ICU package availability on node.
  */
-export function formatInt(value: number): string {
+function formatInt(value: number): string {
   // eslint-disable-next-line @typescript-eslint/no-misused-spread
   const chars = [...value.toString()];
 
@@ -28,7 +28,11 @@ export function Int({ className, value }: Props) {
   return (
     // Wrapping in a `<data>` element just in case some custom CSS or user scripts
     // need the machine-readable value.
-    <data value={value} className={cn('int', className)}>
+    // Thousands are separated with a real space, which at body size reads wider
+    // than the digit gaps around it. Pulling the word spacing back in makes the
+    // groups cohere without a narrow-space character that not every font ships;
+    // `pre` keeps the separator from collapsing or wrapping.
+    <data value={value} className={cn(className)} style={{ wordSpacing: '-1.5px', whiteSpace: 'pre' }}>
       {formatInt(value)}
     </data>
   );

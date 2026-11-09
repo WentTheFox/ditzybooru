@@ -1,10 +1,7 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import { Panel, PanelBody, PanelFooter, PanelHeader } from '#/components/ui/Panel';
-import { cn } from '#/lib/utils';
-
-import type { ClassValue } from '#/lib/utils';
+import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
 
 interface SidebarBlockProps {
   title: string;
@@ -13,45 +10,35 @@ interface SidebarBlockProps {
   icon?: ReactNode;
   /** Optional link rendered at the bottom of the block. */
   footer?: { label: string; href: string };
-  className?: ClassValue;
-  bodyClassName?: ClassValue;
-  /** Whether the body keeps the panel's padding. Lists and grids opt out. */
-  flush?: boolean;
+  /** The block itself, for the in-view observers of the lazy blocks. */
+  ref?: Ref<HTMLElement>;
   children: ReactNode;
 }
 
 /**
- * A titled sidebar block, mirroring Philomena's `.block` with a
- * `.block__header--single-item` header and optional footer link. A thin
- * composition over {@link Panel} - it exists to keep the sidebar's five blocks
- * from restating the same header/footer shape.
+ * A titled sidebar block: a `Block` with a title bar, a body and an optional
+ * footer link. It exists to keep the sidebar's blocks from restating the same
+ * header/footer shape.
  */
-export function SidebarBlock({
-  title,
-  href,
-  icon,
-  footer,
-  className,
-  bodyClassName,
-  flush = true,
-  children,
-}: SidebarBlockProps) {
+export function SidebarBlock({ title, href, icon, footer, ref, children }: SidebarBlockProps) {
   const heading = (
-    <>
+    <span className="flex flex-center gap-sm">
       {icon}
       {title}
-    </>
+    </span>
   );
 
   return (
-    <Panel className={cn(className)}>
-      <PanelHeader center>{href === undefined ? heading : <Link to={href}>{heading}</Link>}</PanelHeader>
+    <Block ref={ref}>
+      <BlockHeader>{href === undefined ? heading : <Link to={href}>{heading}</Link>}</BlockHeader>
 
-      <PanelBody flush={flush} className={cn(bodyClassName)}>
-        {children}
-      </PanelBody>
+      <BlockContent>{children}</BlockContent>
 
-      {footer ? <PanelFooter href={footer.href}>{footer.label}</PanelFooter> : null}
-    </Panel>
+      {footer ? (
+        <BlockHeader sub>
+          <Link to={footer.href}>{footer.label}</Link>
+        </BlockHeader>
+      ) : null}
+    </Block>
   );
 }

@@ -1,0 +1,43 @@
+/**
+ * The only CSS of this site's own that is not tied to one component: the few
+ * generic helpers the package has no class for. Anything that needs a
+ * `.flex`, a gap, a column, a grid, a hidden-below rule or a card should use
+ * the package's component or utility instead of adding to this file.
+ */
+
+/* Anchors and focus targets land clear of the sticky header. */
+html {
+  scroll-padding-block-start: var(--header-height);
+}
+
+/* Secondary text: who made something, how many, when. The package colors
+ * muted text only inside its own components. */
+.muted-text {
+  color: var(--muted-text-color);
+}
+
+/* One line, cut off with an ellipsis rather than wrapped, so a long name cannot
+ * push the rows after it out of alignment. Needs a block or flex item that can
+ * shrink (`min-inline-size: 0`, which `.flex-grow` provides). */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Text a person typed, shown as typed: its own line breaks, and words long
+ * enough to overflow still wrap. */
+.plain-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* The package colors the links of every block and card, and its list of
+ * exceptions (`.button`, `.nav-link`, `.tag a` ...) leaves out `.pagination-link`.
+ * Pagination inside a block therefore gets link blue on its own tint, 4.2:1.
+ * Same specificity as that rule and later in the source; the current page keeps
+ * its own, more specific color. */
+.pagination a.pagination-link {
+  color: inherit;
+}

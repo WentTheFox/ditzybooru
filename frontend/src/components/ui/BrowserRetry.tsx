@@ -4,8 +4,8 @@ import { QueryErrorResetBoundary, useQueryClient } from '@tanstack/react-query';
 import type { QueryKey } from '@tanstack/react-query';
 import { CatchBoundary, useHydrated } from '@tanstack/react-router';
 
-import { Button } from '#/components/ui/Button';
-import { Notice } from '#/components/ui/Notice';
+import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Button } from '#/components/philomena/Button';
 import { failedOnServer } from '#/lib/api/ssr-failures';
 
 interface Props {
@@ -29,7 +29,11 @@ export function BrowserRetry({ queryKey, label, children }: Props) {
   const [serverFailed] = useState(() => failedOnServer(queryClient, queryKey));
 
   const pending = serverFailed ? (
-    <Notice variant="warning">Could not load {label} on the server. Retrying...</Notice>
+    <Alert type="warning">
+      <AlertContent>
+        <AlertText>Could not load {label} on the server. Retrying...</AlertText>
+      </AlertContent>
+    </Alert>
   ) : null;
 
   if (!hydrated && serverFailed) {
@@ -42,18 +46,22 @@ export function BrowserRetry({ queryKey, label, children }: Props) {
         <CatchBoundary
           getResetKey={() => label}
           errorComponent={({ reset }) => (
-            <Notice variant="danger">
-              Could not load {label}.
-              <Button
-                size="sm"
-                onClick={() => {
-                  resetQueries();
-                  reset();
-                }}
-              >
-                Retry
-              </Button>
-            </Notice>
+            <Alert type="danger">
+              <AlertContent>
+                <AlertText>Could not load {label}.</AlertText>
+              </AlertContent>
+              <AlertActions>
+                <Button
+                  sizeBadge
+                  onClick={() => {
+                    resetQueries();
+                    reset();
+                  }}
+                >
+                  Retry
+                </Button>
+              </AlertActions>
+            </Alert>
           )}
         >
           <Suspense fallback={pending}>{children}</Suspense>

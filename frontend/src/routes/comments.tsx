@@ -2,6 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 
 import { CommunityPost } from '#/components/ui/CommunityPost';
 import { Pagination } from '#/components/ui/Pagination';
+import { ContentContainer } from '#/components/philomena/Content';
+import { Flex } from '#/components/philomena/Layout';
 import { QueryState } from '#/components/ui/QueryState';
 import { useLiveQuery } from '#/hooks/use-live-query';
 import { prefetchLive } from '#/lib/api/prefetch';
@@ -38,14 +40,14 @@ function CommentsPage() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(commentsQuery(cq, page, COMMENTS_PER_PAGE));
 
   return (
-    <div className="content-page">
-      <h1 className="content-page__title">Comments</h1>
+    <ContentContainer>
+      <h1>Comments</h1>
       <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="list of comments">
         {list => (
-          <>
+          <Flex column gap="lg">
             {list.items.map(comment => (
               <div key={comment.id}>
-                <p className="content-page__meta">
+                <p className="muted-text">
                   <Link to="/images/$id" params={{ id: comment.imageId }} hash={`comment_${comment.id}`}>
                     Image #{comment.imageId}
                   </Link>
@@ -63,9 +65,9 @@ function CommentsPage() {
                 }}
               />
             ) : null}
-          </>
+          </Flex>
         )}
       </QueryState>
-    </div>
+    </ContentContainer>
   );
 }

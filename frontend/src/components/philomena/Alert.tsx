@@ -3,16 +3,14 @@ import { cn } from '#/lib/utils';
 import { colorClass } from './props';
 import type { ColorType, PropsOf } from './props';
 
-/** A message block. Neutral unless given a `type`. */
+/** A message block. Neutral unless given a `type`. Pass `role="alert"` for one that must be announced. */
 export function Alert({
   type,
   compact = false,
   className,
   ...props
 }: PropsOf<'div'> & { type?: ColorType; compact?: boolean }) {
-  return (
-    <div role="alert" className={cn('alert', colorClass('alert', type), compact && 'compact', className)} {...props} />
-  );
+  return <div className={cn('alert', colorClass('alert', type), compact && 'compact', className)} {...props} />;
 }
 
 export function AlertIcon({ className, ...props }: PropsOf<'span'>) {

@@ -6,43 +6,36 @@ import { useDataSource } from '#/hooks/use-data-source';
 import { useInView } from '#/hooks/use-in-view';
 import { liveStreamsQuery } from '#/lib/api/queries';
 import type { LiveStreamChannel } from '#/lib/types';
-import { Badge, BadgeDot } from '#/components/ui/Badge';
-import { Button } from '#/components/ui/Button';
+import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Badge } from '#/components/philomena/Badge';
+import { Button, ButtonText } from '#/components/philomena/Button';
 import { Int } from '#/components/ui/Int';
-import { PanelList } from '#/components/ui/Panel';
 import { SidebarBlock } from './SidebarBlock';
 
 function ChannelStrip({ channel }: { channel: LiveStreamChannel }) {
   return (
-    <li className="channel-row">
+    <li>
       <Link
         // @ts-expect-error TODO: route not built yet
         to={`/channels/${channel.id}`}
-        className="channel-row__link"
+        className="flex flex-center gap-md"
       >
-        <span className="channel-row__title">
+        <span className="flex-grow truncate">
           {channel.title}
           {channel.nsfw ? <span title="NSFW"> 🔞</span> : null}
         </span>
 
         {channel.isLive ? (
-          <span className="channel-row__status">
-            <span className="channel-row__viewers">
+          <span className="flex flex-center gap-md flex-fixed">
+            <span className="muted-text">
               <Int value={channel.viewers} /> {channel.viewers === 1 ? 'viewer' : 'viewers'}
             </span>
-            <Badge variant="success">
-              <BadgeDot />
-              {/* Fredoka fits a bare stem so tight that the "IV" reads as one
-                  letter. Only this pair needs the air, so it is split here
-                  rather than tracked out across every badge on the site. The
-                  wrapper keeps the halves out of the badge's flex `gap`. */}
-              <span>
-                LI<span className="channel-row__kern">VE</span>
-              </span>
-            </Badge>
+            <Badge type="success">LIVE</Badge>
           </span>
         ) : (
-          <Badge variant="danger">OFF AIR</Badge>
+          <Badge type="danger" className="flex-fixed">
+            OFF AIR
+          </Badge>
         )}
       </Link>
     </li>
@@ -83,34 +76,37 @@ export function LiveStreamsBlock() {
   let body;
   if (channels !== undefined) {
     body = (
-      <PanelList>
+      <ul className="flex flex-column gap-md">
         {liveFirst(channels).map(channel => (
           <ChannelStrip key={channel.id} channel={channel} />
         ))}
-      </PanelList>
+      </ul>
     );
   } else if (isError) {
     body = (
-      <div className="live-streams__status">
-        <span className="channel-row__viewers">Could not load the streams.</span>
-        <Button
-          onClick={() => {
-            void refetch();
-          }}
-        >
-          Retry
-        </Button>
-      </div>
+      <Alert type="danger" compact>
+        <AlertContent>
+          <AlertText>Could not load the streams.</AlertText>
+        </AlertContent>
+        <AlertActions>
+          <Button
+            sizeBadge
+            onClick={() => {
+              void refetch();
+            }}
+          >
+            <ButtonText>Retry</ButtonText>
+          </Button>
+        </AlertActions>
+      </Alert>
     );
   } else {
-    body = <div className="live-streams__status channel-row__viewers">Loading&hellip;</div>;
+    body = <p className="muted-text">Loading&hellip;</p>;
   }
 
   return (
-    <div ref={ref}>
-      <SidebarBlock title="Live Streams" href="/channels" icon={<Radio size={16} />}>
-        {body}
-      </SidebarBlock>
-    </div>
+    <SidebarBlock ref={ref} title="Live Streams" href="/channels" icon={<Radio size={16} />}>
+      {body}
+    </SidebarBlock>
   );
 }

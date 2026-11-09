@@ -2,9 +2,9 @@ import { cn } from '#/lib/utils';
 
 import type { PropsOf } from './props';
 
-/** The page content column and its container. */
-export function Content({ className, ...props }: PropsOf<'main'>) {
-  return <main className={cn('content', className)} {...props} />;
+/** The page content column and its container. A `div`: the page shell owns the one `main`. */
+export function Content({ className, ...props }: PropsOf<'div'>) {
+  return <div className={cn('content', className)} {...props} />;
 }
 
 export function ContentContainer({ className, ...props }: PropsOf<'div'>) {

@@ -1,0 +1,7 @@
+/* A menu is hidden outright once a link in it was followed (see `NavDropdown`):
+ * the package opens it on hover and focus only, with nothing to close it after
+ * a client-side navigation. Same specificity as the package's hover rule, later
+ * in the source. */
+.navbar .navbar-dropdown[data-dismissed] > .navbar-menu {
+  display: none;
+}

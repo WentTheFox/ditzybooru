@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
-import type { CSSProperties } from 'react';
 import { Link } from '@tanstack/react-router';
 import { ArrowBigDown, ArrowBigUp, EyeOff, FolderPlus, Link2, MoreHorizontal, Star } from 'lucide-react';
 
 import type { Media } from '#/lib/types';
 import { useImageInteraction } from '#/hooks/use-image-interaction';
 import { Int } from '#/components/ui/Int';
-import { Menu, MenuButton } from '#/components/ui/Menu';
-import { cn } from '#/lib/utils';
-import { MediaThumb, imageTitle } from './MediaThumb';
+import { Dropdown, DropdownIcon, DropdownItem, DropdownMenu } from '#/components/philomena/Dropdown';
+import {
+  MediaBox as PhilomenaMediaBox,
+  MediaBoxHeader,
+  MediaBoxOverlay,
+  MediaBoxScore,
+  MediaBoxVeil,
+  mediaBoxActionClass,
+  mediaBoxContentClass,
+} from '#/components/philomena/MediaBox';
 
 import type { ClassValue } from '#/lib/utils';
 
@@ -39,16 +45,20 @@ function CommentBubble() {
 }
 
 interface InteractionButtonProps {
-  /** BEM modifier picking the action's accent, e.g. `media-action--fave`. */
-  modifier?: string;
+  /** The action's kind, which picks its color in the stylesheet. */
+  kind: 'fave' | 'upvote' | 'downvote';
   onClick: () => void;
-  active?: boolean;
+  active: boolean;
   title: string;
-  label: string;
   children: React.ReactNode;
 }
 
-function InteractionButton({ modifier, onClick, active = false, title, label, children }: InteractionButtonProps) {
+/**
+ * A toggle in the action bar. The package's `MediaBoxAction` is an anchor, and
+ * these change state rather than navigate, so they are buttons wearing the
+ * same classes.
+ */
+function InteractionButton({ kind, onClick, active, title, children }: InteractionButtonProps) {
   return (
     <button
       type="button"
@@ -56,10 +66,9 @@ function InteractionButton({ modifier, onClick, active = false, title, label, ch
       title={title}
       aria-label={title}
       aria-pressed={active}
-      className={cn('media-action', modifier)}
+      className={mediaBoxActionClass(kind, active)}
     >
       {children}
-      <span className="visually-hidden">{label}</span>
     </button>
   );
 }
@@ -68,9 +77,8 @@ function InteractionButton({ modifier, onClick, active = false, title, label, ch
  * The card's overflow menu: the actions that are used rarely enough not to earn
  * a permanent slot in a bar this dense.
  *
- * Click-to-open rather than the hover-revealed {@link Dropdown} used in the
- * header - a grid is dozens of these, and sweeping the pointer across it would
- * flick menus open the whole way.
+ * Click-to-open rather than hover-revealed - a grid is dozens of these, and
+ * sweeping the pointer across it would flick menus open the whole way.
  */
 function MediaBoxMenu({
   image,
@@ -115,10 +123,10 @@ function MediaBoxMenu({
   };
 
   return (
-    <div className="media-box__more" ref={ref}>
+    <Dropdown ref={ref} manual open={open} className="media-box__more">
       <button
         type="button"
-        className="media-action"
+        className={mediaBoxActionClass('hide')}
         title="More"
         aria-label="More actions"
         aria-haspopup="menu"
@@ -130,41 +138,60 @@ function MediaBoxMenu({
         <MoreHorizontal size={14} />
       </button>
 
-      {open ? (
-        <Menu className="media-box__menu">
-          <MenuButton
-            onClick={() => {
-              void navigator.clipboard.writeText(new URL(`/images/${image.id}`, location.origin).href);
-              close();
-            }}
-          >
+      <DropdownMenu end role="menu">
+        <DropdownItem
+          as="button"
+          type="button"
+          role="menuitem"
+          onClick={() => {
+            void navigator.clipboard.writeText(new URL(`/images/${image.id}`, location.origin).href);
+            close();
+          }}
+        >
+          <DropdownIcon>
             <Link2 size={14} />
-            Copy link
-          </MenuButton>
-          <MenuButton
-            selected={inGallery}
-            onClick={() => {
-              onToggleGallery();
-              close();
-            }}
-          >
+          </DropdownIcon>
+          Copy link
+        </DropdownItem>
+        <DropdownItem
+          as="button"
+          type="button"
+          role="menuitemcheckbox"
+          aria-checked={inGallery}
+          current={inGallery}
+          onClick={() => {
+            onToggleGallery();
+            close();
+          }}
+        >
+          <DropdownIcon>
             <FolderPlus size={14} />
-            {inGallery ? 'Remove from gallery' : 'Add to gallery'}
-          </MenuButton>
-          <MenuButton
-            selected={hidden}
-            onClick={() => {
-              onToggleHidden();
-              close();
-            }}
-          >
+          </DropdownIcon>
+          {inGallery ? 'Remove from gallery' : 'Add to gallery'}
+        </DropdownItem>
+        <DropdownItem
+          as="button"
+          type="button"
+          role="menuitemcheckbox"
+          aria-checked={hidden}
+          current={hidden}
+          onClick={() => {
+            onToggleHidden();
+            close();
+          }}
+        >
+          <DropdownIcon>
             <EyeOff size={14} />
-            {hidden ? 'Unhide' : 'Hide'}
-          </MenuButton>
-        </Menu>
-      ) : null}
-    </div>
+          </DropdownIcon>
+          {hidden ? 'Unhide' : 'Hide'}
+        </DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
   );
+}
+
+function imageTitle(image: Media): string {
+  return `Size: ${image.width}x${image.height} | Tagged: ${image.tags.join(', ')}`;
 }
 
 interface MediaBoxProps {
@@ -172,84 +199,97 @@ interface MediaBoxProps {
   image: Media;
   /** Which representation to render; defaults to the standard thumb. */
   src?: string;
+  /** Whether the interaction bar is drawn. The featured image goes without. */
+  bar?: boolean;
 }
 
 /**
  * A single image thumbnail with Philomena's interaction bar (fave / upvote /
  * score / downvote / comments / more). Interactions update the on-screen
  * counters optimistically via {@link useImageInteraction}.
+ *
+ * The overflow menu's panel is let out of the action bar's clipping (see
+ * `MediaBox.css`).
  */
-export function MediaBox({ className, image, src = image.representations.thumb }: MediaBoxProps) {
+export function MediaBox({ className, image, src = image.representations.thumb, bar = true }: MediaBoxProps) {
   const interaction = useImageInteraction(image);
 
-  return (
-    /* The aspect ratio is what the justified layout sizes the card by; the
-     * square layouts ignore it. */
-    <article
-      className={cn('media-box', className)}
-      style={{ '--media-aspect': image.width / image.height } as CSSProperties}
-    >
-      <div className="media-box-bar">
-        <InteractionButton
-          modifier="media-action--fave"
-          onClick={interaction.toggleFave}
-          active={interaction.faved}
-          title="Fave!"
-          label="Faves"
-        >
-          {/* Not showing the fave count, to keep the bar from crowding. */}
-          <Star size={14} fill={interaction.faved ? 'currentColor' : 'none'} />
-        </InteractionButton>
+  const title = imageTitle(image);
+  const spoilered = image.spoilered && !interaction.hidden;
+  const veiled = interaction.hidden || spoilered;
+  const isVideo = image.mimeType === 'video/webm';
+  // The element follows the file, not the media type: thumbnail sizes come
+  // through as `.gif` stills, and only the larger ones stay video.
+  const playable = src.endsWith('.webm');
 
-        <span className="media-box__votes">
+  return (
+    <PhilomenaMediaBox className={className} spoilered={spoilered} muted={interaction.hidden}>
+      {bar ? (
+        <MediaBoxHeader actions>
+          <InteractionButton kind="fave" onClick={interaction.toggleFave} active={interaction.faved} title="Fave!">
+            {/* Not showing the fave count, to keep the bar from crowding. */}
+            <Star size={14} fill={interaction.faved ? 'currentColor' : 'none'} />
+          </InteractionButton>
+
           <InteractionButton
-            modifier="media-action--up"
+            kind="upvote"
             onClick={interaction.toggleUpvote}
             active={interaction.vote === 'up'}
             title="Yay!"
-            label="Upvote"
           >
             <ArrowBigUp size={14} fill={interaction.vote === 'up' ? 'currentColor' : 'none'} />
           </InteractionButton>
           {/* Deliberately not `<Int>`: the thousands separator buys nothing on a
               3-4 digit score and its extra glyph is real width in a bar this
               tight. */}
-          <span
-            className={cn(
-              'media-score',
-              interaction.score > 0 && 'media-score--positive',
-              interaction.score < 0 && 'media-score--negative',
-            )}
-            title="Score"
-          >
-            {interaction.score}
-          </span>
+          <MediaBoxScore title="Score">{interaction.score}</MediaBoxScore>
           <InteractionButton
-            modifier="media-action--down"
+            kind="downvote"
             onClick={interaction.toggleDownvote}
             active={interaction.vote === 'down'}
             title="Neigh!"
-            label="Downvote"
           >
             <ArrowBigDown size={14} fill={interaction.vote === 'down' ? 'currentColor' : 'none'} />
           </InteractionButton>
-        </span>
 
-        <Link to="/images/$id" params={{ id: image.id }} hash="comments" title="Comments" className="media-action">
-          <CommentBubble />
-          <Int className="media-action__count" value={image.commentCount} />
-        </Link>
+          <Link
+            to="/images/$id"
+            params={{ id: image.id }}
+            hash="comments"
+            title="Comments"
+            className={mediaBoxActionClass('comments')}
+          >
+            <CommentBubble />
+            <Int value={image.commentCount} />
+          </Link>
 
-        <MediaBoxMenu
-          image={image}
-          hidden={interaction.hidden}
-          onToggleHidden={interaction.toggleHidden}
-          inGallery={interaction.inGallery}
-          onToggleGallery={interaction.toggleGallery}
-        />
-      </div>
+          <MediaBoxMenu
+            image={image}
+            hidden={interaction.hidden}
+            onToggleHidden={interaction.toggleHidden}
+            inGallery={interaction.inGallery}
+            onToggleGallery={interaction.toggleGallery}
+          />
+        </MediaBoxHeader>
+      ) : null}
 
-      <MediaThumb image={image} src={src} title={imageTitle(image)} hidden={interaction.hidden} />
-    </article>
+      {/* The package's content area is itself the link. */}
+      <Link to="/images/$id" params={{ id: image.id }} title={title} className={mediaBoxContentClass()}>
+        {playable ? (
+          <video src={src} aria-label={title} autoPlay loop muted playsInline disablePictureInPicture />
+        ) : (
+          <img src={src} alt={title} loading="lazy" />
+        )}
+        {veiled ? (
+          <MediaBoxVeil>
+            <span className="flex flex-column flex-center gap-sm">
+              <EyeOff size={20} aria-hidden="true" />
+              {interaction.hidden ? 'Hidden' : 'Spoilered'}
+            </span>
+          </MediaBoxVeil>
+        ) : null}
+        {isVideo && !veiled ? <MediaBoxOverlay bottom>WebM</MediaBoxOverlay> : null}
+      </Link>
+    </PhilomenaMediaBox>
   );
 }

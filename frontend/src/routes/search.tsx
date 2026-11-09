@@ -2,10 +2,12 @@ import { useEffect, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
+import { ContentContainer } from '#/components/philomena/Content';
 import { MediaGrid, SEARCH_RESULTS_ID, SEARCH_RESULTS_TRANSITION } from '#/components/home/MediaGrid';
 import { useMediaSearch } from '#/hooks/use-media-search';
 import { unwrap } from '#/lib/assertions';
 import { mediaSearchQuery } from '#/lib/api/queries';
+import { MEDIA_PER_PAGE } from '#/lib/media';
 
 /** The search this page ran. `*` is every image, as in Philomena. */
 export interface SearchParams {
@@ -37,7 +39,7 @@ export const Route = createFileRoute('/search')({
         ...mediaSearchQuery(settings.dataSource, {
           query: deps.q,
           page: deps.page,
-          perPage: settings.components.mediaPerPage,
+          perPage: MEDIA_PER_PAGE,
         }),
         staleTime: 'static',
       })
@@ -61,7 +63,7 @@ function SearchPage() {
   }, []);
 
   return (
-    <div className="search-page">
+    <ContentContainer>
       <MediaGrid
         ref={gridRef}
         id={SEARCH_RESULTS_ID}
@@ -85,6 +87,6 @@ function SearchPage() {
           },
         }}
       />
-    </div>
+    </ContentContainer>
   );
 }

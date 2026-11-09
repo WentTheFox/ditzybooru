@@ -26,7 +26,6 @@ import { Route as ProfilesSlugRouteImport } from './routes/profiles/$slug';
 import { Route as SessionsNewRouteImport } from './routes/sessions/new';
 import { Route as SettingsAccountRouteImport } from './routes/settings/account';
 import { Route as SettingsDeveloperRouteImport } from './routes/settings/developer';
-import { Route as SettingsDisplayRouteImport } from './routes/settings/display';
 import { Route as TagsSlugRouteImport } from './routes/tags/$slug';
 import { Route as ApiV1SplatRouteImport } from './routes/api/v1/$';
 import { Route as ForumsForumIndexRouteImport } from './routes/forums/$forum/index';
@@ -117,11 +116,6 @@ const SettingsDeveloperRoute = SettingsDeveloperRouteImport.update({
   path: '/settings/developer',
   getParentRoute: () => rootRouteImport,
 } as any);
-const SettingsDisplayRoute = SettingsDisplayRouteImport.update({
-  id: '/settings/display',
-  path: '/settings/display',
-  getParentRoute: () => rootRouteImport,
-} as any);
 const TagsSlugRoute = TagsSlugRouteImport.update({
   id: '/tags/$slug',
   path: '/tags/$slug',
@@ -157,7 +151,6 @@ export interface FileRoutesByFullPath {
   '/sessions/new': typeof SessionsNewRoute;
   '/settings/account': typeof SettingsAccountRoute;
   '/settings/developer': typeof SettingsDeveloperRoute;
-  '/settings/display': typeof SettingsDisplayRoute;
   '/tags/$slug': typeof TagsSlugRoute;
   '/channels/': typeof ChannelsIndexRoute;
   '/filters/': typeof FiltersIndexRoute;
@@ -181,7 +174,6 @@ export interface FileRoutesByTo {
   '/sessions/new': typeof SessionsNewRoute;
   '/settings/account': typeof SettingsAccountRoute;
   '/settings/developer': typeof SettingsDeveloperRoute;
-  '/settings/display': typeof SettingsDisplayRoute;
   '/tags/$slug': typeof TagsSlugRoute;
   '/channels': typeof ChannelsIndexRoute;
   '/filters': typeof FiltersIndexRoute;
@@ -206,7 +198,6 @@ export interface FileRoutesById {
   '/sessions/new': typeof SessionsNewRoute;
   '/settings/account': typeof SettingsAccountRoute;
   '/settings/developer': typeof SettingsDeveloperRoute;
-  '/settings/display': typeof SettingsDisplayRoute;
   '/tags/$slug': typeof TagsSlugRoute;
   '/channels/': typeof ChannelsIndexRoute;
   '/filters/': typeof FiltersIndexRoute;
@@ -232,7 +223,6 @@ export interface FileRouteTypes {
     | '/sessions/new'
     | '/settings/account'
     | '/settings/developer'
-    | '/settings/display'
     | '/tags/$slug'
     | '/channels/'
     | '/filters/'
@@ -256,7 +246,6 @@ export interface FileRouteTypes {
     | '/sessions/new'
     | '/settings/account'
     | '/settings/developer'
-    | '/settings/display'
     | '/tags/$slug'
     | '/channels'
     | '/filters'
@@ -280,7 +269,6 @@ export interface FileRouteTypes {
     | '/sessions/new'
     | '/settings/account'
     | '/settings/developer'
-    | '/settings/display'
     | '/tags/$slug'
     | '/channels/'
     | '/filters/'
@@ -305,7 +293,6 @@ export interface RootRouteChildren {
   SessionsNewRoute: typeof SessionsNewRoute;
   SettingsAccountRoute: typeof SettingsAccountRoute;
   SettingsDeveloperRoute: typeof SettingsDeveloperRoute;
-  SettingsDisplayRoute: typeof SettingsDisplayRoute;
   TagsSlugRoute: typeof TagsSlugRoute;
   ChannelsIndexRoute: typeof ChannelsIndexRoute;
   FiltersIndexRoute: typeof FiltersIndexRoute;
@@ -437,13 +424,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsDeveloperRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    '/settings/display': {
-      id: '/settings/display';
-      path: '/settings/display';
-      fullPath: '/settings/display';
-      preLoaderRoute: typeof SettingsDisplayRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     '/tags/$slug': {
       id: '/tags/$slug';
       path: '/tags/$slug';
@@ -489,7 +469,6 @@ const rootRouteChildren: RootRouteChildren = {
   SessionsNewRoute: SessionsNewRoute,
   SettingsAccountRoute: SettingsAccountRoute,
   SettingsDeveloperRoute: SettingsDeveloperRoute,
-  SettingsDisplayRoute: SettingsDisplayRoute,
   TagsSlugRoute: TagsSlugRoute,
   ChannelsIndexRoute: ChannelsIndexRoute,
   FiltersIndexRoute: FiltersIndexRoute,

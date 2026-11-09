@@ -1,79 +1,73 @@
 import { Link } from '@tanstack/react-router';
-import { ChevronDown, Heart, Mail } from 'lucide-react';
+import { Heart, Mail } from 'lucide-react';
 
-import { Dropdown } from '#/components/ui/Dropdown';
-import { Menu, MenuLink } from '#/components/ui/Menu';
+import { Counter } from '#/components/philomena/Badge';
+import {
+  Navbar,
+  NavbarIcon,
+  NavbarItem,
+  NavbarMenuIcon,
+  NavbarMenuItem,
+  NavbarMenuText,
+} from '#/components/philomena/Navbar';
 import { primaryNav } from '#/lib/mock/site';
-import { toneStyle } from '#/lib/tone';
 import type { NavItem } from '#/lib/mock/site';
+import { NavDropdown } from './NavDropdown';
 
 function NavEntry({ item }: { item: NavItem }) {
   const children = item.children ?? [];
   const Icon = item.icon;
-  const counter = item.counter === undefined ? null : <span className="nav-link__count">{item.counter}</span>;
+
+  const link = (
+    <NavbarItem as={Link} to={item.href} caret={children.length > 0}>
+      <NavbarIcon>
+        <Icon size={14} />
+      </NavbarIcon>
+      {item.label}
+      {item.counter === undefined ? null : <Counter subtle>{item.counter}</Counter>}
+    </NavbarItem>
+  );
 
   if (children.length === 0) {
-    return (
-      <Link to={item.href} className="nav-link" style={toneStyle(item.tone)}>
-        <Icon className="nav-link__icon" size={14} />
-        {item.label}
-        {counter}
-      </Link>
-    );
+    return link;
   }
 
   return (
-    <Dropdown
-      trigger={
-        <Link to={item.href} className="nav-link" style={toneStyle(item.tone)}>
-          <Icon className="nav-link__icon" size={14} />
-          {item.label}
-          {counter}
-          <ChevronDown className="dropdown__chevron" size={14} />
-        </Link>
-      }
-    >
-      <Menu>
-        {children.map(child => (
-          <MenuLink key={child.href} href={child.href}>
-            {child.label}
-          </MenuLink>
-        ))}
-      </Menu>
-    </Dropdown>
+    <NavDropdown trigger={link}>
+      {children.map(child => (
+        <NavbarMenuItem key={child.href} as={Link} to={child.href}>
+          <NavbarMenuIcon />
+          <NavbarMenuText>{child.label}</NavbarMenuText>
+        </NavbarMenuItem>
+      ))}
+    </NavDropdown>
   );
 }
 
 /**
  * The secondary navigation bar: the sections (Forums / Comments / Galleries /
- * …) followed by Donate and Contact. Hidden on small screens, where its
- * contents live in the {@link MobileMenu} instead.
+ * ...) followed by Donate and Contact. Hidden on small screens, where its
+ * contents live in the burger menu instead.
  */
 export function HeaderNav() {
   return (
-    <nav className="nav-bar nav-bar--sub" aria-label="Sections">
+    <Navbar className="hidden-below-md" aria-label="Sections">
       {primaryNav.map(item => (
         <NavEntry key={item.href} item={item} />
       ))}
 
-      <Link
-        // @ts-expect-error TODO: route not built yet
-        to="/pages/donations"
-        className="nav-link nav-link--donate"
-        title="Become a patron or donate"
-      >
-        <Heart size={14} />
+      <NavbarItem as={Link} to="/pages/donations" title="Become a patron or donate">
+        <NavbarIcon>
+          <Heart size={14} />
+        </NavbarIcon>
         Donate
-      </Link>
-      <Link
-        // @ts-expect-error TODO: route not built yet
-        to="/pages/contact"
-        className="nav-link"
-        title="Contact us"
-      >
-        <Mail size={14} />
+      </NavbarItem>
+      <NavbarItem as={Link} to="/pages/contact" title="Contact us">
+        <NavbarIcon>
+          <Mail size={14} />
+        </NavbarIcon>
         Contact
-      </Link>
-    </nav>
+      </NavbarItem>
+    </Navbar>
   );
 }

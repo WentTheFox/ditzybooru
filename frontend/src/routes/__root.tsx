@@ -3,11 +3,12 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import type { QueryClient } from '@tanstack/react-query';
+import { ContentContainer } from '#/components/philomena/Content';
 import { BottomNav } from '#/components/layout/BottomNav';
 import { SiteHeader } from '#/components/layout/SiteHeader';
 import { SiteFooter } from '#/components/layout/SiteFooter';
 import { useOwnApiKey } from '#/hooks/use-own-api-key';
-import { SiteContext } from '#/hooks/use-site';
+import { SiteContext, useSite } from '#/hooks/use-site';
 import { SsrSettingsContext, useSettings } from '#/hooks/use-settings';
 import { currentSite } from '#/lib/current-site';
 import { readSettings, settingsAttributes } from '#/lib/settings';
@@ -58,10 +59,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 /** A path nothing answers, or a thing the site says is not there. The response is a 404. */
 function NotFound() {
   return (
-    <div className="content-page">
-      <h1 className="content-page__title">Not found</h1>
-      <p className="content-page__meta">There is nothing at this address.</p>
-    </div>
+    <>
+      <h1>Not found</h1>
+      <p>There is nothing at this address.</p>
+    </>
   );
 }
 
@@ -82,14 +83,15 @@ function RootComponent() {
  * calls `useSettings`. */
 function Document() {
   const settings = useSettings();
+  const site = useSite();
   useOwnApiKey();
   const colorScheme = settings.lightness === 'system' ? 'light dark' : settings.lightness;
 
   return (
-    <html lang="en" {...settingsAttributes(settings)}>
+    <html lang="en" {...settingsAttributes(settings, site.themeColor)}>
       <head>
         {/* The UA paints its canvas and native controls before the stylesheet
-            lands, so this cannot live only in `_polarity.css`. */}
+            lands, so this cannot live only in the stylesheet. */}
         <meta name="color-scheme" content={colorScheme} />
         <HeadContent />
       </head>
@@ -97,10 +99,12 @@ function Document() {
       the <body> which generates a huge error in console. So we suppress
       that warning on this node. */}
       <body suppressHydrationWarning>
-        <div className="app-shell">
+        <div className="app-shell flex flex-column">
           <SiteHeader />
-          <main className="app-shell__main">
-            <Outlet />
+          <main className="flex-grow">
+            <ContentContainer>
+              <Outlet />
+            </ContentContainer>
           </main>
           <SiteFooter />
           <BottomNav />

@@ -6,11 +6,11 @@ import type { Attribution } from '#/lib/types';
 export function UserAttribution({ author }: { author: Attribution }) {
   if (author.user) {
     return (
-      <Link to="/profiles/$slug" params={{ slug: author.user.slug }} className="user-attribution">
-        {author.user.name}
+      <Link to="/profiles/$slug" params={{ slug: author.user.slug }}>
+        <strong>{author.user.name}</strong>
       </Link>
     );
   }
 
-  return <span className="user-attribution">{author.anonymousName ?? 'Anonymous'}</span>;
+  return <strong>{author.anonymousName ?? 'Anonymous'}</strong>;
 }

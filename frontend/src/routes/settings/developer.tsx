@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { Notice, NoticeTitle } from '#/components/ui/Notice';
-import { Panel, PanelBody, PanelHeader } from '#/components/ui/Panel';
-import { Segmented } from '#/components/ui/Segmented';
+import { Alert, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { FormControlGroup, FormMessage, Radio } from '#/components/philomena/Forms';
+import { Flex, LayoutNarrow } from '#/components/philomena/Layout';
+import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
 import { useDataSource } from '#/hooks/use-data-source';
 import { setDataSource } from '#/lib/settings-store';
 import type { DataSourceKind } from '#/lib/api/types';
@@ -27,36 +28,49 @@ function DeveloperSettingsPage() {
   const dataSource = useDataSource();
 
   return (
-    <div className="developer-page">
-      <h1 className="developer-page__title">Developer settings</h1>
+    <LayoutNarrow center>
+      <Flex column gap="lg">
+        <h1>Developer settings</h1>
 
-      <Notice>
-        <NoticeTitle>For working on the site</NoticeTitle>
-        These change where the page gets its content, not how it looks. They are stored in the same cookie as every
-        other setting, so the server renders from whichever one is chosen here.
-      </Notice>
+        <Alert>
+          <AlertContent>
+            <AlertTitle>For working on the site</AlertTitle>
+            <AlertText>
+              These change where the page gets its content, not how it looks. They are stored in the same cookie as
+              every other setting, so the server renders from whichever one is chosen here.
+            </AlertText>
+          </AlertContent>
+        </Alert>
 
-      <Panel>
-        <PanelHeader>Data source</PanelHeader>
-        <PanelBody className="developer-setting">
-          <div className="developer-setting__text">
-            <span className="developer-setting__label">Where images, comments and topics come from</span>
-            <span className="developer-setting__hint">
-              Mock data never changes and needs no network, which is what makes a layout comparable between two runs.
-              Live data is read-only and anonymous: the origin&apos;s default filter applies, and faves and watched tags
-              are empty until sign-in exists.
-            </span>
-          </div>
-          <Segmented
-            label="Data source"
-            value={dataSource}
-            options={DATA_SOURCE_OPTIONS}
-            onChange={value => {
-              setDataSource(value);
-            }}
-          />
-        </PanelBody>
-      </Panel>
-    </div>
+        <Block>
+          <BlockHeader>Data source</BlockHeader>
+          <BlockContent>
+            <FormControlGroup vertical role="radiogroup" aria-label="Data source">
+              <FormMessage>
+                Mock data never changes and needs no network, which is what makes a layout comparable between two runs.
+                Live data is read-only and anonymous: the origin&apos;s default filter applies, and faves and watched
+                tags are empty until sign-in exists.
+              </FormMessage>
+              {DATA_SOURCE_OPTIONS.map(option => (
+                <Radio
+                  key={option.value}
+                  name="data-source"
+                  value={option.value}
+                  checked={dataSource === option.value}
+                  onChange={() => {
+                    setDataSource(option.value);
+                  }}
+                  label={
+                    <>
+                      <strong>{option.label}</strong> - {option.description}
+                    </>
+                  }
+                />
+              ))}
+            </FormControlGroup>
+          </BlockContent>
+        </Block>
+      </Flex>
+    </LayoutNarrow>
   );
 }

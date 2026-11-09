@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 
-import { Panel, PanelBody, PanelHeader } from '#/components/ui/Panel';
+import { CodeSpan, ContentContainer } from '#/components/philomena/Content';
+import { Flex } from '#/components/philomena/Layout';
+import { Card, CardHeader } from '#/components/philomena/Surfaces';
 import { QueryState } from '#/components/ui/QueryState';
 import { useLiveQuery } from '#/hooks/use-live-query';
 import { prefetchLive } from '#/lib/api/prefetch';
@@ -22,13 +24,11 @@ function QuerySection({ title, complex, tagCount }: { title: string; complex: nu
   }
 
   return (
-    <Panel>
-      <PanelHeader>{title}</PanelHeader>
-      <PanelBody>
-        {tagCount === 0 ? null : <p>{tagCount.toLocaleString()} tags</p>}
-        {complex === null ? null : <code>{complex}</code>}
-      </PanelBody>
-    </Panel>
+    <Card>
+      <CardHeader>{title}</CardHeader>
+      {tagCount === 0 ? null : <p>{tagCount.toLocaleString()} tags</p>}
+      {complex === null ? null : <CodeSpan>{complex}</CodeSpan>}
+    </Card>
   );
 }
 
@@ -38,25 +38,25 @@ function FilterPage() {
   const { kind, data, error, isPending, refetch } = useLiveQuery(filterQuery(id));
 
   return (
-    <div className="content-page">
+    <ContentContainer>
       <QueryState kind={kind} data={data} error={error} isPending={isPending} refetch={refetch} what="filter">
         {filter => (
-          <>
-            <p className="content-page__meta">
+          <Flex column gap="lg">
+            <p className="muted-text">
               <Link to="/filters">Filters</Link> &raquo; {filter.name}
             </p>
-            <h1 className="content-page__title">{filter.name}</h1>
+            <h1>{filter.name}</h1>
             {filter.description === '' ? null : <p>{filter.description}</p>}
-            <p className="content-page__meta">Used by {filter.userCount.toLocaleString()} users</p>
+            <p className="muted-text">Used by {filter.userCount.toLocaleString()} users</p>
             <QuerySection title="Hidden" complex={filter.hiddenComplex} tagCount={filter.hiddenTagIds.length} />
             <QuerySection
               title="Spoilered"
               complex={filter.spoileredComplex}
               tagCount={filter.spoileredTagIds.length}
             />
-          </>
+          </Flex>
         )}
       </QueryState>
-    </div>
+    </ContentContainer>
   );
 }

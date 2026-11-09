@@ -1,18 +1,14 @@
 /**
- * Every user-chosen setting, and the one cookie that carries them.
+ * Every visitor-chosen setting, and the one cookie that carries them.
  *
- * A cookie rather than `localStorage` because the server renders the page:
- * these settings decide `<html>`'s attributes and custom properties, so they
- * have to arrive with the request or the first paint is wrong. `localStorage`
- * is invisible to the server, which is what used to force a pre-paint script,
- * and that script is what used to force `suppressHydrationWarning`.
+ * A cookie rather than `localStorage` because the server renders the page: the
+ * light/dark choice decides `<html>`'s attributes, so it has to arrive with the
+ * request or the first paint is wrong.
  *
  * Only values differing from the shipped defaults are written, so the cookie
  * stays small - it rides on every same-origin request, `/assets/*` included.
- *
- * What is NOT here: anything the browser can answer on its own. `system`
- * lightness and `system` motion are absences, left to `prefers-color-scheme`
- * and `prefers-reduced-motion` in the stylesheet.
+ * `system` lightness is an absence, left to `prefers-color-scheme` in the
+ * stylesheet.
  */
 
 import { createIsomorphicFn } from '@tanstack/react-start';
@@ -21,42 +17,19 @@ import { getCookie } from '@tanstack/react-start/server';
 import { DATA_SOURCE_KINDS } from '#/lib/api/types';
 import { CLOUDFLARE_PRODUCTION } from '#/lib/deploy';
 import type { DataSourceKind } from '#/lib/api/types';
-import {
-  DEFAULT_COMPONENT_SETTINGS,
-  componentSettingAttributes,
-  sanitizeComponentSettings,
-} from '#/lib/component-settings';
-import type { ComponentSettings, MediaFit } from '#/lib/component-settings';
-import { DEFAULT_DISPLAY_SETTINGS, displaySettingProperties, sanitizeDisplaySettings } from '#/lib/display-settings';
-import type { DisplaySettings } from '#/lib/display-settings';
-import { DEFAULT_MOTION_PREFERENCE, motionProperties } from '#/lib/motion';
-import type { MotionPreference } from '#/lib/motion';
-import { currentSite } from '#/lib/current-site';
-import { DEFAULT_THEME_LIGHTNESS_PREFERENCE, THEME_COLORS } from '#/lib/theme';
+import { DEFAULT_THEME_LIGHTNESS_PREFERENCE } from '#/lib/theme';
 import type { ThemeColor, ThemeLightness, ThemeLightnessPreference } from '#/lib/theme';
 
 export interface Settings {
   lightness: ThemeLightnessPreference;
-  color: ThemeColor;
-  motion: MotionPreference;
-  display: DisplaySettings;
-  components: ComponentSettings;
   /** Which backend the site reads from. A developer setting, offered on
    *  `/settings/developer`. */
   dataSource: DataSourceKind;
 }
 
-/**
- * What a visitor who has chosen nothing gets. Not a constant: the accent is the
- * site's own, so each site on one instance starts with its own color.
- */
-export function defaultSettings(): Settings {
+function defaultSettings(): Settings {
   return {
     lightness: DEFAULT_THEME_LIGHTNESS_PREFERENCE,
-    color: currentSite().themeColor,
-    motion: DEFAULT_MOTION_PREFERENCE,
-    display: DEFAULT_DISPLAY_SETTINGS,
-    components: DEFAULT_COMPONENT_SETTINGS,
     dataSource: CLOUDFLARE_PRODUCTION ? 'mock-anonymous' : 'live',
   };
 }
@@ -65,34 +38,23 @@ const SETTINGS_COOKIE = 'ditzy-settings';
 
 const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
-/** What `settingsAttributes` puts on `<html>`. `style` carries the display
- *  settings as custom properties, which React writes through untouched. */
+/** What `settingsAttributes` puts on `<html>`. */
 export interface SettingsAttributes {
-  'data-theme-lightness'?: ThemeLightness;
-  'data-theme-color': ThemeColor;
-  'data-media-fit': MediaFit;
-  style?: Record<string, string>;
+  'data-theme'?: ThemeLightness;
+  'data-accent': ThemeColor;
 }
 
 /**
- * The `<html>` attributes a set of settings produces, on the server and on the
- * client alike - which is what makes the two renders agree.
+ * The `<html>` attributes the settings and the site's accent produce, on the
+ * server and on the client alike - which is what makes the two renders agree.
  *
- * A default is an absent attribute rather than an explicit one. That is what
- * lets the stylesheet's `prefers-*` branches apply to a visitor who has never
- * chosen anything.
+ * `system` is an absent `data-theme`, which lets the stylesheet's
+ * `prefers-color-scheme` branch apply to a visitor who has never chosen.
  */
-export function settingsAttributes(settings: Settings): SettingsAttributes {
-  const style = {
-    ...displaySettingProperties(settings.display),
-    ...motionProperties(settings.motion),
-  };
-
+export function settingsAttributes(settings: Settings, accent: ThemeColor): SettingsAttributes {
   return {
-    ...(settings.lightness === 'system' ? {} : { 'data-theme-lightness': settings.lightness }),
-    'data-theme-color': settings.color,
-    ...componentSettingAttributes(settings.components),
-    ...(Object.keys(style).length === 0 ? {} : { style }),
+    ...(settings.lightness === 'system' ? {} : { 'data-theme': settings.lightness }),
+    'data-accent': accent,
   };
 }
 
@@ -100,20 +62,12 @@ function isThemeLightnessPreference(value: unknown): value is ThemeLightnessPref
   return value === 'light' || value === 'dark' || value === 'system';
 }
 
-function isMotionPreference(value: unknown): value is MotionPreference {
-  return value === 'on' || value === 'off' || value === 'system';
-}
-
 function isDataSourceKind(value: unknown): value is DataSourceKind {
   return DATA_SOURCE_KINDS.some(kind => kind === value);
 }
 
-function isThemeColor(value: unknown): value is ThemeColor {
-  return THEME_COLORS.some(color => color.id === value);
-}
-
 /** Rejects anything a control could not have produced, so a hand-edited cookie
- *  can never reach the stylesheet as something absurd. */
+ *  can never reach the markup as something absurd. */
 function parseSettings(raw: string | undefined): Settings {
   const defaults = defaultSettings();
   if (raw === undefined) {
@@ -133,31 +87,14 @@ function parseSettings(raw: string | undefined): Settings {
   const stored = parsed as Partial<Record<keyof Settings, unknown>>;
   return {
     lightness: isThemeLightnessPreference(stored.lightness) ? stored.lightness : defaults.lightness,
-    color: isThemeColor(stored.color) ? stored.color : defaults.color,
-    motion: isMotionPreference(stored.motion) ? stored.motion : defaults.motion,
-    display: sanitizeDisplaySettings(stored.display),
-    components: sanitizeComponentSettings(stored.components),
     dataSource: isDataSourceKind(stored.dataSource) ? stored.dataSource : defaults.dataSource,
   };
 }
 
-function omitDefaults<TSettings extends object>(settings: TSettings, defaults: TSettings): Partial<TSettings> {
-  return Object.fromEntries(
-    Object.entries(settings).filter(([key, value]) => value !== defaults[key as keyof TSettings]),
-  ) as Partial<TSettings>;
-}
-
 function settingsPayload(settings: Settings): Record<string, unknown> {
   const defaults = defaultSettings();
-  const display = omitDefaults(settings.display, DEFAULT_DISPLAY_SETTINGS);
-  const components = omitDefaults(settings.components, DEFAULT_COMPONENT_SETTINGS);
-
   return {
     ...(settings.lightness === defaults.lightness ? {} : { lightness: settings.lightness }),
-    ...(settings.color === defaults.color ? {} : { color: settings.color }),
-    ...(settings.motion === defaults.motion ? {} : { motion: settings.motion }),
-    ...(Object.keys(display).length === 0 ? {} : { display }),
-    ...(Object.keys(components).length === 0 ? {} : { components }),
     ...(settings.dataSource === defaults.dataSource ? {} : { dataSource: settings.dataSource }),
   };
 }
@@ -177,9 +114,8 @@ function readCookieFromDocument(name: string): string | undefined {
  *
  * Isomorphic on purpose: the server branch is stripped from the client bundle,
  * and both sides read the same cookie, so the server's markup and the client's
- * first render agree without either side knowing about the other. Reading it
- * per request rather than once per module is also what keeps one visitor's
- * settings out of the next visitor's response.
+ * first render agree. Reading it per request rather than once per module keeps
+ * one visitor's settings out of the next visitor's response.
  */
 export const readSettings = createIsomorphicFn()
   .server(() => parseSettings(getCookie(SETTINGS_COOKIE)))

@@ -1,30 +1,25 @@
 import { useState } from 'react';
 import type { ReactNode, Ref } from 'react';
-import { Link } from '@tanstack/react-router';
-import { MonitorCog, SlidersHorizontal } from 'lucide-react';
 
 import type { Media } from '#/lib/types';
-import { ComponentSettingsControls } from '#/components/layout/ComponentSettings';
-import { Button } from '#/components/ui/Button';
-import { Dropdown } from '#/components/ui/Dropdown';
 import { Int } from '#/components/ui/Int';
 import { Pagination } from '#/components/ui/Pagination';
-import { Panel, PanelHeader } from '#/components/ui/Panel';
-import { useComponentSettings } from '#/hooks/use-component-settings';
-import { MEDIA_GRID_SETTING_CONTROLS } from '#/lib/component-settings';
-import { cn } from '#/lib/utils';
+import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
+import { MediaList } from '#/components/philomena/MediaBox';
+import { PaginationBar, PaginationInfo } from '#/components/philomena/Pagination';
+import { MEDIA_PER_PAGE } from '#/lib/media';
 import { MediaBox } from './MediaBox';
 
 /** Thumbnail grid sizing presets. */
 type MediaGridSize =
-  /** Fixed ~150px thumbnails - used for compact lists like watched images. */
+  /** The package's small thumbnail width - used for compact lists like watched images. */
   | 'small'
-  /** ~150px thumbnails that grow to ~225px on wide viewports (Philomena's main list). */
+  /** The package's regular thumbnail width (Philomena's main list). */
   | 'large';
 
 /**
  * The `view-transition-name` shared by the home page's grid and the search
- * page's, so paging from one to the other morphs the panel rather than cutting.
+ * page's, so paging from one to the other morphs the block rather than cutting.
  * At most one element per page may carry it - two cancel the transition.
  */
 export const SEARCH_RESULTS_TRANSITION = 'search-results';
@@ -38,8 +33,8 @@ export const SEARCH_RESULTS_ID = 'search-results';
 
 /**
  * Who owns the page number. Omitted, the grid keeps its own and pages in place,
- * which is what a side block or a settings specimen wants; given, the caller
- * owns it and the grid only reports clicks.
+ * which is what a side block wants; given, the caller owns it and the grid only
+ * reports clicks.
  */
 interface MediaGridPaging {
   page: number;
@@ -52,7 +47,7 @@ interface MediaGridPaging {
 }
 
 interface MediaGridProps {
-  /** Human-readable label, rendered as the panel's title. */
+  /** Human-readable label, rendered as the block's title. */
   label: string;
   images: Array<Media>;
   /** How many images the backing query matches in total, across all pages. */
@@ -69,45 +64,12 @@ interface MediaGridProps {
   viewTransitionName?: string;
   /** Set to {@link SEARCH_RESULTS_ID} on the grid the pagination scrolls to. */
   id?: string;
-  /** The panel itself, for a page that has to move focus into the grid. */
+  /** The block itself, for a page that has to move focus into the grid. */
   ref?: Ref<HTMLElement>;
 }
 
 /**
- * The grid's own settings, in its title bar rather than in the site-wide
- * display menu: they change this component and nothing else.
- *
- * The same controls the grid's card on the display settings page carries -
- * the link at the bottom goes to that card, for the rest of the page's worth of
- * context around them.
- */
-function MediaGridSettings() {
-  return (
-    <Dropdown
-      align="end"
-      className="media-grid__settings"
-      trigger={
-        <Button variant="ghost" icon title="Grid settings" aria-label="Grid settings">
-          <MonitorCog size={16} />
-        </Button>
-      }
-    >
-      <div className="menu media-grid__settings-menu">
-        <ComponentSettingsControls controls={MEDIA_GRID_SETTING_CONTROLS} />
-
-        <hr className="menu-separator" />
-
-        <Link to="/settings/display" hash="media-grid" className="media-grid__settings-link">
-          <SlidersHorizontal size={16} />
-          More settings
-        </Link>
-      </div>
-    </Dropdown>
-  );
-}
-
-/**
- * An image gallery: a panel title bar, a responsive thumbnail grid, and a
+ * An image gallery: a block title bar, a responsive thumbnail list, and a
  * footer with pagination and the result count. Mirrors Philomena's image
  * `index`.
  */
@@ -124,74 +86,61 @@ export function MediaGrid({
   ref,
 }: MediaGridProps) {
   const [ownPage, setOwnPage] = useState(1);
-  const { mediaPerPage } = useComponentSettings();
 
   const requestedPage = paging?.page ?? ownPage;
   const setPage = paging?.onPageChange ?? setOwnPage;
 
   // The API reports how many images match, not how many pages that is, so the
-  // count follows from the page size the reader asked for.
-  const pageCount = Math.max(1, Math.ceil(total / mediaPerPage));
-  // Raising the page size shrinks the page count under a reader who is deep in
-  // the results, so the stored page is clamped rather than trusted.
+  // count follows from the page size.
+  const pageCount = Math.max(1, Math.ceil(total / MEDIA_PER_PAGE));
   const page = Math.min(requestedPage, pageCount);
-  // The source already returns a page of this size. Slicing matters only while
-  // a smaller size is on its way, and for the display page's fixed specimen.
-  const shown = images.slice(0, mediaPerPage);
-  const firstShown = (page - 1) * mediaPerPage + 1;
-
-  // The heading is visually redundant with the title bar, but the page still
-  // needs one logical heading per section for the document outline.
-  const Heading = `h${headingLevel}` as const;
+  const shown = images.slice(0, MEDIA_PER_PAGE);
+  const firstShown = (page - 1) * MEDIA_PER_PAGE + 1;
 
   return (
     // Focusable, but not tabbable. A document load on `#search-results` puts
     // focus here on its own; a client-side navigation does not, which is what
     // the search route's effect is for.
-    <Panel
-      ref={ref}
-      id={id}
-      tabIndex={-1}
-      className={cn('media-grid-panel', viewTransitionName !== undefined && 'media-grid-panel--transitioning')}
-      style={{ viewTransitionName }}
-    >
-      <Heading className="visually-hidden">{label}</Heading>
+    <Block ref={ref} id={id} tabIndex={-1} style={{ viewTransitionName }}>
+      <BlockHeader>
+        {/* A heading role rather than an `h1`/`h2`, whose own size and margins
+            do not belong in a title bar. */}
+        <span role="heading" aria-level={headingLevel} className="flex flex-center gap-sm">
+          {icon}
+          {label}
+        </span>
+      </BlockHeader>
 
-      <PanelHeader className="media-grid__title">
-        {icon}
-        {label}
-        <MediaGridSettings />
-      </PanelHeader>
-
-      <div className={cn('media-grid', `media-grid--${size}`)}>
-        {shown.map(image => (
-          <MediaBox key={image.id} image={image} />
-        ))}
-
-        {/* Soaks up the justified layout's last-row slack; see `MediaGrid.css`. */}
-        <span className="media-grid__filler" />
-      </div>
+      <BlockContent>
+        <MediaList className={size === 'small' ? 'small' : undefined}>
+          {shown.map(image => (
+            <MediaBox key={image.id} image={image} />
+          ))}
+        </MediaList>
+      </BlockContent>
 
       {/* A single page has nowhere to page to, and a count that only repeats
        * what is on screen. */}
       {pageCount > 1 ? (
-        <footer className="media-grid__footer">
-          <Pagination label={label} page={page} pageCount={pageCount} onPageChange={setPage} back={paging?.back} />
-          <span className="media-grid__count">
-            Showing{' '}
-            <strong>
-              <Int value={firstShown} />
-              &ndash;
-              <Int value={firstShown + shown.length - 1} />
-            </strong>{' '}
-            of{' '}
-            <strong>
-              <Int value={total} />
-            </strong>{' '}
-            total
-          </span>
-        </footer>
+        <BlockContent>
+          <PaginationBar>
+            <Pagination label={label} page={page} pageCount={pageCount} onPageChange={setPage} back={paging?.back} />
+            <PaginationInfo>
+              Showing{' '}
+              <strong>
+                <Int value={firstShown} />
+                &ndash;
+                <Int value={firstShown + shown.length - 1} />
+              </strong>{' '}
+              of{' '}
+              <strong>
+                <Int value={total} />
+              </strong>{' '}
+              total
+            </PaginationInfo>
+          </PaginationBar>
+        </BlockContent>
       ) : null}
-    </Panel>
+    </Block>
   );
 }

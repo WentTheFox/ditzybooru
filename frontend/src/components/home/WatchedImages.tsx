@@ -35,14 +35,13 @@ export function WatchedImages() {
   }
 
   return (
-    <div ref={ref}>
-      <MediaGrid
-        size="small"
-        label="Watched"
-        icon={<Eye size={16} />}
-        images={data?.images ?? []}
-        total={data?.total ?? 0}
-      />
-    </div>
+    <MediaGrid
+      ref={ref}
+      size="small"
+      label="Watched"
+      icon={<Eye size={16} />}
+      images={data?.images ?? []}
+      total={data?.total ?? 0}
+    />
   );
 }

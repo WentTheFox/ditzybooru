@@ -3,9 +3,6 @@
   "ignore": ["frontend/src/route-tree.gen.ts"],
   "ignoreBinaries": ["podman"],
   "workspaces": {
-    "api": { "entry": ["scripts/*.ts"] },
-    "frontend": {
-      "ignoreDependencies": ["@philomena/philomena-css"]
-    }
+    "api": { "entry": ["scripts/*.ts"] }
   }
 }

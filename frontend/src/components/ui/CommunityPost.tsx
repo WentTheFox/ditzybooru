@@ -1,8 +1,17 @@
-import { Avatar } from '#/components/ui/Avatar';
-import { Panel } from '#/components/ui/Panel';
+import { Avatar } from '#/components/philomena/Avatar';
+import {
+  Communication,
+  CommunicationAuthor,
+  CommunicationAuthorName,
+  CommunicationAvatar,
+  CommunicationBody,
+  CommunicationContent,
+  CommunicationText,
+} from '#/components/philomena/Communication';
 import { Prose } from '#/components/ui/Prose';
 import { RelativeTime } from '#/components/ui/RelativeTime';
 import type { RenderedPost } from '#/lib/api/backend/content';
+import { initials } from '#/lib/format';
 
 /**
  * A forum post or an image comment: who wrote it, when, and what they wrote.
@@ -10,20 +19,28 @@ import type { RenderedPost } from '#/lib/api/backend/content';
  */
 export function CommunityPost({ post, idPrefix }: { post: RenderedPost; idPrefix: string }) {
   return (
-    <Panel id={`${idPrefix}${post.id}`} className="post">
-      <div className="post__body">
-        <div className="post__sender">
-          <Avatar name={post.author} src={post.avatarUrl ?? null} />
-          <strong>{post.author}</strong>
-          <RelativeTime className="content-page__meta" dateTime={post.createdAt} />
-        </div>
-        {post.bodyHtml === undefined ? (
-          // Only the markup the author wrote, as plain text.
-          <p className="post__plain">{post.body}</p>
-        ) : (
-          <Prose html={post.bodyHtml} />
-        )}
-      </div>
-    </Panel>
+    <Communication id={`${idPrefix}${post.id}`}>
+      <CommunicationBody>
+        <CommunicationAvatar>
+          <Avatar size="sm" src={post.avatarUrl ?? undefined} alt={post.author}>
+            {initials(post.author)}
+          </Avatar>
+        </CommunicationAvatar>
+        <CommunicationContent>
+          <CommunicationAuthor>
+            <CommunicationAuthorName>{post.author}</CommunicationAuthorName>
+            <RelativeTime className="muted-text" dateTime={post.createdAt} />
+          </CommunicationAuthor>
+          <CommunicationText>
+            {post.bodyHtml === undefined ? (
+              // Only the markup the author wrote, as plain text.
+              <p className="plain-text">{post.body}</p>
+            ) : (
+              <Prose html={post.bodyHtml} />
+            )}
+          </CommunicationText>
+        </CommunicationContent>
+      </CommunicationBody>
+    </Communication>
   );
 }

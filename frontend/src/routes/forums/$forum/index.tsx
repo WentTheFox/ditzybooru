@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Lock, Pin } from 'lucide-react';
 
+import { Table, TableWrap } from '#/components/philomena/Surfaces';
+import { LayoutNarrow } from '#/components/philomena/Layout';
 import { Pagination } from '#/components/ui/Pagination';
-import { Panel } from '#/components/ui/Panel';
 import { QueryState } from '#/components/ui/QueryState';
 import { RelativeTime } from '#/components/ui/RelativeTime';
-import { Table, TableScroll } from '#/components/ui/Table';
 import { useLiveQuery } from '#/hooks/use-live-query';
 import { prefetchLive } from '#/lib/api/prefetch';
 import { forumQuery, forumTopicsQuery } from '#/lib/api/queries';
@@ -35,7 +35,7 @@ function ForumPage() {
   const topics = useLiveQuery(forumTopicsQuery(slug, page, TOPICS_PER_PAGE));
 
   return (
-    <div className="content-page">
+    <LayoutNarrow center>
       <QueryState
         kind={forum.kind}
         data={forum.data}
@@ -46,11 +46,11 @@ function ForumPage() {
       >
         {info => (
           <>
-            <p className="content-page__meta">
+            <p className="muted-text">
               <Link to="/forums">Forums</Link> &raquo; {info.name}
             </p>
-            <h1 className="content-page__title">{info.name}</h1>
-            <p className="content-page__meta">{info.description}</p>
+            <h1>{info.name}</h1>
+            <p className="muted-text">{info.description}</p>
           </>
         )}
       </QueryState>
@@ -64,13 +64,13 @@ function ForumPage() {
           what="list of topics"
         >
           {list => (
-            <Panel>
-              <TableScroll>
-                <Table numeric>
+            <>
+              <TableWrap responsive>
+                <Table striped hover>
                   <thead>
                     <tr>
                       <th>Topic</th>
-                      <th>Posts</th>
+                      <th className="numeric">Posts</th>
                       <th>Last reply</th>
                     </tr>
                   </thead>
@@ -83,9 +83,9 @@ function ForumPage() {
                           <Link to="/forums/$forum/topics/$topic" params={{ forum: slug, topic: topic.slug }}>
                             {topic.title}
                           </Link>
-                          <div className="content-page__meta">by {topic.author}</div>
+                          <div className="muted-text">by {topic.author}</div>
                         </td>
-                        <td>{topic.postCount}</td>
+                        <td className="numeric">{topic.postCount}</td>
                         <td>
                           <RelativeTime dateTime={topic.lastRepliedAt} />
                         </td>
@@ -93,7 +93,7 @@ function ForumPage() {
                     ))}
                   </tbody>
                 </Table>
-              </TableScroll>
+              </TableWrap>
               {list.total > TOPICS_PER_PAGE ? (
                 <Pagination
                   label="Topics"
@@ -104,10 +104,10 @@ function ForumPage() {
                   }}
                 />
               ) : null}
-            </Panel>
+            </>
           )}
         </QueryState>
       )}
-    </div>
+    </LayoutNarrow>
   );
 }
