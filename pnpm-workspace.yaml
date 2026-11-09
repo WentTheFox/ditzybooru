@@ -7,6 +7,10 @@ packages:
 # resolution and `pnpm dlx` alike.
 minimumReleaseAge: 20160
 
+# First-party package published by the site owner; exempt from the age check.
+minimumReleaseAgeExclude:
+  - '@philomena/philomena-css'
+
 # Only these packages may run install scripts.
 allowBuilds:
   esbuild: true

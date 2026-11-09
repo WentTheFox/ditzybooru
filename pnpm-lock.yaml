@@ -208,6 +208,9 @@ importers:
       '@fontsource-variable/fredoka':
         specifier: ^5.3.0
         version: 5.3.0
+      '@philomena/philomena-css':
+        specifier: ^0.2.0
+        version: 0.2.0
       '@tanstack/react-devtools':
         specifier: ^0.10.13
         version: 0.10.13(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(csstype@3.2.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(solid-js@1.9.15)
@@ -1430,6 +1433,21 @@ packages:
     resolution: {integrity: sha512-UqGPmo56KDfLlfXFAFIrNflHT8tFxWGEivWg3Zeyp4Uy2NlKN1FGPr6/BxcLGG3+kZ6Wp14g5Uj+n71boqZfiw==}
     cpu: [x64]
     os: [win32]
+
+  '@philomena/philomena-css@0.2.0':
+    resolution: {integrity: sha512-YmxpIETJDpmWXJdiCcIN3+dpXTT91gHi60OUGLI3TCJdUY10GRiU3jccPL3UB7rwPD5m+6LHw4ZifQFYtk/MPQ==}
+    engines: {node: '>=24'}
+    peerDependencies:
+      '@csstools/postcss-relative-color-syntax': ^4.0.16
+      postcss-mixins: ^12.1.2
+      postcss-simple-vars: ^7.0.1
+    peerDependenciesMeta:
+      '@csstools/postcss-relative-color-syntax':
+        optional: true
+      postcss-mixins:
+        optional: true
+      postcss-simple-vars:
+        optional: true
 
   '@playwright/test@1.64.1':
     resolution: {integrity: sha512-IaYGml/nSOiZWROfPtuIL7neuu9qDOZ3TNvNljUIrhDMxiGTgPjzj/g9p9RxpS2tSepPDRY+UwAaEeiKtUvIAg==}
@@ -3112,6 +3130,9 @@ packages:
     resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
     engines: {node: '>=6'}
 
+  the-new-css-reset@1.11.3:
+    resolution: {integrity: sha512-61SB81vu9foUyEIqoU1CeqxrdlsVjJojj/CBXoG8BdvlKFsllB0Rza63DblnRqH+3uttPj3FGWo7+c9nu7MT+A==}
+
   tinybench@6.2.2:
     resolution: {integrity: sha512-nIZ2N2dFpjBsg2hgitKu7mA+FvsIJuGJOwysRngmVRRmWgR/UyPjwJj8c/fT/dhm8EkHnF5EOogRf+0Z2qrimA==}
     engines: {node: '>=20.0.0'}
@@ -4353,6 +4374,10 @@ snapshots:
 
   '@oxc-resolver/binding-win32-x64-msvc@11.24.2':
     optional: true
+
+  '@philomena/philomena-css@0.2.0':
+    dependencies:
+      the-new-css-reset: 1.11.3
 
   '@playwright/test@1.64.1':
     dependencies:
@@ -6157,6 +6182,8 @@ snapshots:
   supports-color@10.2.2: {}
 
   tapable@2.3.3: {}
+
+  the-new-css-reset@1.11.3: {}
 
   tinybench@6.2.2: {}
 
