@@ -30,7 +30,9 @@ export function SearchBar({ className, inputRef }: { className?: ClassValue; inp
       className={cn('flex flex-center gap-sm', className)}
       role="search"
     >
-      <FormInputGroup className="flex-grow">
+      {/* The group carries a bottom margin meant for stacked form fields. In this
+          centered row it would lift the field above the camera button. */}
+      <FormInputGroup className="flex-grow mb-0">
         <InputField
           ref={inputRef}
           type="search"
