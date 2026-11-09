@@ -12,7 +12,7 @@ import { SiteContext, useSite } from '#/hooks/use-site';
 import { SsrSettingsContext, useSettings } from '#/hooks/use-settings';
 import { currentSite } from '#/lib/current-site';
 import { readSettings, settingsAttributes } from '#/lib/settings';
-import fredokaLatin from '@fontsource-variable/fredoka/files/fredoka-latin-wght-normal.woff2?url';
+import montserratLatin from '@fontsource/montserrat/files/montserrat-latin-400-normal.woff2?url';
 
 // The one stylesheet entry point: `styles/index.css` imports every other CSS
 // file in the project, so the whole site compiles to a single stylesheet. Start
@@ -33,7 +33,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // required even same-origin, or the preload is discarded and refetched.
       {
         rel: 'preload',
-        href: fredokaLatin,
+        href: montserratLatin,
         as: 'font',
         type: 'font/woff2',
         crossOrigin: 'anonymous',

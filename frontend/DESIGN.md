@@ -47,6 +47,14 @@ rendered by the server as `data-theme` on `<html>`, so the first paint is right.
 `system` is the absence of the attribute. Motion follows `prefers-reduced-motion`
 and nothing else. There are no user-facing display dials.
 
+## Typeface
+
+The package's `--base-font` is `"Montserrat"` and it ships no font file. The site
+self-hosts it through `@fontsource/montserrat` (regular and bold, imported in
+`styles/index.css`, the regular latin file preloaded in `__root.tsx`). The static
+build is used rather than the variable one because it registers the family name
+the token already asks for, so no override is needed.
+
 ## Per-site accent
 
 Each site names an accent in its config (`Site.themeColor`, one of red, orange,

@@ -149,7 +149,7 @@ hyphenated phrase.
 
 ## Brand Commitments
 
-Ditzybooru, licensed AGPL-3.0 like Philomena. Typeface in use: Inter Variable.
+Ditzybooru, licensed AGPL-3.0 like Philomena. Typeface in use: Montserrat, the one PhilomenaCSS names.
 
 The visual relationship to Derpibooru is intentional continuity, not
 imitation: the familiar booru brought up to date.
