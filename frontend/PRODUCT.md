@@ -74,8 +74,8 @@ Five things together, none of which the upstream frontend offers:
 2. **Modern look at feature parity** - the same capabilities, not a subset.
 3. **Faster and app-like** - a React SPA against a multipage Phoenix app.
 4. **Extra features upstream lacks**, on top of parity.
-5. **Deep customization** - themes and display settings as a product
-   feature, not a developer convenience.
+5. **Looks like Philomena, per site** - the design is Philomena's own
+   (PhilomenaCSS), in light and dark, with each site's accent color.
 
 ## Operating Context
 
@@ -131,17 +131,16 @@ hyphenated phrase.
 - **No standalone data store.** All reads and writes proxy to the origin
   server through Ditzybooru's Rust backend, and must work against any
   Philomena instance.
-- **Nine accent themes × light/dark.** Every design holds up in all
-  combinations; contrast is verified per theme.
-- **Six display settings stay functional.** `radius`, `borderWidth`,
-  `shadow`, `density`, `fontScale`, `motion` are unregistered custom
-  properties feeding `calc()` sitewide; nothing may hardcode past them.
-  `radius: 0` by default because square corners are what Derpibooru looks
-  like, and this is a modernization of it, not a departure.
+- **Nine accents × light/dark.** A site names its accent; the visitor picks
+  light or dark. Every design holds up in all combinations; contrast is
+  verified per accent.
+- **The design is an external package.** `@philomena/philomena-css` provides the
+  look; own CSS is the exception, with a reason, and is recorded in DESIGN.md.
+  There are no user-facing display settings.
 - **Mobile-first responsiveness.** Phone layout is a first-class target.
-- **Stack:** React 19, TanStack Router, Vite, raw CSS with a token layer
-  (`src/styles/tokens/`, `src/styles/themes/`). Tailwind was removed
-  deliberately; do not reintroduce a utility framework. TypeScript only.
+- **Stack:** React 19, TanStack Router, Vite, PhilomenaCSS through typed
+  wrappers in `src/components/philomena/`. Do not reintroduce a utility
+  framework or a token layer of our own. TypeScript only.
 - **Planned, not built:** SSR. Real API wiring - the home page renders from
   `src/lib/mock/`. Search, the image page, tag editing, forums and upload do
   not exist yet in any form beyond the header's placeholder field. The search
@@ -157,12 +156,12 @@ imitation: the familiar booru brought up to date.
 
 ## Evidence on Hand
 
-- Working home/activity page and a `/ui/playground` route exercising the
-  token and component system (`src/components/`, `src/styles/`).
+- Working home/activity page, search, image, profile, forum and content pages,
+  built on the PhilomenaCSS components (`src/components/philomena/`).
 - Mock data at `src/lib/mock/`, shaped like Philomena API responses, with
   thumbnails from the public Derpibooru CDN (Philomena's development seeds).
 - Accessibility suite at `a11y/a11y.test.ts` - axe-core against the built
-  site in a real browser, run across every theme.
+  site in a real browser, run in light and dark across every accent.
 - No search, tag-editing, or image-page code exists yet. The header's search
   field is a placeholder that submits nowhere, and the tag component
   (`styles/components/tag.css`) renders categories but has no editing
@@ -188,8 +187,7 @@ imitation: the familiar booru brought up to date.
    shorter still.
 5. **Parity before invention.** A feature upstream has and Ditzybooru lacks is
    a defect. Extras come after, not instead.
-6. **The user owns the interface.** Every new surface survives all themes and
-   display settings.
+6. **Every surface survives every theme.** Light and dark, every accent.
 7. **Speed is a feature.** Weight and jank are product bugs. A query that
    feels slow is a query the user stops refining.
 8. **Origin server is the source of truth.** The frontend presents Philomena
@@ -197,9 +195,9 @@ imitation: the familiar booru brought up to date.
 
 ## Accessibility & Inclusion
 
-WCAG 2 AA, verified by axe-core with zero violations in every accent theme in
-both light and dark. A gate, not an aspiration. The `motion` setting lets
-users reduce animation directly, alongside `prefers-reduced-motion`.
+WCAG 2 AA, verified by axe-core with zero violations in every accent in both
+light and dark. A gate, not an aspiration. Animation follows
+`prefers-reduced-motion`.
 
 Search and tag editing raise the bar rather than lower it. A nested query is
 structured content: whatever visual treatment expresses its nesting must also
