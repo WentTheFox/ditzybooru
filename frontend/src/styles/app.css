@@ -33,11 +33,13 @@ html {
   overflow-wrap: anywhere;
 }
 
-/* The package colors the links of every block and card, and its list of
- * exceptions (`.button`, `.nav-link`, `.tag a` ...) leaves out `.pagination-link`.
- * Pagination inside a block therefore gets link blue on its own tint, 4.2:1.
- * Same specificity as that rule and later in the source; the current page keeps
- * its own, more specific color. */
+/* The package colors and underlines the links of every block and card, and its
+ * list of exceptions (`.button`, `.nav-link`, `.tag a` ...) leaves out
+ * `.pagination-link`. Pagination inside a block therefore gets link blue, 4.2:1
+ * on its own tint, and an underline that its own `text-decoration: none` loses
+ * to by one element selector. Same specificity as that rule and later in the
+ * source; the current page keeps its own, more specific color. */
 .pagination a.pagination-link {
   color: inherit;
+  text-decoration: none;
 }

@@ -1,8 +1,7 @@
 /* The package clips every direct child of a media box's action bar to keep its
  * text to one line, which would also clip the overflow menu's panel. The panel
- * stays inside the box, so nothing else needs to overflow. The `...` trigger
- * goes to the end of the bar, which centers everything else. */
+ * stays inside the box, so nothing else needs to overflow. The bar keeps the
+ * package's centering: the `...` trigger is the last of the centered actions. */
 .media-box .media-box-header > .media-box__more {
   overflow: visible;
-  margin-inline-start: auto;
 }
