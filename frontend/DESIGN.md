@@ -26,16 +26,16 @@ reaches for the package before it reaches for CSS.
 Only then write CSS. The leftover is deliberately small (about 220 lines in nine
 files) and every rule is there because the package has no equivalent:
 
-| File | Why it exists |
-| --- | --- |
-| `styles/app.css` | `.muted-text`, `.truncate`, `.plain-text`, and a global `scroll-padding` for the sticky header. The package styles muted text only inside its own components. |
-| `styles/view-transitions.css` | Cross-route view transitions for the media grid. |
-| `components/layout/BottomNav.css` | The phone tab bar. The package has none. |
-| `components/layout/SiteFooter.css` | The footer band. The package has none. |
-| `components/layout/NavDropdown.css` | Closes a hover menu once a link in it was followed. The package only opens on hover and focus. |
-| `components/home/MediaBox.css` | One override so the media box's overflow menu is not clipped. |
-| `components/ui/Prose.css` | The site's markup carries the package's `hidden` utility on embedded images. |
-| `routes/__root.css` | Page shell: full-height column that clears the bottom nav. |
+| File                                | Why it exists                                                                                                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `styles/app.css`                    | `.muted-text`, `.truncate`, `.plain-text`, and a global `scroll-padding` for the sticky header. The package styles muted text only inside its own components. |
+| `styles/view-transitions.css`       | Cross-route view transitions for the media grid.                                                                                                              |
+| `components/layout/BottomNav.css`   | The phone tab bar. The package has none.                                                                                                                      |
+| `components/layout/SiteFooter.css`  | The footer band. The package has none.                                                                                                                        |
+| `components/layout/NavDropdown.css` | Closes a hover menu once a link in it was followed. The package only opens on hover and focus.                                                                |
+| `components/home/MediaBox.css`      | One override so the media box's overflow menu is not clipped.                                                                                                 |
+| `components/ui/Prose.css`           | The site's markup carries the package's `hidden` utility on embedded images.                                                                                  |
+| `routes/__root.css`                 | Page shell: full-height column that clears the bottom nav.                                                                                                    |
 
 If a change adds to this table, say why the package cannot do it.
 
@@ -66,7 +66,8 @@ color at build time, so an accent cannot be a runtime variable. Instead:
   `$base-color-dark` and `$base-color-light` change; the saturation and
   lightness are the package's own, so its contrast checks carry over) and keeps
   just the declarations that differ.
-- The result is `src/styles/accents.css`, generated and committed. Blue is the
+- The result is `src/styles/accents.min.css`, generated and committed. It is a single line so
+  that nobody mistakes it for a file to edit by hand. Blue is the
   package default and emits nothing.
 - Regenerate after upgrading the package or changing an accent:
   `pnpm --filter frontend run build:accents`.
@@ -77,7 +78,7 @@ Never hardcode a site name, origin or color in a component; use `useSite()`.
 
 `styles/index.css` is the single entry point. It imports the package whole
 (it resets the page, so nothing may rely on a browser default), then
-`accents.css`, then the files in the table above. No `.tsx` imports CSS.
+`accents.min.css`, then the files in the table above. No `.tsx` imports CSS.
 
 The package is CSS only. What it leaves to script is left to script here:
 hover menus do not close on Escape, the burger does not trap focus (`MobileMenu`

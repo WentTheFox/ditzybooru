@@ -10,7 +10,7 @@
  * anything about their machine.
  *
  * The accent is not a visitor setting: each site names one (`Site.themeColor`)
- * and `<html data-accent>` applies it. See `styles/accents.css`.
+ * and `<html data-accent>` applies it. See `styles/accents.min.css`.
  *
  * Persistence and the store live in `lib/settings` and `lib/settings-store`.
  */
@@ -27,7 +27,7 @@ const DARK_SCHEME_QUERY = '(prefers-color-scheme: dark)';
 export const DEFAULT_THEME_LIGHTNESS_PREFERENCE: ThemeLightnessPreference = 'system';
 
 /** The accents a site can name. Blue is the package default; the rest are
- *  generated into `styles/accents.css`. */
+ *  generated into `styles/accents.min.css`. */
 export const THEME_COLORS: Array<{ id: ThemeColor }> = [
   { id: 'red' },
   { id: 'orange' },

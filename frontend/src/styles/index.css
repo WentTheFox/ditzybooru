@@ -4,7 +4,7 @@
  * The look of the site is PhilomenaCSS (`@philomena/philomena-css`), used
  * through the React components in `components/philomena`. Its compiled
  * stylesheet is imported whole - it resets the page, so nothing here may rely
- * on a browser default - and `accents.css` layers each site's accent color on
+ * on a browser default - and `accents.min.css` layers each site's accent color on
  * top of it. Everything below that is CSS the package does not cover: layout
  * for this site's own pages and a few app-specific pieces.
  *
@@ -24,7 +24,7 @@
 
 /* Generated: `pnpm --filter frontend run build:accents`. Scoped to
  * `:root[data-accent]`, so it out-ranks the package's tokens wherever it sits. */
-@import './accents.css';
+@import './accents.min.css';
 
 @import './app.css';
 @import './view-transitions.css';
