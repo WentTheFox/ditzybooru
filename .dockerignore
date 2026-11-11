@@ -1,0 +1,16 @@
+.git
+**/node_modules
+target
+tools
+.idea
+.vscode
+.claude
+frontend/.output
+frontend/.tanstack
+frontend/.wrangler
+frontend/dist
+frontend/test-results
+frontend/playwright-report
+sites.local.json
+.site-cache.json
+.env*
