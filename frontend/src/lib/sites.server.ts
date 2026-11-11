@@ -35,7 +35,7 @@ interface CacheEntry {
 /** The file is in the repository root, next to `package.json`. The server runs
  *  from `frontend/`. */
 const SITES_FILE = process.env.SITES_FILE ?? resolve(process.cwd(), '..', 'sites.local.json');
-const CACHE_FILE = join(dirname(SITES_FILE), '.site-cache.json');
+const CACHE_FILE = process.env.SITE_CACHE_FILE ?? join(dirname(SITES_FILE), '.site-cache.json');
 
 let table: Map<string, SiteConfig> | undefined;
 let cache: Map<string, CacheEntry> | undefined;
