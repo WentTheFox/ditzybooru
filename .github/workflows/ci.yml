@@ -27,7 +27,7 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run knip
       - run: pnpm run build
-      # The self-hosted target, so a break in it shows up here and not on deploy.
+      # The container target, so a break in it shows up here and not in the image build.
       - run: BUILD_TARGET=node pnpm run build
 
       # Structural a11y via axe-core plus a contrast audit over all 18

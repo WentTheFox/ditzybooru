@@ -11,8 +11,8 @@ import { bundleBudget } from './bundle-budget.ts';
 
 /**
  * Where the server runs. Cloudflare Workers by default. `BUILD_TARGET=node`
- * builds a standalone Node server into `.output` instead, for a self-hosted
- * deploy (see `deploy.conf`).
+ * builds a standalone Node server into `.output` instead, for the container
+ * image (see `Dockerfile`).
  */
 const serverTarget = process.env.BUILD_TARGET === 'node' ? 'node' : 'cloudflare';
 

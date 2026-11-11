@@ -1,8 +1,7 @@
 /**
  * Where the Rust backend is, and whether this deploy may use it.
  *
- * - Node (self-hosted): on, at `API_BACKEND_URL` or the loopback port in
- *   `pm2.json`.
+ * - Node (container): on, at `API_BACKEND_URL` or the loopback port 3711.
  * - Cloudflare Workers: OFF unless `API_PROXY=on` and `API_BACKEND_URL` are
  *   set as Worker variables. Every API call from a visitor is a Worker
  *   request, which counts against the account's quota, so this is the kill

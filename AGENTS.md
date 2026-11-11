@@ -17,6 +17,6 @@
 ## Git
 
 - Write commit messages in the Conventional Commits format.
-- Cloudflare Workers Builds deploys every push to `main` to production.
-- `BUILD_TARGET=node` builds a standalone Node server instead of the Cloudflare Worker. `deploy.conf` sets it for the self-hosted deploy, so both targets must keep building.
+- Every push to `main` on the fork (`origin`) publishes the container images and rolls them out to production on the cluster. Rollback is a revert on `main`. See `docs/kubernetes.md`.
+- `BUILD_TARGET=node` builds a standalone Node server instead of the Cloudflare Worker. The `Dockerfile` sets it for the cluster, so both targets must keep building.
 - Multi-site: the request `Host` picks the Philomena origin and branding (`lib/sites.ts`, `sites.local.json`). Never hardcode an origin or the site name in components; use `useSite()`.

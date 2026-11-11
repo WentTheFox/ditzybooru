@@ -19,6 +19,7 @@ Build each architecture natively.
 Names only, none of them hold secrets.
 
 - `HOST`, `PORT`: set by the images to `0.0.0.0` and the port above.
+- `API_BACKEND_URL`: the backend's URL for the frontend, for example `http://<backend service>:3711`. Required: the default is `http://127.0.0.1:3711`, which only works when both run in one pod.
 - `SITES_FILE`: path to the sites JSON (`sites.local.json` locally). The request `Host` picks the upstream site from it. Mount it from a ConfigMap.
 - `SITE_CACHE_FILE`: where the frontend writes its site cache. Defaults to `.site-cache.json` next to the sites file, so point it at a writable path such as an `emptyDir` when the sites file is a read-only mount.
 

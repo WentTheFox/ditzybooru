@@ -209,8 +209,8 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@philomena/philomena-css':
-        specifier: ^0.2.0
-        version: 0.2.0(@csstools/postcss-relative-color-syntax@4.0.15(postcss@8.5.32))(postcss-mixins@12.1.2(postcss@8.5.32))(postcss-simple-vars@7.0.1(postcss@8.5.32))
+        specifier: ^0.4.0
+        version: 0.4.0(@csstools/postcss-relative-color-syntax@4.0.15(postcss@8.5.32))(postcss-mixins@12.1.2(postcss@8.5.32))(postcss-simple-vars@7.0.1(postcss@8.5.32))
       '@tanstack/react-devtools':
         specifier: ^0.10.13
         version: 0.10.13(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(csstype@3.2.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(solid-js@1.9.15)
@@ -1498,8 +1498,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@philomena/philomena-css@0.2.0':
-    resolution: {integrity: sha512-YmxpIETJDpmWXJdiCcIN3+dpXTT91gHi60OUGLI3TCJdUY10GRiU3jccPL3UB7rwPD5m+6LHw4ZifQFYtk/MPQ==}
+  '@philomena/philomena-css@0.4.0':
+    resolution: {integrity: sha512-We4az2bosea0dFNjRg5emTmr99XiRQMMyf8RTa9Z0TQLnrDfLobm/Zkv50ZIRZrIq/hNB8s9Eo6O9B4xYhTTCg==}
     engines: {node: '>=24'}
     peerDependencies:
       '@csstools/postcss-relative-color-syntax': ^4.0.16
@@ -4547,7 +4547,7 @@ snapshots:
   '@oxc-resolver/binding-win32-x64-msvc@11.24.2':
     optional: true
 
-  '@philomena/philomena-css@0.2.0(@csstools/postcss-relative-color-syntax@4.0.15(postcss@8.5.32))(postcss-mixins@12.1.2(postcss@8.5.32))(postcss-simple-vars@7.0.1(postcss@8.5.32))':
+  '@philomena/philomena-css@0.4.0(@csstools/postcss-relative-color-syntax@4.0.15(postcss@8.5.32))(postcss-mixins@12.1.2(postcss@8.5.32))(postcss-simple-vars@7.0.1(postcss@8.5.32))':
     dependencies:
       the-new-css-reset: 1.11.3
     optionalDependencies:
