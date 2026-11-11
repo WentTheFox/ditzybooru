@@ -7,6 +7,20 @@ export function Communication({ deleted = false, className, ...props }: PropsOf<
   return <article className={cn('communication', deleted && 'deleted', className)} {...props} />;
 }
 
+/**
+ * What the site says about a communication (why it was deleted, by whom), in a
+ * bar before `CommunicationBody`. It sits outside the text so nothing a user
+ * writes can look like it.
+ */
+export function CommunicationNotice({ className, ...props }: PropsOf<'div'>) {
+  return <div className={cn('communication-notice', className)} {...props} />;
+}
+
+/** Who the notice comes from, at the end of its bar. */
+export function CommunicationNoticeBy({ className, ...props }: PropsOf<'span'>) {
+  return <span className={cn('communication-notice-by', className)} {...props} />;
+}
+
 /** The avatar and content row. */
 export function CommunicationBody({ className, ...props }: PropsOf<'div'>) {
   return <div className={cn('communication-body', className)} {...props} />;

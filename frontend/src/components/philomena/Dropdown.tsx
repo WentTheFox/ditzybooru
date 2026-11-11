@@ -41,7 +41,7 @@ type DropdownItemProps<TElement extends ElementType> = {
   className?: PropsOf<'a'>['className'];
 } & Omit<React.ComponentProps<TElement>, 'as' | 'current' | 'danger' | 'className'>;
 
-/** A link by default; `as="button"` or `as="label"` (for a `MenuCheck`) otherwise. */
+/** A link by default; `as="button"` or `as="label"` (for a `MenuCheck` or `MenuSwitch`) otherwise. */
 export function DropdownItem<TElement extends ElementType = 'a'>({
   as,
   current = false,
@@ -64,4 +64,27 @@ export function DropdownIcon({ className, ...props }: PropsOf<'span'>) {
 
 export function DropdownDivider({ className, ...props }: PropsOf<'hr'>) {
   return <hr className={cn('dropdown-divider', className)} {...props} />;
+}
+
+/** A row of buttons at the end of a menu, such as Apply and Clear. */
+export function DropdownActions({ className, ...props }: PropsOf<'div'>) {
+  return <div className={cn('dropdown-actions', className)} {...props} />;
+}
+
+/**
+ * A checkbox or radio drawn in CSS for a `DropdownItem as="label"` or a navbar
+ * menu item: the row toggles it. `end` puts the box after the text.
+ */
+export function MenuCheck({
+  type = 'checkbox',
+  end = false,
+  className,
+  ...props
+}: Omit<PropsOf<'input'>, 'type'> & { type?: 'checkbox' | 'radio'; end?: boolean }) {
+  return (
+    <>
+      <input type={type} className={cn('menu-check-input', className)} {...props} />
+      <span className={cn('menu-check-box', end && 'menu-end')} aria-hidden="true" />
+    </>
+  );
 }

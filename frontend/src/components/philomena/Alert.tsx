@@ -3,32 +3,19 @@ import { cn } from '#/lib/utils';
 import { colorClass } from './props';
 import type { ColorType, PropsOf } from './props';
 
-/** A message block. Neutral unless given a `type`. Pass `role="alert"` for one that must be announced. */
-export function Alert({
-  type,
-  compact = false,
-  className,
-  ...props
-}: PropsOf<'div'> & { type?: ColorType; compact?: boolean }) {
-  return <div className={cn('alert', colorClass('alert', type), compact && 'compact', className)} {...props} />;
+/**
+ * A flat tinted bar of text and links, as Philomena's flash notices. Neutral
+ * unless given a `type`. Pass `role="alert"` for one that must be announced.
+ */
+export function Alert({ type, className, ...props }: PropsOf<'div'> & { type?: ColorType }) {
+  return <div className={cn('alert', colorClass('alert', type), className)} {...props} />;
 }
 
+/** Goes first; floats beside the text so that `AlertText` becomes a column next to it. */
 export function AlertIcon({ className, ...props }: PropsOf<'span'>) {
   return <span className={cn('alert-icon', className)} {...props} />;
 }
 
-export function AlertContent({ className, ...props }: PropsOf<'div'>) {
-  return <div className={cn('alert-content', className)} {...props} />;
-}
-
-export function AlertTitle({ className, ...props }: PropsOf<'div'>) {
-  return <div className={cn('alert-title', className)} {...props} />;
-}
-
 export function AlertText({ className, ...props }: PropsOf<'div'>) {
   return <div className={cn('alert-text', className)} {...props} />;
-}
-
-export function AlertActions({ className, ...props }: PropsOf<'div'>) {
-  return <div className={cn('alert-actions', className)} {...props} />;
 }

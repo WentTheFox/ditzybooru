@@ -4,7 +4,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 
-import { Alert, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Button } from '#/components/philomena/Button';
 import { Checkbox, FormControlGroup, FormControlSubmit, FormMessage, InputField } from '#/components/philomena/Forms';
 import { Flex, LayoutNarrow } from '#/components/philomena/Layout';
@@ -108,10 +108,10 @@ function SignInPage() {
 
         {kind === 'live' ? null : (
           <Alert type="warning">
-            <AlertContent>
-              <AlertTitle>Mock data is on</AlertTitle>
-              <AlertText>Signing in needs the live data source. Switch to it in the developer settings.</AlertText>
-            </AlertContent>
+            <AlertText>
+              <strong>Mock data is on</strong> Signing in needs the live data source. Switch to it in the developer
+              settings.
+            </AlertText>
           </Alert>
         )}
 

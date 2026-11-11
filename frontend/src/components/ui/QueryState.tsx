@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 
-import { Alert, AlertActions, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Button } from '#/components/philomena/Button';
+import { Flex } from '#/components/philomena/Layout';
 import { HttpError } from '#/lib/http/http-client';
 import type { DataSourceKind } from '#/lib/api/types';
 
@@ -29,11 +30,13 @@ function StateAlert({
 }) {
   return (
     <Alert type={type}>
-      <AlertContent>
-        <AlertTitle>{title}</AlertTitle>
-        {children === undefined ? null : <AlertText>{children}</AlertText>}
-      </AlertContent>
-      {actions === undefined ? null : <AlertActions>{actions}</AlertActions>}
+      <Flex center wrap gap="md" justify="between">
+        <AlertText>
+          <strong>{title}</strong>
+          {children === undefined ? null : <> {children}</>}
+        </AlertText>
+        {actions}
+      </Flex>
     </Alert>
   );
 }

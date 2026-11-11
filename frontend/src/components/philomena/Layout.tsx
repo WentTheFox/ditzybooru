@@ -46,6 +46,28 @@ export function Flex({
   );
 }
 
+type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 12;
+
+/** A CSS grid of `columns` equal columns (`gap` is a step of the spacing scale). */
+export function Grid({ columns, gap, className, ...props }: PropsOf<'div'> & { columns?: Columns; gap?: Gap }) {
+  return (
+    <div
+      className={cn(
+        'grid',
+        columns !== undefined && `grid-cols-${columns}`,
+        gap !== undefined && `gap-${gap}`,
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+/** A grid item that spans `span` columns (`full` for all of them). */
+export function GridItem({ span, className, ...props }: PropsOf<'div'> & { span: Columns | 'full' }) {
+  return <div className={cn(`col-span-${span}`, className)} {...props} />;
+}
+
 /** A sidebar and main column pair: `LayoutColumns` > `LayoutSide` + `LayoutMain`. */
 export function LayoutColumns({ className, ...props }: PropsOf<'div'>) {
   return <div className={cn('layout-columns', className)} {...props} />;

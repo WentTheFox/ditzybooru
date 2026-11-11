@@ -2,11 +2,12 @@ import { useState } from 'react';
 import type { SubmitEvent } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 
-import { Alert, AlertContent, AlertText, AlertTitle } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Button } from '#/components/philomena/Button';
 import { FormControlGroup, FormControlSubmit, FormMessage, InputField } from '#/components/philomena/Forms';
 import { Block, BlockContent, BlockHeader } from '#/components/philomena/Surfaces';
-import { Flex, LayoutNarrow } from '#/components/philomena/Layout';
+import { Flex } from '#/components/philomena/Layout';
+import { SettingsLayout } from '#/components/settings/SettingsLayout';
 import { useSite } from '#/hooks/use-site';
 import { setApiKey, useApiKey } from '#/lib/api/api-key';
 import { get } from '#/lib/api/backend/client';
@@ -52,70 +53,63 @@ function AccountSettingsPage() {
   };
 
   return (
-    <LayoutNarrow center>
-      <Flex column gap="lg">
-        <h1>Account</h1>
+    <SettingsLayout title="Account">
+      <Alert>
+        <AlertText>
+          <strong>Your API key</strong> When you are signed in to {site.name} here, this site fetches your personal API
+          key for you, so there is nothing to enter. Where {site.name} would not take a sign-in (it asks for a captcha
+          that only its own pages can show), paste the key from your account settings on {site.name} instead. Either way
+          it stays in this browser and is sent only with the requests that need it.
+        </AlertText>
+      </Alert>
 
-        <Alert>
-          <AlertContent>
-            <AlertTitle>Your API key</AlertTitle>
-            <AlertText>
-              When you are signed in to {site.name} here, this site fetches your personal API key for you, so there is
-              nothing to enter. Where {site.name} would not take a sign-in (it asks for a captcha that only its own
-              pages can show), paste the key from your account settings on {site.name} instead. Either way it stays in
-              this browser and is sent only with the requests that need it.
-            </AlertText>
-          </AlertContent>
-        </Alert>
-
-        <Block>
-          <BlockHeader>API key</BlockHeader>
-          <BlockContent>
-            <Flex column gap="lg">
-              {saved === null ? null : (
-                <div>
-                  <p>A key is saved in this browser.</p>
-                  <Button
-                    onClick={() => {
-                      setApiKey(null);
-                    }}
-                  >
-                    Remove it
+      <Block>
+        <BlockHeader>API key</BlockHeader>
+        <BlockContent>
+          <Flex column gap="lg">
+            {saved === null ? null : (
+              <div>
+                <p>A key is saved in this browser.</p>
+                <Button
+                  onClick={() => {
+                    setApiKey(null);
+                  }}
+                >
+                  Remove it
+                </Button>
+              </div>
+            )}
+            <form onSubmit={save}>
+              <FormControlGroup vertical>
+                <label htmlFor="api-key">{saved === null ? 'Your API key' : 'Replace it with another key'}</label>
+                <InputField
+                  id="api-key"
+                  type="password"
+                  autoComplete="off"
+                  spellCheck={false}
+                  fullWidth
+                  value={draft}
+                  onChange={event => {
+                    setDraft(event.target.value);
+                  }}
+                />
+                <FormMessage kind={result.state === 'refused' || result.state === 'failed' ? 'error' : 'description'}>
+                  <span role="status">
+                    {result.state === 'checking' ? 'Checking the key…' : null}
+                    {result.state === 'refused' ? `${site.name} does not accept this key.` : null}
+                    {result.state === 'failed' ? 'Could not reach the site to check the key. Try again.' : null}
+                  </span>
+                </FormMessage>
+                <FormControlSubmit>
+                  <Button type="primary" disabled={draft.trim() === '' || result.state === 'checking'} {...SUBMIT}>
+                    Save key
                   </Button>
-                </div>
-              )}
-              <form onSubmit={save}>
-                <FormControlGroup vertical>
-                  <label htmlFor="api-key">{saved === null ? 'Your API key' : 'Replace it with another key'}</label>
-                  <InputField
-                    id="api-key"
-                    type="password"
-                    autoComplete="off"
-                    spellCheck={false}
-                    fullWidth
-                    value={draft}
-                    onChange={event => {
-                      setDraft(event.target.value);
-                    }}
-                  />
-                  <FormMessage kind={result.state === 'refused' || result.state === 'failed' ? 'error' : 'description'}>
-                    <span role="status">
-                      {result.state === 'checking' ? 'Checking the key…' : null}
-                      {result.state === 'refused' ? `${site.name} does not accept this key.` : null}
-                      {result.state === 'failed' ? 'Could not reach the site to check the key. Try again.' : null}
-                    </span>
-                  </FormMessage>
-                  <FormControlSubmit>
-                    <Button type="primary" disabled={draft.trim() === '' || result.state === 'checking'} {...SUBMIT}>
-                      Save key
-                    </Button>
-                  </FormControlSubmit>
-                </FormControlGroup>
-              </form>
-            </Flex>
-          </BlockContent>
-        </Block>
-      </Flex>
-    </LayoutNarrow>
+                </FormControlSubmit>
+              </FormControlGroup>
+            </form>
+          </Flex>
+        </BlockContent>
+      </Block>
+    </SettingsLayout>
   );
 }

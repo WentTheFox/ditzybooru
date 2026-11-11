@@ -58,26 +58,13 @@ export function AccordionItem({
   );
 }
 
-/**
- * A section that opens without a script: checkbox, label, content, in that
- * order. `id` links the label to the checkbox.
- */
-export function ToggleBox({
-  id,
-  label,
-  className,
-  children,
-  ...props
-}: Omit<PropsOf<'input'>, 'children'> & { id: string; label: React.ReactNode; children?: React.ReactNode }) {
-  return (
-    <>
-      <input type="checkbox" id={id} className={cn('toggle-box', className)} {...props} />
-      <label htmlFor={id} className="toggle-box-label">
-        {label}
-      </label>
-      <div className="toggle-box-content">{children}</div>
-    </>
-  );
+export function tabClass(selected = false): string {
+  return cn('tab', selected && 'selected');
+}
+
+/** A bar of links to other pages, each page marking its own tab `selected` (see `tabClass`). */
+export function TabsNav({ className, ...props }: PropsOf<'nav'>) {
+  return <nav className={cn('tabs', className)} {...props} />;
 }
 
 /** Tab links, each followed elsewhere by a `TabPanel`. Your script moves `selected`. */
@@ -105,6 +92,37 @@ export function Tab({
 
 export function TabPanel({ selected = false, className, ...props }: PropsOf<'div'> & { selected?: boolean }) {
   return <div role="tabpanel" className={cn('tab-panel', selected && 'selected', className)} {...props} />;
+}
+
+/** A heading between groups of tabs, inside `Tabs` (most useful in `SideTabs`). */
+export function TabsTitle({ className, ...props }: PropsOf<'span'>) {
+  return <span className={cn('tabs-title', className)} {...props} />;
+}
+
+/**
+ * Tabs in a column at the start with the panel next to it, for settings pages.
+ * Children are the `Tabs` bar and the `TabPanel`s. Give `toggleId` to make the
+ * bar a selector on narrow screens that opens on click, without a script; put
+ * a `SideTabsExpand` with the same id first inside the bar.
+ */
+export function SideTabs({ toggleId, className, children, ...props }: PropsOf<'div'> & { toggleId?: string }) {
+  return (
+    <div className={cn('side-tabs', className)} {...props}>
+      {toggleId === undefined ? null : (
+        <input type="checkbox" id={toggleId} className="side-tabs-toggle" aria-label="Show all sections" />
+      )}
+      {children}
+    </div>
+  );
+}
+
+/** The label that opens a narrow `SideTabs` bar; the first child of `Tabs`. */
+export function SideTabsExpand({
+  toggleId,
+  className,
+  ...props
+}: Omit<PropsOf<'label'>, 'htmlFor'> & { toggleId: string }) {
+  return <label htmlFor={toggleId} className={cn('side-tabs-expand', className)} {...props} />;
 }
 
 /** A floating panel. `visible` shows it; `wide` and `allowOverflow` change its box. */

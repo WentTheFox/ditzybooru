@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { MessagesSquare, Pin } from 'lucide-react';
 
-import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Button, ButtonText } from '#/components/philomena/Button';
+import { Flex } from '#/components/philomena/Layout';
 import { RelativeTime } from '#/components/ui/RelativeTime';
 import { useDataSource } from '#/hooks/use-data-source';
 import { useInView } from '#/hooks/use-in-view';
@@ -58,11 +59,9 @@ export function ForumActivityBlock() {
     );
   } else if (isError) {
     body = (
-      <Alert type="danger" compact>
-        <AlertContent>
+      <Alert type="danger">
+        <Flex center wrap gap="md" justify="between">
           <AlertText>Could not load forum activity.</AlertText>
-        </AlertContent>
-        <AlertActions>
           <Button
             sizeBadge
             onClick={() => {
@@ -71,7 +70,7 @@ export function ForumActivityBlock() {
           >
             <ButtonText>Retry</ButtonText>
           </Button>
-        </AlertActions>
+        </Flex>
       </Alert>
     );
   } else {

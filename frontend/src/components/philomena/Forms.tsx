@@ -228,6 +228,8 @@ export function ComboboxSuggestionItem({
 }
 
 /** A switch for a `DropdownItem` / `NavbarMenuItem` label (`as="label"`). */
-export function MenuSwitch({ className, ...props }: Omit<PropsOf<'input'>, 'type'>) {
-  return <input type="checkbox" role="switch" className={cn('form-switch-input', className)} {...props} />;
+export function MenuSwitch({ end = false, className, ...props }: Omit<PropsOf<'input'>, 'type'> & { end?: boolean }) {
+  return (
+    <input type="checkbox" role="switch" className={cn('form-switch-input', end && 'menu-end', className)} {...props} />
+  );
 }

@@ -6,9 +6,10 @@ import { useDataSource } from '#/hooks/use-data-source';
 import { useInView } from '#/hooks/use-in-view';
 import { liveStreamsQuery } from '#/lib/api/queries';
 import type { LiveStreamChannel } from '#/lib/types';
-import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Badge } from '#/components/philomena/Badge';
 import { Button, ButtonText } from '#/components/philomena/Button';
+import { Flex } from '#/components/philomena/Layout';
 import { Int } from '#/components/ui/Int';
 import { SidebarBlock } from './SidebarBlock';
 
@@ -84,11 +85,9 @@ export function LiveStreamsBlock() {
     );
   } else if (isError) {
     body = (
-      <Alert type="danger" compact>
-        <AlertContent>
+      <Alert type="danger">
+        <Flex center wrap gap="md" justify="between">
           <AlertText>Could not load the streams.</AlertText>
-        </AlertContent>
-        <AlertActions>
           <Button
             sizeBadge
             onClick={() => {
@@ -97,7 +96,7 @@ export function LiveStreamsBlock() {
           >
             <ButtonText>Retry</ButtonText>
           </Button>
-        </AlertActions>
+        </Flex>
       </Alert>
     );
   } else {

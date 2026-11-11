@@ -13,6 +13,7 @@ import * as Button from './Button';
 import * as Communication from './Communication';
 import * as Content from './Content';
 import * as Dropdown from './Dropdown';
+import * as Editor from './Editor';
 import * as Forms from './Forms';
 import * as Header from './Header';
 import * as Layout from './Layout';
@@ -24,8 +25,7 @@ import * as Tag from './Tag';
 
 /**
  * Every class a component can emit must exist in the package stylesheet. A typo
- * or a class that only the docs site defines (the docs page shows
- * `menu-check-box`, which the package does not ship) would otherwise render
+ * or a class that only the docs site defines would otherwise render
  * silently unstyled.
  */
 const stylesheet = readFileSync(
@@ -42,12 +42,9 @@ type AnyComponent = ComponentType<Record<string, unknown>>;
 
 /** Each case renders one component with its modifiers on. */
 const cases: Array<[name: string, component: unknown, props: Record<string, unknown>]> = [
-  ['Alert', Alert.Alert, { type: 'danger', compact: true }],
+  ['Alert', Alert.Alert, { type: 'danger' }],
   ['AlertIcon', Alert.AlertIcon, {}],
-  ['AlertContent', Alert.AlertContent, {}],
-  ['AlertTitle', Alert.AlertTitle, {}],
   ['AlertText', Alert.AlertText, {}],
-  ['AlertActions', Alert.AlertActions, {}],
   ['Avatar', Avatar.Avatar, { size: 'md', square: true, src: '/a.png' }],
   ['AvatarGroup', Avatar.AvatarGroup, {}],
   ['Badge', Badge.Badge, { type: 'special' }],
@@ -84,6 +81,8 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['ButtonText', Button.ButtonText, {}],
   ['LoadingIcon', Button.LoadingIcon, {}],
   ['Communication', Communication.Communication, { deleted: true }],
+  ['CommunicationNotice', Communication.CommunicationNotice, {}],
+  ['CommunicationNoticeBy', Communication.CommunicationNoticeBy, {}],
   ['CommunicationBody', Communication.CommunicationBody, {}],
   ['CommunicationAvatar', Communication.CommunicationAvatar, {}],
   ['CommunicationContent', Communication.CommunicationContent, {}],
@@ -108,6 +107,15 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['DropdownItem', Dropdown.DropdownItem, { current: true, danger: true }],
   ['DropdownIcon', Dropdown.DropdownIcon, {}],
   ['DropdownDivider', Dropdown.DropdownDivider, {}],
+  ['DropdownActions', Dropdown.DropdownActions, {}],
+  ['MenuCheck', Dropdown.MenuCheck, { type: 'radio', end: true }],
+  ['Editor', Editor.Editor, { invalid: true }],
+  ['EditorToolbar', Editor.EditorToolbar, {}],
+  ['EditorToolbarGroup', Editor.EditorToolbarGroup, {}],
+  ['EditorToolbarSpacer', Editor.EditorToolbarSpacer, {}],
+  ['EditorButton', Editor.EditorButton, { active: true }],
+  ['EditorInput', Editor.EditorInput, { mono: true }],
+  ['EditorFooter', Editor.EditorFooter, {}],
   ['FormControlGroup', Forms.FormControlGroup, { vertical: true }],
   ['FormControlWrap', Forms.FormControlWrap, { disabled: true, fullWidth: true }],
   ['FormControl', Forms.FormControl, { buttons: true }],
@@ -125,7 +133,7 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['ComboboxSuggestions', Forms.ComboboxSuggestions, {}],
   ['ComboboxSuggestionHeader', Forms.ComboboxSuggestionHeader, { overlay: true }],
   ['ComboboxSuggestionItem', Forms.ComboboxSuggestionItem, { selected: true, highlighted: true, addon: 'x' }],
-  ['MenuSwitch', Forms.MenuSwitch, {}],
+  ['MenuSwitch', Forms.MenuSwitch, { end: true }],
   ['Header', Header.Header, { nonStick: true }],
   ['HeaderBrand', Header.HeaderBrand, {}],
   ['HeaderBrandText', Header.HeaderBrandText, {}],
@@ -136,6 +144,8 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
     Layout.Flex,
     { column: true, wrap: true, gap: 'md', justify: 'between', center: true, middle: true, grow: true },
   ],
+  ['Grid', Layout.Grid, { columns: 12, gap: 'md' }],
+  ['GridItem', Layout.GridItem, { span: 'full' }],
   ['LayoutColumns', Layout.LayoutColumns, {}],
   ['LayoutSide', Layout.LayoutSide, {}],
   ['LayoutMain', Layout.LayoutMain, {}],
@@ -182,10 +192,13 @@ const cases: Array<[name: string, component: unknown, props: Record<string, unkn
   ['CardFormsSection', Surfaces.CardFormsSection, {}],
   ['Accordion', Surfaces.Accordion, {}],
   ['AccordionItem', Surfaces.AccordionItem, { header: 'h' }],
-  ['ToggleBox', Surfaces.ToggleBox, { id: 't', label: 'l' }],
   ['Tabs', Surfaces.Tabs, {}],
   ['Tab', Surfaces.Tab, { selected: true, disabled: true }],
   ['TabPanel', Surfaces.TabPanel, { selected: true }],
+  ['TabsNav', Surfaces.TabsNav, {}],
+  ['TabsTitle', Surfaces.TabsTitle, {}],
+  ['SideTabs', Surfaces.SideTabs, { toggleId: 's' }],
+  ['SideTabsExpand', Surfaces.SideTabsExpand, { toggleId: 's' }],
   ['Popup', Surfaces.Popup, { visible: true, wide: true, allowOverflow: true, hasAnchor: true }],
   ['Progress', Surfaces.Progress, { type: 'success', value: 40 }],
   ['Separator', Surfaces.Separator, { thin: true, vertical: true }],
@@ -243,6 +256,7 @@ describe('philomena components', () => {
           sizeBadge: true,
         }),
       ],
+      ['tabClass', Surfaces.tabClass(true)],
       ['navLinkClass', Header.navLinkClass(true)],
       ['headerBrandClass', Header.headerBrandClass()],
       ['burgerItemClass', Burger.burgerItemClass(true)],

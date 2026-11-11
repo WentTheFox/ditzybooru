@@ -11,7 +11,7 @@ export type PropsOf<TElement extends keyof JSX.IntrinsicElements> = Omit<Compone
 };
 
 /** The semantic color types PhilomenaCSS builds `{component}-{type}` variants from. */
-export type ColorType = 'primary' | 'success' | 'warning' | 'danger' | 'special' | 'light' | 'dark';
+export type ColorType = 'primary' | 'success' | 'warning' | 'danger' | 'special';
 
 /** `{prefix}-{type}`, or nothing for the neutral default. */
 export function colorClass(prefix: string, type: ColorType | undefined): string | undefined {

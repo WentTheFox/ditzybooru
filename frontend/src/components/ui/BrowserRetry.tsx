@@ -4,8 +4,9 @@ import { QueryErrorResetBoundary, useQueryClient } from '@tanstack/react-query';
 import type { QueryKey } from '@tanstack/react-query';
 import { CatchBoundary, useHydrated } from '@tanstack/react-router';
 
-import { Alert, AlertActions, AlertContent, AlertText } from '#/components/philomena/Alert';
+import { Alert, AlertText } from '#/components/philomena/Alert';
 import { Button } from '#/components/philomena/Button';
+import { Flex } from '#/components/philomena/Layout';
 import { failedOnServer } from '#/lib/api/ssr-failures';
 
 interface Props {
@@ -30,9 +31,7 @@ export function BrowserRetry({ queryKey, label, children }: Props) {
 
   const pending = serverFailed ? (
     <Alert type="warning">
-      <AlertContent>
-        <AlertText>Could not load {label} on the server. Retrying...</AlertText>
-      </AlertContent>
+      <AlertText>Could not load {label} on the server. Retrying...</AlertText>
     </Alert>
   ) : null;
 
@@ -47,10 +46,8 @@ export function BrowserRetry({ queryKey, label, children }: Props) {
           getResetKey={() => label}
           errorComponent={({ reset }) => (
             <Alert type="danger">
-              <AlertContent>
+              <Flex center wrap gap="md" justify="between">
                 <AlertText>Could not load {label}.</AlertText>
-              </AlertContent>
-              <AlertActions>
                 <Button
                   sizeBadge
                   onClick={() => {
@@ -60,7 +57,7 @@ export function BrowserRetry({ queryKey, label, children }: Props) {
                 >
                   Retry
                 </Button>
-              </AlertActions>
+              </Flex>
             </Alert>
           )}
         >
