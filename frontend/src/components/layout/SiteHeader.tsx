@@ -168,9 +168,9 @@ export function SiteHeader() {
           </Link>
         </Navbar>
 
-        <SearchBar className="flex-grow hidden-below-md mx-xl" />
+        <SearchBar className="flex-1 hidden-below-md mx-xl" />
 
-        <Navbar className="flex-fixed" aria-label="Account and tools">
+        <Navbar className="flex-none" aria-label="Account and tools">
           <NavbarItem as={Link} to="/images/new" title="Upload" aria-label="Upload">
             <NavbarIcon>
               <Upload size={16} />

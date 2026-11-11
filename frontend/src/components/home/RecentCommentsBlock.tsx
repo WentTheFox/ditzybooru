@@ -15,11 +15,11 @@ function CommentStrip({ comment }: { comment: Comment }) {
   const imageId = comment.imageId;
 
   return (
-    <li className="flex flex-center gap-md">
+    <li className="flex items-center gap-md">
       <Link to="/images/$id" params={{ id: imageId }} aria-label={`Image ${imageId}`}>
         <Avatar size="xs" square src={comment.imageThumbTiny} />
       </Link>
-      <div className="flex-grow">
+      <div className="flex-1">
         <div className="truncate">
           <Link to="/images/$id" params={{ id: imageId }} hash={`comment_${comment.id}`}>
             #{imageId}
@@ -50,7 +50,7 @@ export function RecentCommentsBlock() {
       icon={<MessageCircle size={16} />}
       footer={{ label: 'Most Commented-on Images', href: mostCommentedQuery }}
     >
-      <ul className="flex flex-column gap-md">
+      <ul className="flex flex-col gap-md">
         {comments.map(comment => (
           <CommentStrip key={comment.id} comment={comment} />
         ))}

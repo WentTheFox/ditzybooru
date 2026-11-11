@@ -51,7 +51,7 @@ export function ForumActivityBlock() {
   let body;
   if (topics !== undefined) {
     body = (
-      <ul className="flex flex-column gap-md">
+      <ul className="flex flex-col gap-md">
         {topics.map(topic => (
           <TopicStrip key={`${topic.forum.slug}/${topic.slug}`} topic={topic} />
         ))}

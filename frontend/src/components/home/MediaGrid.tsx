@@ -105,7 +105,7 @@ export function MediaGrid({
       <BlockHeader>
         {/* A heading role rather than an `h1`/`h2`, whose own size and margins
             do not belong in a title bar. */}
-        <span role="heading" aria-level={headingLevel} className="flex flex-center gap-sm">
+        <span role="heading" aria-level={headingLevel} className="flex items-center gap-sm">
           {icon}
           {label}
         </span>

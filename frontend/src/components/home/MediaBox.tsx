@@ -282,7 +282,7 @@ export function MediaBox({ className, image, src = image.representations.thumb, 
         )}
         {veiled ? (
           <MediaBoxVeil>
-            <span className="flex flex-column flex-center gap-sm">
+            <span className="flex flex-col items-center gap-sm">
               <EyeOff size={20} aria-hidden="true" />
               {interaction.hidden ? 'Hidden' : 'Spoilered'}
             </span>

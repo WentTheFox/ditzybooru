@@ -1,6 +1,6 @@
 /* The page shell: header, content, footer, with the footer pinned to the bottom
  * of the viewport on pages too short to fill it. Its direction is the package's
- * `flex flex-column`. */
+ * `flex flex-col`. */
 .app-shell {
   min-block-size: 100dvh;
   /* Clears the fixed bottom navigation, so the last thing on the page is

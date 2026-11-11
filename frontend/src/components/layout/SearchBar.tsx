@@ -27,12 +27,12 @@ export function SearchBar({ className, inputRef }: { className?: ClassValue; inp
         // An empty field means the default listing, not a search for "".
         void navigate({ to: '/search', search: { q: query.trim() || '*', page: 1 } });
       }}
-      className={cn('flex flex-center gap-sm', className)}
+      className={cn('flex items-center gap-sm', className)}
       role="search"
     >
       {/* The group carries a bottom margin meant for stacked form fields. In this
           centered row it would lift the field above the camera button. */}
-      <FormInputGroup className="flex-grow mb-0">
+      <FormInputGroup className="flex-1 mb-0">
         <InputField
           ref={inputRef}
           type="search"

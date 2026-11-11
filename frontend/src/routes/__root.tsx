@@ -99,9 +99,9 @@ function Document() {
       the <body> which generates a huge error in console. So we suppress
       that warning on this node. */}
       <body suppressHydrationWarning>
-        <div className="app-shell flex flex-column">
+        <div className="app-shell flex flex-col">
           <SiteHeader />
-          <main className="flex-grow">
+          <main className="flex-1">
             <ContentContainer>
               <Outlet />
             </ContentContainer>

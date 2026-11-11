@@ -22,7 +22,7 @@ interface SidebarBlockProps {
  */
 export function SidebarBlock({ title, href, icon, footer, ref, children }: SidebarBlockProps) {
   const heading = (
-    <span className="flex flex-center gap-sm">
+    <span className="flex items-center gap-sm">
       {icon}
       {title}
     </span>

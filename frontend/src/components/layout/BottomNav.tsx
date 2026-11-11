@@ -50,7 +50,7 @@ export function BottomNav() {
       <div className="bottom-nav-bar nav horizontal">
         <button
           type="button"
-          className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
+          className={cn(navLinkClass(), 'flex flex-col items-center justify-center gap-xs')}
           aria-expanded={searchOpen}
           onClick={() => {
             setSearchOpen(open => !open);
@@ -65,7 +65,7 @@ export function BottomNav() {
             <Link
               // @ts-expect-error TODO: route not built yet
               to="/notifications"
-              className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
+              className={cn(navLinkClass(), 'flex flex-col items-center justify-center gap-xs')}
             >
               <CounterAnchor>
                 <Bell size={20} />
@@ -78,7 +78,7 @@ export function BottomNav() {
             <Link
               // @ts-expect-error TODO: route not built yet
               to="/conversations"
-              className={cn(navLinkClass(), 'flex flex-column flex-middle gap-xs')}
+              className={cn(navLinkClass(), 'flex flex-col items-center justify-center gap-xs')}
             >
               <Mail size={20} />
               Conversations

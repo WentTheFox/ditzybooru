@@ -22,9 +22,9 @@ export function Flex({
   gap?: Gap;
   /** Main-axis alignment: `flex-between` or `flex-end`. */
   justify?: 'between' | 'end';
-  /** Centers the items on the cross axis (`flex-center`). */
+  /** Centers the items on the cross axis (`items-center`). */
   center?: boolean;
-  /** Centers the items on both axes (`flex-middle`). */
+  /** Centers the items on both axes (`items-center justify-center`). */
   middle?: boolean;
   grow?: boolean;
 }) {
@@ -32,13 +32,13 @@ export function Flex({
     <div
       className={cn(
         'flex',
-        column && 'flex-column',
+        column && 'flex-col',
         wrap && 'flex-wrap',
         gap !== undefined && `gap-${gap}`,
         justify !== undefined && `flex-${justify}`,
-        center && 'flex-center',
-        middle && 'flex-middle',
-        grow && 'flex-grow',
+        center && 'items-center',
+        middle && 'items-center justify-center',
+        grow && 'flex-1',
         className,
       )}
       {...props}

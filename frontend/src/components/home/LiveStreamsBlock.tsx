@@ -19,22 +19,22 @@ function ChannelStrip({ channel }: { channel: LiveStreamChannel }) {
       <Link
         // @ts-expect-error TODO: route not built yet
         to={`/channels/${channel.id}`}
-        className="flex flex-center gap-md"
+        className="flex items-center gap-md"
       >
-        <span className="flex-grow truncate">
+        <span className="flex-1 truncate">
           {channel.title}
           {channel.nsfw ? <span title="NSFW"> 🔞</span> : null}
         </span>
 
         {channel.isLive ? (
-          <span className="flex flex-center gap-md flex-fixed">
+          <span className="flex items-center gap-md flex-none">
             <span className="muted-text">
               <Int value={channel.viewers} /> {channel.viewers === 1 ? 'viewer' : 'viewers'}
             </span>
             <Badge type="success">LIVE</Badge>
           </span>
         ) : (
-          <Badge type="danger" className="flex-fixed">
+          <Badge type="danger" className="flex-none">
             OFF AIR
           </Badge>
         )}
@@ -77,7 +77,7 @@ export function LiveStreamsBlock() {
   let body;
   if (channels !== undefined) {
     body = (
-      <ul className="flex flex-column gap-md">
+      <ul className="flex flex-col gap-md">
         {liveFirst(channels).map(channel => (
           <ChannelStrip key={channel.id} channel={channel} />
         ))}

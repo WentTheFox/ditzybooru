@@ -18,7 +18,7 @@ html {
 
 /* One line, cut off with an ellipsis rather than wrapped, so a long name cannot
  * push the rows after it out of alignment. Needs a block or flex item that can
- * shrink (`min-inline-size: 0`, which `.flex-grow` provides). */
+ * shrink (`min-inline-size: 0`, which `.flex-1` provides). */
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
