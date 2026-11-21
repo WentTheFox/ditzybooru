@@ -1893,8 +1893,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listConversations"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /conversations/:conversation_id/reports/new": {
@@ -1919,8 +1921,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getConversation"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /conversations/new": {
@@ -2192,11 +2196,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "user",
-    "phase": 5,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
+    "note": "Redirects a visitor who is not staff to the sign-in form: who voted for what is for staff."
   },
   "GET /forums/:forum_id/topics/:topic_id/posts/:id/edit": {
     "controller": "PhilomenaWeb.Topic.PostController#edit",
@@ -2646,8 +2650,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listNotifications"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /notifications/categories/:id": {
@@ -2659,8 +2665,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getNotificationCategory"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /notifications/unread": {
@@ -2672,8 +2680,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getUnreadCounts"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /pages": {
@@ -3178,8 +3188,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 5,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listReports"
+    ],
     "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /rules": {

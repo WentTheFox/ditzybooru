@@ -6,6 +6,7 @@ import * as directories from './operations/directories.ts';
 import * as forums from './operations/forums.ts';
 import * as histories from './operations/histories.ts';
 import * as images from './operations/images.ts';
+import * as inbox from './operations/inbox.ts';
 import * as interactions from './operations/interactions.ts';
 import * as items from './operations/items.ts';
 import * as listings from './operations/listings.ts';
@@ -28,5 +29,6 @@ export const operations: Operation[] = [
   ...Object.values(pages),
   ...Object.values(session),
   ...Object.values(interactions),
+  ...Object.values(inbox),
   ...Object.values(uploads),
 ];

@@ -153,6 +153,43 @@ const CommissionPage = s.object({
   ),
 });
 
+const Notification = s.object({
+  /** The sentence the site shows, e.g. who posted where. */
+  text: s.string(),
+  createdAt: s.dateTime(),
+  /** The topic, image or gallery the notification is about. */
+  url: s.uri(),
+});
+
+const ConversationSummary = s.object({
+  slug: s.string(),
+  title: s.string(),
+  startedAt: s.dateTime(),
+  lastMessageAt: s.dateTime(),
+  /** The other party's name. */
+  withUser: s.string(),
+});
+
+const Message = s.object({
+  author: s.string(),
+  authorSlug: s.optional(s.nullable(s.string())),
+  avatarUrl: s.optional(s.nullable(s.uri())),
+  createdAt: s.dateTime(),
+  /** The message as HTML cleaned by the backend: safe to render. */
+  bodyHtml: s.string(),
+});
+
+const FiledReport = s.object({
+  /** `Open`, `In Progress`, `Closed` or what the site words it. */
+  state: s.string(),
+  resource: s.string(),
+  resourceUrl: s.optional(s.uri()),
+  /** The rule reported against; Philomena only. */
+  rule: s.optional(s.string()),
+  reason: s.string(),
+  openedAt: s.dateTime(),
+});
+
 const ImageComments = s.object({
   /** Every comment of the image, across pages. */
   total: s.int(),
@@ -564,6 +601,35 @@ export const schemas = {
   DuplicateReportList: s.object({ items: s.array(s.ref('DuplicateReport')), hasNext: s.bool() }),
   CommissionPage,
   Notice: s.object({ message: s.optional(s.string()) }),
+  Notification,
+  ConversationSummary,
+  Message,
+  FiledReport,
+  UnreadCounts: s.object({ notifications: s.int(), conversations: s.int() }),
+  NotificationOverview: s.object({
+    categories: s.array(
+      s.object({
+        title: s.string(),
+        /** The name `getNotificationCategory` takes. */
+        category: s.string(),
+        total: s.int(),
+        items: s.array(s.ref('Notification')),
+      }),
+    ),
+  }),
+  NotificationCategory: s.object({
+    title: s.string(),
+    items: s.array(s.ref('Notification')),
+    hasNext: s.bool(),
+  }),
+  ConversationList: s.object({ items: s.array(s.ref('ConversationSummary')), hasNext: s.bool() }),
+  Conversation: s.object({
+    title: s.string(),
+    withUser: s.string(),
+    messages: s.array(s.ref('Message')),
+    hasNext: s.bool(),
+  }),
+  ReportList: s.object({ items: s.array(s.ref('FiledReport')), hasNext: s.bool() }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

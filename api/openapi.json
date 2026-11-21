@@ -370,6 +370,84 @@
         ],
         "type": "object"
       },
+      "Conversation": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          },
+          "withUser": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "withUser",
+          "messages",
+          "hasNext"
+        ],
+        "type": "object"
+      },
+      "ConversationList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationSummary"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
+      "ConversationSummary": {
+        "additionalProperties": false,
+        "properties": {
+          "lastMessageAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "withUser": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "startedAt",
+          "lastMessageAt",
+          "withUser"
+        ],
+        "type": "object"
+      },
       "DnpEntry": {
         "additionalProperties": false,
         "properties": {
@@ -630,6 +708,38 @@
         },
         "required": [
           "error"
+        ],
+        "type": "object"
+      },
+      "FiledReport": {
+        "additionalProperties": false,
+        "properties": {
+          "openedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "resourceUrl": {
+            "format": "uri-reference",
+            "type": "string"
+          },
+          "rule": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "resource",
+          "reason",
+          "openedAt"
         ],
         "type": "object"
       },
@@ -1510,6 +1620,48 @@
         ],
         "type": "object"
       },
+      "Message": {
+        "additionalProperties": false,
+        "properties": {
+          "author": {
+            "type": "string"
+          },
+          "authorSlug": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "avatarUrl": {
+            "oneOf": [
+              {
+                "format": "uri-reference",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bodyHtml": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "author",
+          "createdAt",
+          "bodyHtml"
+        ],
+        "type": "object"
+      },
       "Notice": {
         "additionalProperties": false,
         "properties": {
@@ -1518,6 +1670,93 @@
           }
         },
         "required": [],
+        "type": "object"
+      },
+      "Notification": {
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "format": "uri-reference",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "createdAt",
+          "url"
+        ],
+        "type": "object"
+      },
+      "NotificationCategory": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Notification"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
+      "NotificationOverview": {
+        "additionalProperties": false,
+        "properties": {
+          "categories": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "items": {
+                  "items": {
+                    "$ref": "#/components/schemas/Notification"
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "total": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "title",
+                "category",
+                "total",
+                "items"
+              ],
+              "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "categories"
+        ],
         "type": "object"
       },
       "PageHistory": {
@@ -1910,6 +2149,26 @@
           "id",
           "author",
           "createdAt"
+        ],
+        "type": "object"
+      },
+      "ReportList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FiledReport"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
         ],
         "type": "object"
       },
@@ -2613,6 +2872,22 @@
           "perPage"
         ],
         "type": "object"
+      },
+      "UnreadCounts": {
+        "additionalProperties": false,
+        "properties": {
+          "conversations": {
+            "type": "integer"
+          },
+          "notifications": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "notifications",
+          "conversations"
+        ],
+        "type": "object"
       }
     }
   },
@@ -3286,6 +3561,231 @@
                   }
                 }
               }
+            }
+          ]
+        }
+      }
+    },
+    "/conversations": {
+      "get": {
+        "operationId": "listConversations",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The signed-in visitor’s private conversations, newest message first.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /conversations"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/conversations",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "lastMessageAt": {
+                        "attr": "datetime",
+                        "sel": ".small-text time:nth-of-type(2)"
+                      },
+                      "slug": {
+                        "as": "lastSegment",
+                        "attr": "href",
+                        "sel": ".table--communication-list__name a"
+                      },
+                      "startedAt": {
+                        "attr": "datetime",
+                        "sel": ".small-text time:nth-of-type(1)"
+                      },
+                      "title": {
+                        "sel": ".table--communication-list__name a",
+                        "text": true
+                      },
+                      "withUser": {
+                        "sel": ".table--communication-list__stats strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": "table.table > tbody > tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/conversation/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/conversations/{slug}": {
+      "get": {
+        "operationId": "getConversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Conversation"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "A private conversation and one page of its messages. Opening it marks it read.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /conversations/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/conversations/{slug}",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "messages": {
+                    "fields": {
+                      "author": {
+                        "sel": ".communication__body__sender-name strong",
+                        "text": true
+                      },
+                      "authorSlug": {
+                        "as": "lastSegment",
+                        "attr": "href",
+                        "optional": true,
+                        "sel": ".communication__body__sender-name strong a"
+                      },
+                      "avatarUrl": {
+                        "as": "url",
+                        "attr": "src",
+                        "optional": true,
+                        "sel": ".communication__body__avatar img"
+                      },
+                      "bodyHtml": {
+                        "as": "sanitizedHtml",
+                        "html": true,
+                        "sel": ".communication__body__text"
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": ".communication__options time"
+                      }
+                    },
+                    "many": true,
+                    "sel": "article.communication"
+                  },
+                  "title": {
+                    "sel": "h1",
+                    "text": true
+                  },
+                  "withUser": {
+                    "sel": ".block__header strong",
+                    "text": true
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/conversation/show.html.slime"
             }
           ]
         }
@@ -6997,6 +7497,267 @@
         }
       }
     },
+    "/notifications": {
+      "get": {
+        "operationId": "listNotifications",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationOverview"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The notification area: the latest notifications of each kind.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /notifications"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/notifications"
+              },
+              "select": {
+                "fields": {
+                  "categories": {
+                    "fields": {
+                      "category": {
+                        "as": "lastSegment",
+                        "attr": "href",
+                        "sel": "a[href^=\"/notifications/categories/\"]"
+                      },
+                      "items": {
+                        "fields": {
+                          "createdAt": {
+                            "attr": "datetime",
+                            "sel": "time"
+                          },
+                          "text": {
+                            "sel": ".flex__grow > div",
+                            "text": true
+                          },
+                          "url": {
+                            "as": "url",
+                            "attr": "href",
+                            "sel": "strong > a:not([href^=\"/profiles/\"])"
+                          }
+                        },
+                        "many": true,
+                        "sel": ".notification"
+                      },
+                      "title": {
+                        "sel": ".block__header__title",
+                        "text": true
+                      },
+                      "total": {
+                        "as": "lastInt",
+                        "sel": "a[href^=\"/notifications/categories/\"]",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": ".notification-type-block"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/notification/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/notifications/categories/{category}": {
+      "get": {
+        "operationId": "getNotificationCategory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "category",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationCategory"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "One kind of notification, a page at a time. Categories are named as the notification area links them.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "category": "forum_post"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /notifications/categories/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/notifications/categories/{category}",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": "time"
+                      },
+                      "text": {
+                        "sel": ".flex__grow > div",
+                        "text": true
+                      },
+                      "url": {
+                        "as": "url",
+                        "attr": "href",
+                        "sel": "strong > a:not([href^=\"/profiles/\"])"
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": ".notification"
+                  },
+                  "title": {
+                    "sel": ".notification-type-block .block__header__title",
+                    "text": true
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/notification/category/show.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/notifications/unread": {
+      "get": {
+        "operationId": "getUnreadCounts",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadCounts"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "How many unread notifications and conversations the signed-in visitor has.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /notifications/unread"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "json",
+              "map": {
+                "conversations": "/conversations",
+                "notifications": "/notifications"
+              },
+              "request": {
+                "method": "GET",
+                "path": "/notifications/unread"
+              }
+            }
+          ]
+        }
+      }
+    },
     "/oembed": {
       "get": {
         "operationId": "getEmbed",
@@ -8696,6 +9457,163 @@
                   }
                 }
               }
+            }
+          ]
+        }
+      }
+    },
+    "/reports": {
+      "get": {
+        "operationId": "listReports",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The reports the signed-in visitor filed.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /reports"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/reports",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "openedAt": {
+                        "attr": "datetime",
+                        "sel": "td:nth-child(5) time"
+                      },
+                      "reason": {
+                        "sel": "td:nth-child(4)",
+                        "text": true
+                      },
+                      "resource": {
+                        "sel": "td:nth-child(2)",
+                        "text": true
+                      },
+                      "resourceUrl": {
+                        "as": "url",
+                        "attr": "href",
+                        "optional": true,
+                        "sel": "td:nth-child(2) a"
+                      },
+                      "rule": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "state": {
+                        "sel": "td:nth-child(1)",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": "table.table > tbody > tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/report/index.html.slime"
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/reports",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "openedAt": {
+                        "attr": "datetime",
+                        "sel": "td:nth-child(4) time"
+                      },
+                      "reason": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "resource": {
+                        "sel": "td:nth-child(2)",
+                        "text": true
+                      },
+                      "resourceUrl": {
+                        "as": "url",
+                        "attr": "href",
+                        "optional": true,
+                        "sel": "td:nth-child(2) a"
+                      },
+                      "state": {
+                        "sel": "td:nth-child(1)",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": "table.table > tbody > tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/report/index.html.slime"
             }
           ]
         }
