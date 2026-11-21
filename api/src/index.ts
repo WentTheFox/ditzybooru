@@ -8,6 +8,7 @@ import * as directories from './operations/directories.ts';
 import * as forums from './operations/forums.ts';
 import * as histories from './operations/histories.ts';
 import * as galleries from './operations/galleries.ts';
+import * as imageEdits from './operations/imageEdits.ts';
 import * as images from './operations/images.ts';
 import * as inbox from './operations/inbox.ts';
 import * as interactions from './operations/interactions.ts';
@@ -41,6 +42,7 @@ export const operations: Operation[] = [
   ...Object.values(preferences),
   ...Object.values(discussion),
   ...Object.values(galleries),
+  ...Object.values(imageEdits),
   ...Object.values(commissions),
   ...Object.values(reports),
   ...Object.values(profile),

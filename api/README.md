@@ -30,7 +30,9 @@ upstream route and is the resume point.
    (`verify.signup@example.com`, made by `createRegistration`), and the 2FA and
    email-token operations take a fresh value from `VERIFY_PARAM_<NAME>_<INSTANCE>`
    (a code from `:pot.totp/1` in the app container, a token from the site's
-   `deliver_user_*` functions).
+   `deliver_user_*` functions, the id of something an earlier run made). A list
+   parameter is a JSON list (`[1,2]`); the sign-in and write examples assume the
+   dev seed plus the rows earlier runs left (a gallery, a poll, an artist link).
 6. Commit the batch. Resume = rerun step 2.
 
 ## Conventions

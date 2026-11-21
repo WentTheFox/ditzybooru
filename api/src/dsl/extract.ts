@@ -144,7 +144,7 @@ type FormResult = (
   | { json: JsonMap }
 ) & {
   /**
-   * Pointers to booleans in the extracted result; at least one must be true, or the submission counts as rejected.
+   * Pointers to booleans in the extracted result; at least one must be true (`!/field`: false), or the submission counts as rejected.
    * A top-level field whose name starts with `_` only serves this check and is left out of the answer.
    */
   must?: string[];

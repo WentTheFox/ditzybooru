@@ -680,9 +680,9 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The route is declared on Furbooru, but its NotificationController has no delete action."
   },
   "DELETE /profiles/:profile_id/artist_links/:id": {
     "controller": "PhilomenaWeb.Profile.ArtistLinkController#delete",
@@ -692,9 +692,9 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The route is declared on Furbooru, but its ArtistLinkController has no delete action."
   },
   "DELETE /profiles/:profile_id/awards/:id": {
     "controller": "PhilomenaWeb.Profile.AwardController#delete",
@@ -2638,8 +2638,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "uploadImage"
+    ],
     "note": ""
   },
   "GET /images/random": {
@@ -3140,11 +3142,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "The moderation scratchpad is for staff."
   },
   "GET /profiles/:profile_id/source_changes": {
     "controller": "PhilomenaWeb.Profile.SourceChangeController#index",
@@ -3878,8 +3880,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reorderGallery"
+    ],
     "note": ""
   },
   "PATCH /galleries/:id": {
@@ -3934,8 +3938,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateImageDescription"
+    ],
     "note": ""
   },
   "PATCH /images/:image_id/file": {
@@ -3945,11 +3951,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Replacing an image file is a staff action."
   },
   "PATCH /images/:image_id/scratchpad": {
     "controller": "PhilomenaWeb.Image.ScratchpadController#update",
@@ -3973,8 +3979,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateImageSources"
+    ],
     "note": ""
   },
   "PATCH /images/:image_id/tag_lock": {
@@ -3997,11 +4005,13 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "moderator",
-    "phase": 7,
-    "status": "todo",
-    "operations": [],
-    "note": "Staff action: moved to the moderator phase."
+    "area": "user",
+    "phase": 6,
+    "status": "verified",
+    "operations": [
+      "updateImageTags"
+    ],
+    "note": ""
   },
   "PATCH /images/:image_id/uploader": {
     "controller": "PhilomenaWeb.Image.UploaderController#update",
@@ -4122,11 +4132,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "The moderation scratchpad is for staff."
   },
   "PATCH /registrations": {
     "controller": "PhilomenaWeb.RegistrationController#update",
@@ -4739,8 +4749,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createDuplicateReport"
+    ],
     "note": ""
   },
   "POST /duplicate_reports/:duplicate_report_id/accept": {
@@ -4945,8 +4957,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "votePoll"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics/:topic_id/posts": {
@@ -5145,8 +5159,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "uploadImage"
+    ],
     "note": ""
   },
   "POST /images/:image_id/anonymous": {
@@ -5447,9 +5463,9 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Reads third-party pages for the site's upload form; a client uploads by URL with uploadImage instead."
   },
   "POST /ip_profiles/:ip_profile_id/tag_changes/revert": {
     "controller": "PhilomenaWeb.IpProfile.TagChange.RevertController#create",
@@ -5671,9 +5687,9 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The reverse search form post; the search itself is reverseSearch."
   },
   "POST /sessions": {
     "controller": "PhilomenaWeb.SessionController#create",
@@ -6080,8 +6096,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reorderGallery"
+    ],
     "note": ""
   },
   "PUT /galleries/:id": {
@@ -6136,8 +6154,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateImageDescription"
+    ],
     "note": ""
   },
   "PUT /images/:image_id/file": {
@@ -6147,11 +6167,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Replacing an image file is a staff action."
   },
   "PUT /images/:image_id/scratchpad": {
     "controller": "PhilomenaWeb.Image.ScratchpadController#update",
@@ -6175,8 +6195,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateImageSources"
+    ],
     "note": ""
   },
   "PUT /images/:image_id/tag_lock": {
@@ -6199,11 +6221,13 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "moderator",
-    "phase": 7,
-    "status": "todo",
-    "operations": [],
-    "note": "Staff action: moved to the moderator phase."
+    "area": "user",
+    "phase": 6,
+    "status": "verified",
+    "operations": [
+      "updateImageTags"
+    ],
+    "note": ""
   },
   "PUT /images/:image_id/uploader": {
     "controller": "PhilomenaWeb.Image.UploaderController#update",
@@ -6324,11 +6348,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "The moderation scratchpad is for staff."
   },
   "PUT /registrations": {
     "controller": "PhilomenaWeb.RegistrationController#update",

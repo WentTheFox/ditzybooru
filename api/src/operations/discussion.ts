@@ -175,3 +175,45 @@ export const previewPost = defineOperation({
     ],
   },
 });
+
+export const votePoll = noticeForm({
+  operationId: 'votePoll',
+  group: 'forums',
+  path: '/forums/{forum}/topics/{topic}/poll/votes',
+  summary: 'Vote in a topic’s poll: the ids of the chosen options, as a list.',
+  params: [
+    { name: 'forum', in: 'path', schema: s.string(), required: true },
+    { name: 'topic', in: 'path', schema: s.string(), required: true },
+  ],
+  body: s.object({ optionIds: s.array(s.int()) }),
+  formPage: '/forums/{forum}/topics/{topic}',
+  request: {
+    path: '/forums/{forum}/topics/{topic}/poll/votes',
+    body: { 'poll[option_ids][]': '{optionIds}' },
+  },
+  signedIn: true,
+  follow: true,
+  routes: ['POST /forums/:forum_id/topics/:topic_id/poll/votes'],
+  examples: { forum: 'dis', topic: 'example-topic', optionIds: '[1]' },
+});
+
+export const createDuplicateReport = noticeForm({
+  operationId: 'createDuplicateReport',
+  group: 'duplicates',
+  path: '/duplicate_reports',
+  summary: 'Report an image as a duplicate of another.',
+  body: s.object({ imageId: s.int(), duplicateOfImageId: s.int(), reason: s.optional(s.string()) }),
+  formPage: '/images/{imageId}',
+  request: {
+    path: '/duplicate_reports',
+    body: {
+      'duplicate_report[image_id]': '{imageId}',
+      'duplicate_report[duplicate_of_image_id]': '{duplicateOfImageId}',
+      'duplicate_report[reason]': '{reason}',
+    },
+  },
+  signedIn: true,
+  follow: true,
+  routes: ['POST /duplicate_reports'],
+  examples: { imageId: 3, duplicateOfImageId: 2, reason: 'Reported by the verifier.' },
+});

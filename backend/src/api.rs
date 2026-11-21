@@ -84,7 +84,8 @@ pub fn router() -> Result<Router> {
     Ok(router.with_state(state))
 }
 
-/// The plain values of a JSON object body, as text. Anything else is no
+/// The plain values of a JSON object body, as text; a list of plain values
+/// stays a JSON list (text that starts with `[`). Anything else is no
 /// parameters.
 fn body_params(body: &[u8]) -> BTreeMap<String, String> {
     let Ok(Value::Object(object)) = serde_json::from_slice::<Value>(body) else {
@@ -96,6 +97,13 @@ fn body_params(body: &[u8]) -> BTreeMap<String, String> {
             Value::String(text) => Some((name, text)),
             Value::Bool(flag) => Some((name, flag.to_string())),
             Value::Number(number) => Some((name, number.to_string())),
+            Value::Array(items)
+                if items
+                    .iter()
+                    .all(|item| matches!(item, Value::String(_) | Value::Number(_))) =>
+            {
+                Some((name, Value::Array(items).to_string()))
+            }
             _ => None,
         })
         .collect()

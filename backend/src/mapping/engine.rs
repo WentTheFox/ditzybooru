@@ -505,6 +505,24 @@ const CHALLENGE_BACKOFF: std::time::Duration = std::time::Duration::from_secs(15
 /// is 15 minutes; one more minute is the margin.
 const BLOCKED_BACKOFF: std::time::Duration = std::time::Duration::from_mins(16);
 
+/// The items of a list parameter: a JSON list, or text split at commas.
+fn list_items(list: &str) -> Vec<String> {
+    if let Ok(Value::Array(items)) = serde_json::from_str::<Value>(list) {
+        return items
+            .into_iter()
+            .map(|item| match item {
+                Value::String(text) => text,
+                other => other.to_string(),
+            })
+            .collect();
+    }
+    list.split(',')
+        .map(str::trim)
+        .filter(|item| !item.is_empty())
+        .map(str::to_owned)
+        .collect()
+}
+
 /// The body of a form submission: fields (names raw, values percent-encoded) or
 /// a JSON document, by the request's encoding.
 type FormBody = (Option<Vec<(String, String)>>, Option<String>);
@@ -523,6 +541,11 @@ fn form_payload(
                 let typed = match value.as_str() {
                     "true" => Value::Bool(true),
                     "false" => Value::Bool(false),
+                    // A list the client sent (`[1,2]`) goes out as a list.
+                    list if list.starts_with('[') => serde_json::from_str::<Value>(list)
+                        .ok()
+                        .filter(Value::is_array)
+                        .unwrap_or(Value::String(value)),
                     _ => Value::String(value),
                 };
                 object.insert(name.clone(), typed);
@@ -547,12 +570,13 @@ fn form_payload(
             fields.push(("_method".to_owned(), percent_encode(&form.request.method)));
         }
         for (name, template) in &form.request.body {
-            if name.ends_with("[]") {
-                // A list field (`categories[]`): the value is a comma separated
-                // list, sent as one field per item.
+            if name.ends_with("[]") || name.contains("[*]") {
+                // A list field: `categories[]` repeats the name, `sources[*][source]`
+                // numbers it. The value is a JSON list or a comma separated one.
                 if let Some(list) = fill_with(template, params, false)? {
-                    for item in list.split(',').map(str::trim).filter(|i| !i.is_empty()) {
-                        fields.push((name.clone(), percent_encode(item)));
+                    for (index, item) in list_items(&list).iter().enumerate() {
+                        let field = name.replace("[*]", &format!("[{index}]"));
+                        fields.push((field, percent_encode(item)));
                     }
                 }
             } else if let Some(value) = fill(template, params)? {
@@ -742,11 +766,13 @@ pub fn extract(
             };
             let value = html::select(page, &form.result.select, ctx.origin)?;
             let accepted = form.result.must.is_empty()
-                || form
-                    .result
-                    .must
-                    .iter()
-                    .any(|pointer| value.pointer(pointer) == Some(&Value::Bool(true)));
+                || form.result.must.iter().any(|pointer| {
+                    // `!/field`: the field must be false.
+                    pointer.strip_prefix('!').map_or_else(
+                        || value.pointer(pointer) == Some(&Value::Bool(true)),
+                        |negated| value.pointer(negated) == Some(&Value::Bool(false)),
+                    )
+                });
             if !accepted {
                 let mut messages = vec![];
                 if let Some(css) = &form.result.errors {

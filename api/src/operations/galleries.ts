@@ -60,7 +60,7 @@ export const updateGallery = noticeForm({
   extraFields: { id: galleryId },
   response: 'GallerySaved',
   routes: ['PUT /galleries/:id', 'PATCH /galleries/:id', 'GET /galleries/:id/edit'],
-  examples: { id: 3, title: 'Verifier gallery', thumbnailId: 1, description: 'Edited by the verifier.' },
+  examples: { id: 4, title: 'Verifier gallery', thumbnailId: 1, description: 'Edited by the verifier.' },
 });
 
 export const deleteGallery = noticeForm({
@@ -94,7 +94,7 @@ function galleryImage(on: boolean) {
     params: galleryPath,
     body: s.object({ imageId: s.int() }),
     response: s.ref('Done'),
-    examples: { id: 3, imageId: 2 },
+    examples: { id: 4, imageId: 2 },
     philomena: {
       routes: [`${verb} /galleries/:gallery_id/images`],
       auth: 'session',
@@ -113,3 +113,28 @@ function galleryImage(on: boolean) {
 
 export const addGalleryImage = galleryImage(true);
 export const removeGalleryImage = galleryImage(false);
+
+export const reorderGallery = defineOperation({
+  operationId: 'reorderGallery',
+  path: '/galleries/{id}/order',
+  method: 'put',
+  summary: 'Put a gallery’s images in a new order: the ids of some or all of its images, in the order wanted.',
+  tags: ['galleries'],
+  params: galleryPath,
+  body: s.object({ imageIds: s.array(s.int()) }),
+  response: s.ref('Done'),
+  examples: { id: 4, imageIds: '[2,1]' },
+  philomena: {
+    routes: ['PUT /galleries/:gallery_id/order', 'PATCH /galleries/:gallery_id/order'],
+    auth: 'session',
+    strategies: [
+      {
+        kind: 'form',
+        flavors: BOTH,
+        form: { page: '/', csrf: TOKEN },
+        request: { method: 'PUT', path: '/galleries/{id}/order', encoding: 'json', body: { image_ids: '{imageIds}' } },
+        result: { json: {} },
+      },
+    ],
+  },
+});

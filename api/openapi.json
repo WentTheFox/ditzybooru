@@ -1314,6 +1314,23 @@
         ],
         "type": "object"
       },
+      "ImageDescription": {
+        "additionalProperties": false,
+        "properties": {
+          "bodyHtml": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
       "ImageFavorites": {
         "additionalProperties": false,
         "properties": {
@@ -1505,6 +1522,22 @@
         ],
         "type": "object"
       },
+      "ImageSources": {
+        "additionalProperties": false,
+        "properties": {
+          "sources": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "sources"
+        ],
+        "type": "object"
+      },
       "ImageTag": {
         "additionalProperties": false,
         "properties": {
@@ -1534,6 +1567,42 @@
         "required": [
           "name"
         ],
+        "type": "object"
+      },
+      "ImageTags": {
+        "additionalProperties": false,
+        "properties": {
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "tags"
+        ],
+        "type": "object"
+      },
+      "ImageUploaded": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [],
         "type": "object"
       },
       "Interaction": {
@@ -5883,6 +5952,118 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createDuplicateReport",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "duplicateOfImageId": {
+                    "type": "integer"
+                  },
+                  "imageId": {
+                    "type": "integer"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "imageId",
+                  "duplicateOfImageId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report an image as a duplicate of another.",
+        "tags": [
+          "duplicates"
+        ],
+        "x-examples": {
+          "duplicateOfImageId": 2,
+          "imageId": 3,
+          "reason": "Reported by the verifier."
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /duplicate_reports"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{imageId}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "duplicate_report[duplicate_of_image_id]": "{duplicateOfImageId}",
+                  "duplicate_report[image_id]": "{imageId}",
+                  "duplicate_report[reason]": "{reason}"
+                },
+                "method": "POST",
+                "path": "/duplicate_reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/filters": {
@@ -8221,6 +8402,133 @@
         }
       }
     },
+    "/forums/{forum}/topics/{topic}/poll/votes": {
+      "post": {
+        "operationId": "votePoll",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "optionIds": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "optionIds"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Vote in a topic’s poll: the ids of the chosen options, as a list.",
+        "tags": [
+          "forums"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "optionIds": "[1]",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics/:topic_id/poll/votes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/{topic}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "poll[option_ids][]": "{optionIds}"
+                },
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/poll/votes"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/forums/{forum}/topics/{topic}/posts": {
       "get": {
         "operationId": "listTopicPosts",
@@ -9859,7 +10167,7 @@
         ],
         "x-examples": {
           "description": "Edited by the verifier.",
-          "id": 3,
+          "id": 4,
           "thumbnailId": 1,
           "title": "Verifier gallery"
         },
@@ -9987,7 +10295,7 @@
           "galleries"
         ],
         "x-examples": {
-          "id": 3,
+          "id": 4,
           "imageId": 2
         },
         "x-philomena": {
@@ -10082,7 +10390,7 @@
           "galleries"
         ],
         "x-examples": {
-          "id": 3,
+          "id": 4,
           "imageId": 2
         },
         "x-philomena": {
@@ -10111,6 +10419,108 @@
                 "encoding": "json",
                 "method": "POST",
                 "path": "/galleries/{id}/images"
+              },
+              "result": {
+                "json": {}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/galleries/{id}/order": {
+      "put": {
+        "operationId": "reorderGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "imageIds": {
+                    "items": {
+                      "type": "integer"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "imageIds"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Put a gallery’s images in a new order: the ids of some or all of its images, in the order wanted.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "id": 4,
+          "imageIds": "[2,1]"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /galleries/:gallery_id/order",
+            "PATCH /galleries/:gallery_id/order"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "image_ids": "{imageIds}"
+                },
+                "encoding": "json",
+                "method": "PUT",
+                "path": "/galleries/{id}/order"
               },
               "result": {
                 "json": {}
@@ -11258,6 +11668,122 @@
         }
       }
     },
+    "/images/{id}/description": {
+      "put": {
+        "operationId": "updateImageDescription",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageDescription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change an image’s description.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "description": "Described by the verifier.",
+          "id": 4
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /images/:image_id/description",
+            "PATCH /images/:image_id/description"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "image[description]": "{description}"
+                },
+                "method": "PUT",
+                "path": "/images/{id}/description"
+              },
+              "result": {
+                "answer": true,
+                "errors": ".alert, .help-block",
+                "must": [
+                  "!/_failed"
+                ],
+                "page": "",
+                "select": {
+                  "fields": {
+                    "_failed": {
+                      "exists": true,
+                      "sel": ".alert"
+                    },
+                    "bodyHtml": {
+                      "as": "sanitizedHtml",
+                      "html": true,
+                      "optional": true,
+                      "sel": ".block__content p"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/images/{id}/fave": {
       "delete": {
         "operationId": "unfaveImage",
@@ -11888,6 +12414,140 @@
         }
       }
     },
+    "/images/{id}/sources": {
+      "put": {
+        "operationId": "updateImageSources",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "previousSources": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "sources": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "sources",
+                  "previousSources"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageSources"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change an image’s source URLs. Send the current list (`previousSources`) and the new one, as lists of URLs.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "id": 4,
+          "previousSources": "[]",
+          "sources": "[\"https://example.com/verifier\"]"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /images/:image_id/sources",
+            "PATCH /images/:image_id/sources"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "image[old_sources][*][source]": "{previousSources}",
+                  "image[sources][*][source]": "{sources}"
+                },
+                "method": "PUT",
+                "path": "/images/{id}/sources"
+              },
+              "result": {
+                "answer": true,
+                "errors": ".alert, .help-block",
+                "must": [
+                  "!/_failed"
+                ],
+                "page": "",
+                "select": {
+                  "fields": {
+                    "_failed": {
+                      "exists": true,
+                      "sel": ".alert"
+                    },
+                    "sources": {
+                      "attr": "value",
+                      "many": true,
+                      "optional": true,
+                      "sel": "input.js-source-url"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/images/{id}/subscription": {
       "delete": {
         "operationId": "unsubscribeImage",
@@ -12041,6 +12701,132 @@
                     "subscribed": {
                       "exists": true,
                       "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/images/{id}/tags": {
+      "put": {
+        "operationId": "updateImageTags",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "previousTags": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tags",
+                  "previousTags"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageTags"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change an image’s tags. Send the tags as the image page shows them (`previousTags`) and the new list, comma separated; the site works out what changed.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "id": 4,
+          "previousTags": "safe",
+          "tags": "safe, verifier tag"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /images/:image_id/tags",
+            "PATCH /images/:image_id/tags"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "image[old_tag_input]": "{previousTags}",
+                  "image[tag_input]": "{tags}"
+                },
+                "method": "PUT",
+                "path": "/images/{id}/tags"
+              },
+              "result": {
+                "answer": true,
+                "errors": ".alert, .help-block",
+                "must": [
+                  "!/_failed"
+                ],
+                "page": "",
+                "select": {
+                  "fields": {
+                    "_failed": {
+                      "exists": true,
+                      "sel": ".alert"
+                    },
+                    "tags": {
+                      "many": true,
+                      "optional": true,
+                      "sel": ".tag__name",
+                      "text": true
                     }
                   }
                 }
@@ -19293,6 +20079,141 @@
                     "_took": {
                       "exists": true,
                       "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/uploads": {
+      "post": {
+        "operationId": "uploadImage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "sources": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url",
+                  "tags"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploaded"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Upload an image the site fetches from a URL, as the visitor. Answers the new image’s id. A file upload is not mapped yet.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "sources": "[\"https://example.com/verifier\"]",
+          "tags": "safe, verify upload, upload test, noise, generated",
+          "url": "http://host.containers.internal:8099/verify.png"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images",
+            "GET /images/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "image[description]": "{description}",
+                  "image[scraper_url]": "",
+                  "image[sources][*][source]": "{sources}",
+                  "image[tag_input]": "{tags}",
+                  "scraper_cache": "{url}"
+                },
+                "method": "POST",
+                "path": "/images"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "int",
+                      "attr": "data-image-id",
+                      "optional": true,
+                      "sel": ".image-show-container"
                     },
                     "message": {
                       "optional": true,

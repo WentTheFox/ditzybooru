@@ -52,6 +52,7 @@ for (const op of operations) {
     'x-philomena': op.philomena,
     ...(op.examples ? { 'x-examples': op.examples } : {}),
   };
+  if (paths[op.path]?.[op.method]) throw new Error(`${op.operationId}: ${op.method} ${op.path} is already taken`);
   (paths[op.path] ??= {})[op.method] = entry;
   for (const route of op.philomena.routes) {
     if (!coverage[route]) throw new Error(`${op.operationId}: unknown route "${route}"`);
