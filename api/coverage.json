@@ -1365,9 +1365,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Click-tracking redirect to the advert's external link; there is no page to map."
   },
   "GET /api/v1/json/comments/:id": {
     "controller": "PhilomenaWeb.Api.Json.CommentController#show",
@@ -1736,9 +1736,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "A binary index for the site's own autocomplete script (class asset); the engine reads text and JSON only. Suggestions come from the tag search instead."
   },
   "GET /autocomplete/tags": {
     "controller": "PhilomenaWeb.Autocomplete.TagController#show",
@@ -1792,9 +1792,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Redirects to the stream's external URL; the livestreams page (listChannels) carries the same channels."
   },
   "GET /channels/:id/edit": {
     "controller": "PhilomenaWeb.ChannelController#edit",
@@ -1846,8 +1846,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listCommissions"
+    ],
     "note": ""
   },
   "GET /confirmations/:id": {
@@ -1949,8 +1951,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listDnpEntries"
+    ],
     "note": ""
   },
   "GET /dnp/:id": {
@@ -1962,8 +1966,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getDnpEntry"
+    ],
     "note": ""
   },
   "GET /dnp/:id/edit": {
@@ -2657,9 +2663,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Redirects visitors to the sign-in form: only staff can list static pages."
   },
   "GET /pages/:id": {
     "controller": "PhilomenaWeb.PageController#show",
@@ -3210,9 +3216,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The reverse search form; the search itself is reverseSearch."
   },
   "GET /sessions/new": {
     "controller": "PhilomenaWeb.SessionController#new",
@@ -3389,9 +3395,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "A JSON object keyed by theme name (dynamic keys the mapping cannot express); the frontend ships its own themes."
   },
   "GET /unlocks/:id": {
     "controller": "PhilomenaWeb.UnlockController#show",

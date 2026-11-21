@@ -264,6 +264,135 @@
         ],
         "type": "object"
       },
+      "CommissionList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CommissionListing"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
+      "CommissionListing": {
+        "additionalProperties": false,
+        "properties": {
+          "artist": {
+            "type": "string"
+          },
+          "avatarUrl": {
+            "format": "uri-reference",
+            "type": "string"
+          },
+          "categories": {
+            "type": "string"
+          },
+          "offers": {
+            "type": "string"
+          },
+          "priceRange": {
+            "type": "string"
+          },
+          "profileSlug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "artist",
+          "profileSlug",
+          "priceRange",
+          "categories",
+          "offers"
+        ],
+        "type": "object"
+      },
+      "DnpEntry": {
+        "additionalProperties": false,
+        "properties": {
+          "conditions": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "restriction": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "tagSlug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "createdAt",
+          "tag",
+          "tagSlug",
+          "restriction",
+          "conditions"
+        ],
+        "type": "object"
+      },
+      "DnpEntrySummary": {
+        "additionalProperties": false,
+        "properties": {
+          "conditions": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "restriction": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "tagSlug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tag",
+          "tagSlug",
+          "restriction",
+          "conditions"
+        ],
+        "type": "object"
+      },
+      "DnpList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DnpEntrySummary"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
       "Embed": {
         "additionalProperties": false,
         "properties": {
@@ -2435,6 +2564,303 @@
                 "method": "GET",
                 "path": "/api/v1/json/comments/{id}"
               }
+            }
+          ]
+        }
+      }
+    },
+    "/commissions": {
+      "get": {
+        "operationId": "listCommissions",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The commissions directory: one page of open listings.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /commissions"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/commissions",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "artist": {
+                        "sel": ".commission__listing_artist",
+                        "text": true
+                      },
+                      "avatarUrl": {
+                        "as": "url",
+                        "attr": "src",
+                        "optional": true,
+                        "sel": "img"
+                      },
+                      "categories": {
+                        "as": "stripPrefix:Categories:",
+                        "sel": ".commission__listing__body_text p:nth-of-type(2)",
+                        "text": true
+                      },
+                      "offers": {
+                        "as": "stripPrefix:Offers:",
+                        "sel": ".commission__listing__body_text p:nth-of-type(3)",
+                        "text": true
+                      },
+                      "priceRange": {
+                        "as": "stripPrefix:Price Range:",
+                        "sel": ".commission__listing__body_text p:nth-of-type(1)",
+                        "text": true
+                      },
+                      "profileSlug": {
+                        "as": "lastSegment",
+                        "attr": "href",
+                        "sel": ".commission__listing_artist a[href^=\"/profiles/\"]"
+                      }
+                    },
+                    "many": true,
+                    "sel": ".commission"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/commission/_directory_results.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/dnp": {
+      "get": {
+        "operationId": "listDnpEntries",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DnpList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The Do-Not-Post list: one page of listed artists with their restriction and conditions.",
+        "tags": [
+          "dnp"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /dnp"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/dnp",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "conditions": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "id": {
+                        "as": "lastInt",
+                        "attr": "href",
+                        "sel": "a[href^=\"/dnp/\"]"
+                      },
+                      "restriction": {
+                        "sel": "td:nth-child(2)",
+                        "text": true
+                      },
+                      "tag": {
+                        "sel": ".tag__name",
+                        "text": true
+                      },
+                      "tagSlug": {
+                        "attr": "data-tag-slug",
+                        "sel": ".tag"
+                      }
+                    },
+                    "many": true,
+                    "sel": "table.table tbody tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/dnp_entry/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/dnp/{id}": {
+      "get": {
+        "operationId": "getDnpEntry",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DnpEntry"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "A Do-Not-Post entry: its tag, restriction and conditions.",
+        "tags": [
+          "dnp"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /dnp/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/dnp/{id}"
+              },
+              "select": {
+                "fields": {
+                  "conditions": {
+                    "sel": "table.table tr:nth-child(4) td:nth-child(2)",
+                    "text": true
+                  },
+                  "createdAt": {
+                    "attr": "datetime",
+                    "sel": "table.table tr:nth-child(1) time"
+                  },
+                  "restriction": {
+                    "sel": "table.table tr:nth-child(3) td:nth-child(2)",
+                    "text": true
+                  },
+                  "tag": {
+                    "sel": "table.table .tag__name",
+                    "text": true
+                  },
+                  "tagSlug": {
+                    "attr": "data-tag-slug",
+                    "sel": "table.table .tag"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/dnp_entry/show.html.slime"
             }
           ]
         }

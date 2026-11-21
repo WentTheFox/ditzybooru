@@ -51,6 +51,35 @@ const ImagePage = s.object({
   description: s.optional(s.string()),
 });
 
+/** One entry of the Do-Not-Post list. */
+const DnpEntrySummary = s.object({
+  id: s.int(),
+  tag: s.string(),
+  tagSlug: s.string(),
+  restriction: s.string(),
+  conditions: s.string(),
+});
+
+const DnpEntry = s.object({
+  createdAt: s.dateTime(),
+  tag: s.string(),
+  tagSlug: s.string(),
+  restriction: s.string(),
+  conditions: s.string(),
+});
+
+const CommissionListing = s.object({
+  artist: s.string(),
+  profileSlug: s.string(),
+  avatarUrl: s.optional(s.uri()),
+  /** The price range as the site words it, e.g. `$5.00 - $50.00 USD`. */
+  priceRange: s.string(),
+  /** The categories as the site words them, comma separated. */
+  categories: s.string(),
+  /** The kinds of work on offer, comma separated. */
+  offers: s.string(),
+});
+
 const ImageComments = s.object({
   /** Every comment of the image, across pages. */
   total: s.int(),
@@ -442,6 +471,11 @@ export const schemas = {
     perPage: s.int(),
     interactions: s.array(s.ref('Interaction')),
   }),
+  DnpEntrySummary,
+  DnpEntry,
+  CommissionListing,
+  DnpList: s.object({ items: s.array(s.ref('DnpEntrySummary')), hasNext: s.bool() }),
+  CommissionList: s.object({ items: s.array(s.ref('CommissionListing')), hasNext: s.bool() }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

@@ -12,6 +12,7 @@ export type Transform =
   | 'slug'
   | 'relativeTime'
   | `trimSuffix:${string}`
+  | `stripPrefix:${string}`
   | `split:${string}`
   | `join:${string}`;
 

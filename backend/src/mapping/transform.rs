@@ -32,6 +32,12 @@ pub fn apply(name: &str, value: &Value, origin: &str) -> Result<Value> {
             text.strip_suffix(suffix).unwrap_or(&text).trim().to_owned(),
         ));
     }
+    // `stripPrefix:TEXT`: the text without TEXT at its start ("Categories: Art" -> "Art").
+    if let Some(prefix) = name.strip_prefix("stripPrefix:") {
+        return Ok(Value::String(
+            text.strip_prefix(prefix).unwrap_or(&text).trim().to_owned(),
+        ));
+    }
     if let Some(sep) = name.strip_prefix("split:") {
         let parts = text
             .split(sep)
@@ -186,6 +192,15 @@ mod tests {
         assert_eq!(at("1 replies"), 2);
         assert_eq!(at("0 replies"), 1);
         assert_eq!(at("no number"), Value::Null);
+    }
+
+    #[test]
+    fn strip_prefix_drops_the_start_when_it_is_there() {
+        let at = |text: &str| {
+            apply("stripPrefix:Categories:", &Value::String(text.to_owned()), "").unwrap()
+        };
+        assert_eq!(at("Categories: Art, Music"), "Art, Music");
+        assert_eq!(at("Art"), "Art");
     }
 
     #[test]
