@@ -1,3 +1,4 @@
+import type { FieldSpec } from '../dsl/extract.ts';
 import type { Operation } from '../dsl/operation.ts';
 import { defineOperation } from '../dsl/operation.ts';
 import { s } from '../dsl/schema.ts';
@@ -216,7 +217,7 @@ export const changeName = noticeForm({
   signedIn: true,
   follow: true,
   routes: ['PUT /registrations/name', 'PATCH /registrations/name', 'GET /registrations/name/edit'],
-  examples: { name: 'Pleb' },
+  examples: { name: 'Verify Renamed Twice' },
 });
 
 export const changePassword = noticeForm({
@@ -280,6 +281,76 @@ export const deactivateAccount = defineOperation({
             fields: { ...sessionFields, _anonymous: { sel: 'a[href="/sessions/new"]', exists: true } },
           },
           must: ['/_anonymous'],
+          errors: REJECTION,
+        },
+      },
+    ],
+  },
+});
+
+/** The 2FA page, as it reads whether 2FA is on and, when it is off, the secret to pair an app with. */
+const totpFields = {
+  // The first bold word of the page: `enabled` or `disabled`.
+  status: { sel: 'form > p > strong', text: true },
+  secret: { sel: 'form h4 + p > strong', text: true, optional: true },
+  // Shown once, right after 2FA is turned on.
+  backupCodes: { sel: '.block--success ul li', text: true, many: true, optional: true },
+} satisfies Record<string, FieldSpec>;
+
+export const getTotpSetup = defineOperation({
+  operationId: 'getTotpSetup',
+  path: '/registrations/totp',
+  method: 'get',
+  summary:
+    'The two factor authentication page: whether it is on and, when it is off, the secret to pair an authenticator app with. The first visit makes the secret.',
+  tags: ['account'],
+  response: s.ref('TotpSetup'),
+  examples: {},
+  philomena: {
+    routes: ['GET /registrations/totp/edit'],
+    auth: 'session',
+    cacheSeconds: 0,
+    strategies: [
+      {
+        kind: 'html',
+        flavors: ['philomena', 'furbooru'],
+        request: { method: 'GET', path: '/registrations/totp/edit' },
+        template: 'lib/philomena_web/templates/registration/totp/edit.html.slime',
+        select: { fields: totpFields },
+      },
+    ],
+  },
+});
+
+export const updateTotp = defineOperation({
+  operationId: 'updateTotp',
+  path: '/registrations/totp',
+  method: 'put',
+  summary:
+    'Turn two factor authentication on (the code from the paired app) or off (a code or a backup code). Turning it on answers the backup codes, once.',
+  tags: ['account'],
+  body: s.object({ code: s.string(), currentPassword: s.string() }),
+  response: s.ref('TotpSetup'),
+  examples: { currentPassword: 'philomena123', code: '000000' },
+  philomena: {
+    routes: ['PUT /registrations/totp', 'PATCH /registrations/totp'],
+    auth: 'session',
+    strategies: [
+      {
+        kind: 'form',
+        flavors: ['philomena', 'furbooru'],
+        form: { page: '/registrations/edit', csrf: TOKEN },
+        request: {
+          method: 'PUT',
+          path: '/registrations/totp',
+          body: { 'user[twofactor_token]': '{code}', 'user[current_password]': '{currentPassword}' },
+        },
+        // The site redirects back to the page when it took the code.
+        result: {
+          page: '/registrations/totp/edit',
+          follow: true,
+          requireRedirect: true,
+          select: { fields: totpFields },
           errors: REJECTION,
         },
       },

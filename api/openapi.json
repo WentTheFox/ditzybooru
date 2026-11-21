@@ -2873,6 +2873,40 @@
         ],
         "type": "object"
       },
+      "TotpSetup": {
+        "additionalProperties": false,
+        "properties": {
+          "backupCodes": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "secret": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "backupCodes"
+        ],
+        "type": "object"
+      },
       "UnreadCounts": {
         "additionalProperties": false,
         "properties": {
@@ -9290,7 +9324,7 @@
           "account"
         ],
         "x-examples": {
-          "name": "Pleb"
+          "name": "Verify Renamed Twice"
         },
         "x-philomena": {
           "auth": "session",
@@ -9452,6 +9486,190 @@
                     "message": {
                       "optional": true,
                       "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/registrations/totp": {
+      "get": {
+        "operationId": "getTotpSetup",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotpSetup"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The two factor authentication page: whether it is on and, when it is off, the secret to pair an authenticator app with. The first visit makes the secret.",
+        "tags": [
+          "account"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "cacheSeconds": 0,
+          "routes": [
+            "GET /registrations/totp/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/registrations/totp/edit"
+              },
+              "select": {
+                "fields": {
+                  "backupCodes": {
+                    "many": true,
+                    "optional": true,
+                    "sel": ".block--success ul li",
+                    "text": true
+                  },
+                  "secret": {
+                    "optional": true,
+                    "sel": "form h4 + p > strong",
+                    "text": true
+                  },
+                  "status": {
+                    "sel": "form > p > strong",
+                    "text": true
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/registration/totp/edit.html.slime"
+            }
+          ]
+        }
+      },
+      "put": {
+        "operationId": "updateTotp",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "currentPassword": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "currentPassword"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TotpSetup"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Turn two factor authentication on (the code from the paired app) or off (a code or a backup code). Turning it on answers the backup codes, once.",
+        "tags": [
+          "account"
+        ],
+        "x-examples": {
+          "code": "000000",
+          "currentPassword": "philomena123"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /registrations/totp",
+            "PATCH /registrations/totp"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/registrations/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "user[current_password]": "{currentPassword}",
+                  "user[twofactor_token]": "{code}"
+                },
+                "method": "PUT",
+                "path": "/registrations/totp"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "page": "/registrations/totp/edit",
+                "requireRedirect": true,
+                "select": {
+                  "fields": {
+                    "backupCodes": {
+                      "many": true,
+                      "optional": true,
+                      "sel": ".block--success ul li",
+                      "text": true
+                    },
+                    "secret": {
+                      "optional": true,
+                      "sel": "form h4 + p > strong",
+                      "text": true
+                    },
+                    "status": {
+                      "sel": "form > p > strong",
                       "text": true
                     }
                   }
@@ -10655,6 +10873,9 @@
         "tags": [
           "session"
         ],
+        "x-examples": {
+          "code": "000000"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [

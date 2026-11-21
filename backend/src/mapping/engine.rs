@@ -269,10 +269,21 @@ async fn get_text(
         );
     }
     let path = plan_request(request, params)?;
-    match send(client, throttle, ctx, &path, None, false).await? {
-        Sent::Body(body) => Ok(body),
-        Sent::Redirect(_) => bail!("unexpected redirect"),
+    // Redirects are read, not followed. A page that prepares something on
+    // first sight (the 2FA secret) sends the visitor back to itself: ask once
+    // more. Any other redirect is the site saying there is no such page.
+    for attempt in 0..2 {
+        match send(client, throttle, ctx, &path, None, true).await? {
+            Sent::Body(body) => return Ok(body),
+            Sent::Redirect(location) if attempt == 0 && location.ends_with(path.as_str()) => {}
+            Sent::Redirect(_) => {
+                return Err(anyhow::Error::new(UpstreamStatus(
+                    reqwest::StatusCode::FOUND,
+                )));
+            }
+        }
     }
+    bail!("unexpected redirect")
 }
 
 /// The request for `url`: the key (never in logs) and cookies added, and the
@@ -581,6 +592,13 @@ async fn fetch_form(
         });
     }
 
+    if form.result.require_redirect && led_to.is_none() {
+        let mut messages = vec![];
+        if let Some(css) = &form.result.errors {
+            messages.extend(html::texts(&submitted, css)?);
+        }
+        return Err(anyhow::Error::new(FormRejected(messages.join(" "))));
+    }
     let result = match (&led_to, form.result.follow) {
         // The page the submission sent the visitor to, where the site shows
         // its message (a profile page whose address the submission decided).

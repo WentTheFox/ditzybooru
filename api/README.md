@@ -25,7 +25,12 @@ upstream route and is the resume point.
    `VERIFY_LOGIN_<INSTANCE>` (`email:password`, e.g. `user@example.com:philomena123`
    for the dev seed). The dev stacks run hCaptcha's test secret, so the verifier
    signs in with its published test response. Mutations really happen on those
-   stacks, so give them examples that are safe to repeat.
+   stacks, so give them examples that are safe to repeat. Some cannot be:
+   sign-up, rename and deactivation use a throwaway account
+   (`verify.signup@example.com`, made by `createRegistration`), and the 2FA and
+   email-token operations take a fresh value from `VERIFY_PARAM_<NAME>_<INSTANCE>`
+   (a code from `:pot.totp/1` in the app container, a token from the site's
+   `deliver_user_*` functions).
 6. Commit the batch. Resume = rerun step 2.
 
 ## Conventions

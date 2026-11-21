@@ -267,7 +267,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "deactivateAccount"
     ],
@@ -1948,7 +1948,7 @@
     "class": "html-page",
     "area": "user",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "deactivateAccount"
     ],
@@ -3145,7 +3145,7 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "changeName"
     ],
@@ -3175,8 +3175,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getTotpSetup"
+    ],
     "note": ""
   },
   "GET /reports": {
@@ -3299,7 +3301,7 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "createSessionTotp"
     ],
@@ -4043,7 +4045,7 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "changeName"
     ],
@@ -4073,8 +4075,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateTotp"
+    ],
     "note": ""
   },
   "PATCH /rules/:id": {
@@ -5519,7 +5523,7 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "createSessionTotp"
     ],
@@ -6149,7 +6153,7 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "changeName"
     ],
@@ -6179,8 +6183,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateTotp"
+    ],
     "note": ""
   },
   "PUT /rules/:id": {

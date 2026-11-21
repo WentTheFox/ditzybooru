@@ -630,6 +630,14 @@ export const schemas = {
     hasNext: s.bool(),
   }),
   ReportList: s.object({ items: s.array(s.ref('FiledReport')), hasNext: s.bool() }),
+  TotpSetup: s.object({
+    /** `enabled` or `disabled`. */
+    status: s.enum('enabled', 'disabled'),
+    /** The key to pair an authenticator app with, as text or as the QR code of an `otpauth://` link; only while 2FA is off. */
+    secret: s.optional(s.nullable(s.string())),
+    /** One-time backup codes, shown right after 2FA is turned on. */
+    backupCodes: s.array(s.string()),
+  }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

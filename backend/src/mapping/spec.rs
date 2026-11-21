@@ -373,6 +373,10 @@ pub struct FormResult {
     /// redirected somewhere local.
     #[serde(default)]
     pub follow: bool,
+    /// The site accepts the submission by redirecting; a page rendered in
+    /// answer is a rejection, and `errors` says why.
+    #[serde(default)]
+    pub require_redirect: bool,
     /// What to take from the page. Unused when `json` is set.
     #[serde(default)]
     pub select: SelectSpec,

@@ -156,7 +156,15 @@ async fn session_for(
         fresh.ensure_fingerprint();
         return Ok(Some(fresh));
     }
-    sign_in(client, document, instance, name).await.map(Some)
+    sign_in(
+        client,
+        document,
+        instance,
+        name,
+        op.id == "createSessionTotp",
+    )
+    .await
+    .map(Some)
 }
 
 /// A signed-in session on `instance`, from `VERIFY_LOGIN_<INSTANCE>` (`email:password`),
@@ -167,6 +175,7 @@ async fn sign_in(
     document: &Document,
     instance: &Instance,
     name: &str,
+    half: bool,
 ) -> Result<Session, String> {
     let var = format!(
         "VERIFY_LOGIN_{}",
@@ -201,8 +210,14 @@ async fn sign_in(
         .map_err(|err| format!("signing in failed: {err:#}"))?;
     let answer = extract(strategy, &responses, ctx, &params)
         .map_err(|err| format!("signing in failed: {err:#}"))?;
-    if answer.get("signedIn") != Some(&Value::Bool(true)) {
-        return Err("signing in did not sign in".to_owned());
+    // `half`: stop where the site asks for the 2FA code, for the operation that gives it.
+    let wanted = if half {
+        "secondFactorRequired"
+    } else {
+        "signedIn"
+    };
+    if answer.get(wanted) != Some(&Value::Bool(true)) {
+        return Err(format!("signing in did not reach {wanted}"));
     }
     Ok(session)
 }

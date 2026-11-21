@@ -127,6 +127,7 @@ export const createSessionTotp = defineOperation({
     rememberMe: s.optional(s.bool()),
   }),
   response: s.ref('Session'),
+  examples: { code: '000000' },
   philomena: {
     routes: ['POST /sessions/totp', 'GET /sessions/totp/new'],
     auth: 'session',
