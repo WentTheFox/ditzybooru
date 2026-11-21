@@ -3869,6 +3869,10 @@
         "tags": [
           "images"
         ],
+        "x-examples": {
+          "tags": "safe, verify upload, upload test, noise, generated",
+          "url": "http://host.containers.internal:8099/verify.png"
+        },
         "x-philomena": {
           "auth": "api-key",
           "cacheSeconds": 0,
@@ -5837,6 +5841,9 @@
         "tags": [
           "images"
         ],
+        "x-examples": {
+          "url": "http://web/img/view/2026/11/2/4.jpg"
+        },
         "x-philomena": {
           "auth": "api-key-optional",
           "cacheSeconds": 0,

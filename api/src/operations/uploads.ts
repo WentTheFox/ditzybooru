@@ -21,6 +21,10 @@ export const createImage = defineOperation({
     description: s.optional(s.string()),
   }),
   response: s.ref('Media'),
+  examples: {
+    url: 'http://host.containers.internal:8099/verify.png',
+    tags: 'safe, verify upload, upload test, noise, generated',
+  },
   philomena: {
     routes: ['POST /api/v1/json/images'],
     auth: 'api-key',
@@ -57,6 +61,7 @@ export const reverseSearch = defineOperation({
     limit: s.optional(s.int()),
   }),
   response: s.ref('ReverseSearchResults'),
+  examples: { url: 'http://web/img/view/2026/11/2/4.jpg' },
   philomena: {
     routes: ['POST /api/v1/json/search/reverse'],
     auth: 'api-key-optional',
