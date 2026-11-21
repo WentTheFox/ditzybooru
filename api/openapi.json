@@ -316,6 +316,60 @@
         ],
         "type": "object"
       },
+      "CommissionPage": {
+        "additionalProperties": false,
+        "properties": {
+          "artist": {
+            "type": "string"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "contactHtml": {
+            "type": "string"
+          },
+          "informationHtml": {
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "addOns": {
+                  "type": "string"
+                },
+                "basePrice": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "exampleImageId": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "description",
+                "basePrice",
+                "addOns"
+              ],
+              "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "artist",
+          "categories",
+          "items"
+        ],
+        "type": "object"
+      },
       "DnpEntry": {
         "additionalProperties": false,
         "properties": {
@@ -390,6 +444,91 @@
         "required": [
           "items",
           "hasNext"
+        ],
+        "type": "object"
+      },
+      "DuplicateReport": {
+        "additionalProperties": false,
+        "properties": {
+          "duplicateOfImageId": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "imageId": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "imageId",
+          "duplicateOfImageId"
+        ],
+        "type": "object"
+      },
+      "DuplicateReportList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DuplicateReport"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
+      "EditHistory": {
+        "additionalProperties": false,
+        "properties": {
+          "author": {
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/EditVersion"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "author",
+          "items"
+        ],
+        "type": "object"
+      },
+      "EditVersion": {
+        "additionalProperties": false,
+        "properties": {
+          "diffHtml": {
+            "type": "string"
+          },
+          "editedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "editor": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "diffHtml",
+          "reason",
+          "editedAt",
+          "editor"
         ],
         "type": "object"
       },
@@ -864,6 +1003,71 @@
         ],
         "type": "object"
       },
+      "ImageBox": {
+        "additionalProperties": false,
+        "properties": {
+          "commentCount": {
+            "type": "integer"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "downvotes": {
+            "type": "integer"
+          },
+          "faves": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "representations": {
+            "$ref": "#/components/schemas/Representations"
+          },
+          "score": {
+            "type": "integer"
+          },
+          "upvotes": {
+            "type": "integer"
+          },
+          "width": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "width",
+          "height",
+          "score",
+          "upvotes",
+          "downvotes",
+          "faves",
+          "commentCount",
+          "representations"
+        ],
+        "type": "object"
+      },
+      "ImageBoxList": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ImageBox"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
       "ImageComments": {
         "additionalProperties": false,
         "properties": {
@@ -905,6 +1109,35 @@
           "upvotes",
           "downvotes",
           "faves"
+        ],
+        "type": "object"
+      },
+      "ImageFavorites": {
+        "additionalProperties": false,
+        "properties": {
+          "users": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "slug"
+              ],
+              "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "users"
         ],
         "type": "object"
       },
@@ -1274,6 +1507,47 @@
           "page",
           "perPage",
           "interactions"
+        ],
+        "type": "object"
+      },
+      "PageHistory": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PageRevision"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "items"
+        ],
+        "type": "object"
+      },
+      "PageRevision": {
+        "additionalProperties": false,
+        "properties": {
+          "diffHtml": {
+            "type": "string"
+          },
+          "editedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "editor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "editor",
+          "editedAt",
+          "diffHtml"
         ],
         "type": "object"
       },
@@ -2982,6 +3256,99 @@
         }
       }
     },
+    "/duplicate_reports": {
+      "get": {
+        "operationId": "listDuplicateReports",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DuplicateReportList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The duplicate reports: pairs of images where one is reported as a copy of the other.",
+        "tags": [
+          "duplicates"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /duplicate_reports"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/duplicate_reports",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "duplicateOfImageId": {
+                        "as": "lastInt",
+                        "sel": "td:nth-child(2) .dr__image-cell p:first-child",
+                        "text": true
+                      },
+                      "id": {
+                        "as": "lastInt",
+                        "attr": "class"
+                      },
+                      "imageId": {
+                        "as": "lastInt",
+                        "sel": ".dr__image-cell p:first-child",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "table.dupe-report-list > tbody > tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/duplicate_report/_duplicate_report.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/filters": {
       "get": {
         "operationId": "listFilters",
@@ -4052,6 +4419,119 @@
                 "method": "GET",
                 "path": "/api/v1/json/forums/{forum}/topics/{topic}/posts/{post}"
               }
+            }
+          ]
+        }
+      }
+    },
+    "/forums/{forum}/topics/{topic}/posts/{postId}/history": {
+      "get": {
+        "operationId": "listPostHistory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "postId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditHistory"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The last 25 versions of a forum post, each as a diff against the one before.",
+        "tags": [
+          "history"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "postId": 1,
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /forums/:forum_id/topics/:topic_id/posts/:post_id/history"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/forums/{forum}/topics/{topic}/posts/{postId}/history"
+              },
+              "select": {
+                "fields": {
+                  "author": {
+                    "sel": "h1 strong",
+                    "text": true
+                  },
+                  "items": {
+                    "fields": {
+                      "diffHtml": {
+                        "as": "sanitizedHtml",
+                        "html": true,
+                        "sel": ".communication__body__text"
+                      },
+                      "editedAt": {
+                        "attr": "datetime",
+                        "sel": ".flex__right time"
+                      },
+                      "editor": {
+                        "sel": ".flex__right strong",
+                        "text": true
+                      },
+                      "reason": {
+                        "sel": ".communication__options .flex--spaced-out > div:first-child",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "article.communication"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/topic/post/history/index.html.slime"
             }
           ]
         }
@@ -5476,6 +5956,351 @@
         }
       }
     },
+    "/images/{imageId}/comments/{commentId}/history": {
+      "get": {
+        "operationId": "listCommentHistory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EditHistory"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The last 25 versions of a comment, each as a diff against the one before.",
+        "tags": [
+          "history"
+        ],
+        "x-examples": {
+          "commentId": 1,
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /images/:image_id/comments/:comment_id/history"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/images/{imageId}/comments/{commentId}/history"
+              },
+              "select": {
+                "fields": {
+                  "author": {
+                    "sel": "h1 strong",
+                    "text": true
+                  },
+                  "items": {
+                    "fields": {
+                      "diffHtml": {
+                        "as": "sanitizedHtml",
+                        "html": true,
+                        "sel": ".communication__body__text"
+                      },
+                      "editedAt": {
+                        "attr": "datetime",
+                        "sel": ".flex__right time"
+                      },
+                      "editor": {
+                        "sel": ".flex__right strong",
+                        "text": true
+                      },
+                      "reason": {
+                        "sel": ".communication__options .flex--spaced-out > div:first-child",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "article.communication"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/image/comment/history/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/images/{imageId}/favorites": {
+      "get": {
+        "operationId": "listImageFavorites",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageFavorites"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The users who faved an image, by name.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "cacheSeconds": 30,
+          "routes": [
+            "GET /images/:image_id/favorites"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/images/{imageId}/favorites"
+              },
+              "select": {
+                "fields": {
+                  "users": {
+                    "fields": {
+                      "name": {
+                        "text": true
+                      },
+                      "slug": {
+                        "as": "lastSegment",
+                        "attr": "href"
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": "a.interaction-user-list-item"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/image/favorite/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/images/{imageId}/related": {
+      "get": {
+        "operationId": "listRelatedImages",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageBoxList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Images the site finds similar to one image, as thumbnails.",
+        "tags": [
+          "images"
+        ],
+        "x-examples": {
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /images/:image_id/related"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/images/{imageId}/related"
+              },
+              "select": {
+                "fields": {
+                  "items": {
+                    "fields": {
+                      "commentCount": {
+                        "as": "int",
+                        "attr": "data-comment-count",
+                        "sel": ".image-container"
+                      },
+                      "createdAt": {
+                        "attr": "data-created-at",
+                        "sel": ".image-container"
+                      },
+                      "downvotes": {
+                        "as": "int",
+                        "attr": "data-downvotes",
+                        "sel": ".image-container"
+                      },
+                      "faves": {
+                        "as": "int",
+                        "attr": "data-faves",
+                        "sel": ".image-container"
+                      },
+                      "height": {
+                        "as": "int",
+                        "attr": "data-height",
+                        "sel": ".image-container"
+                      },
+                      "id": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "sel": ".image-container"
+                      },
+                      "representations": {
+                        "attr": "data-uris",
+                        "json": true,
+                        "map": {
+                          "full": {
+                            "as": "url",
+                            "from": "/full"
+                          },
+                          "large": {
+                            "as": "url",
+                            "from": "/large"
+                          },
+                          "medium": {
+                            "as": "url",
+                            "from": "/medium"
+                          },
+                          "small": {
+                            "as": "url",
+                            "from": "/small"
+                          },
+                          "tall": {
+                            "as": "url",
+                            "from": "/tall"
+                          },
+                          "thumb": {
+                            "as": "url",
+                            "from": "/thumb"
+                          },
+                          "thumbSmall": {
+                            "as": "url",
+                            "from": "/thumb_small"
+                          },
+                          "thumbTiny": {
+                            "as": "url",
+                            "from": "/thumb_tiny"
+                          }
+                        },
+                        "sel": ".image-container"
+                      },
+                      "score": {
+                        "as": "int",
+                        "attr": "data-score",
+                        "sel": ".image-container"
+                      },
+                      "upvotes": {
+                        "as": "int",
+                        "attr": "data-upvotes",
+                        "sel": ".image-container"
+                      },
+                      "width": {
+                        "as": "int",
+                        "attr": "data-width",
+                        "sel": ".image-container"
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": "#imagelist-container .media-box"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/image/related/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/images/{imageId}/source_changes": {
       "get": {
         "operationId": "listImageSourceChanges",
@@ -5576,7 +6401,7 @@
                       }
                     },
                     "many": true,
-                    "sel": "table.table tbody tr"
+                    "sel": "table.table > tbody > tr"
                   }
                 }
               },
@@ -5992,6 +6817,97 @@
         }
       }
     },
+    "/pages/{slug}/history": {
+      "get": {
+        "operationId": "listPageHistory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageHistory"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The revisions of a static page, each with the diff of its text.",
+        "tags": [
+          "history"
+        ],
+        "x-examples": {
+          "slug": "about"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /pages/:page_id/history"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/pages/{slug}/history"
+              },
+              "select": {
+                "fields": {
+                  "items": {
+                    "fields": {
+                      "diffHtml": {
+                        "as": "sanitizedHtml",
+                        "html": true,
+                        "sel": "td.static-page__diff"
+                      },
+                      "editedAt": {
+                        "attr": "datetime",
+                        "sel": "td:nth-child(2) time"
+                      },
+                      "editor": {
+                        "sel": "td:nth-child(1)",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "table.table > tbody > tr"
+                  },
+                  "title": {
+                    "sel": "h1 a",
+                    "text": true
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/page/history/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/posts": {
       "get": {
         "operationId": "listPosts",
@@ -6286,6 +7202,122 @@
         }
       }
     },
+    "/profiles/{slug}/commission": {
+      "get": {
+        "operationId": "getProfileCommission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommissionPage"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "A user's commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /profiles/:profile_id/commission"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/profiles/{slug}/commission"
+              },
+              "select": {
+                "fields": {
+                  "artist": {
+                    "as": "trimSuffix:'s Commissions",
+                    "sel": "h1",
+                    "text": true
+                  },
+                  "categories": {
+                    "many": true,
+                    "optional": true,
+                    "sel": ".commission__category",
+                    "text": true
+                  },
+                  "contactHtml": {
+                    "as": "sanitizedHtml",
+                    "html": true,
+                    "optional": true,
+                    "sel": ".column-layout__left .block:nth-child(2) .paragraph"
+                  },
+                  "informationHtml": {
+                    "as": "sanitizedHtml",
+                    "html": true,
+                    "optional": true,
+                    "sel": ".column-layout__left .block:nth-child(1) .paragraph"
+                  },
+                  "items": {
+                    "fields": {
+                      "addOns": {
+                        "sel": "td:nth-child(4)",
+                        "text": true
+                      },
+                      "basePrice": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "description": {
+                        "sel": "td:nth-child(2)",
+                        "text": true
+                      },
+                      "exampleImageId": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "optional": true,
+                        "sel": ".image-container"
+                      }
+                    },
+                    "many": true,
+                    "optional": true,
+                    "sel": ".column-layout__main table.table > tbody > tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/profile/commission/show.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/profiles/{slug}/source_changes": {
       "get": {
         "operationId": "listProfileSourceChanges",
@@ -6386,7 +7418,7 @@
                       }
                     },
                     "many": true,
-                    "sel": "table.table tbody tr"
+                    "sel": "table.table > tbody > tr"
                   }
                 }
               },
@@ -6608,6 +7640,97 @@
                 }
               },
               "template": "lib/philomena_web/templates/rule/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/rules/{id}": {
+      "get": {
+        "operationId": "getRule",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rule"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "One rule with its text and examples. Only Philomena has this page.",
+        "tags": [
+          "pages"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /rules/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/rules/{id}"
+              },
+              "select": {
+                "fields": {
+                  "bodyHtml": {
+                    "as": "sanitizedHtml",
+                    "html": true,
+                    "sel": ".rule__body .walloftext"
+                  },
+                  "examplesHtml": {
+                    "as": "sanitizedHtml",
+                    "html": true,
+                    "optional": true,
+                    "sel": ".rule__example .walloftext"
+                  },
+                  "id": {
+                    "as": "int",
+                    "attr": "id"
+                  },
+                  "important": {
+                    "exists": true,
+                    "sel": ".rule__badge--important"
+                  },
+                  "title": {
+                    "sel": ".rule__title",
+                    "text": true
+                  }
+                },
+                "root": "article.rule"
+              },
+              "template": "lib/philomena_web/templates/rule/show.html.slime"
             }
           ]
         }

@@ -101,6 +101,58 @@ const TagChange = s.object({
   removed: s.array(s.string()),
 });
 
+const EditVersion = s.object({
+  /** The text with `<ins>` and `<del>` marks for what this edit added and removed: safe to render. */
+  diffHtml: s.string(),
+  /** The editor's reason, or `No reason given`. */
+  reason: s.string(),
+  editedAt: s.dateTime(),
+  editor: s.string(),
+});
+
+const PageRevision = s.object({
+  editor: s.string(),
+  editedAt: s.dateTime(),
+  diffHtml: s.string(),
+});
+
+const ImageBox = s.object({
+  id: s.int(),
+  createdAt: s.dateTime(),
+  width: s.int(),
+  height: s.int(),
+  score: s.int(),
+  upvotes: s.int(),
+  downvotes: s.int(),
+  faves: s.int(),
+  commentCount: s.int(),
+  representations: s.ref('Representations'),
+});
+
+const DuplicateReport = s.object({
+  id: s.int(),
+  imageId: s.int(),
+  duplicateOfImageId: s.int(),
+});
+
+const CommissionPage = s.object({
+  artist: s.string(),
+  categories: s.array(s.string()),
+  /** The listing's general text, as HTML cleaned by the backend: safe to render. */
+  informationHtml: s.optional(s.string()),
+  /** How to reach the artist, as HTML cleaned by the backend: safe to render. */
+  contactHtml: s.optional(s.string()),
+  items: s.array(
+    s.object({
+      description: s.string(),
+      /** The price as the site words it, e.g. `$5.00`. */
+      basePrice: s.string(),
+      addOns: s.string(),
+      exampleImageId: s.optional(s.int()),
+    }),
+  ),
+});
+
 const ImageComments = s.object({
   /** Every comment of the image, across pages. */
   total: s.int(),
@@ -501,6 +553,16 @@ export const schemas = {
   TagChange,
   SourceChangeList: s.object({ items: s.array(s.ref('SourceChange')), hasNext: s.bool() }),
   TagChangeList: s.object({ items: s.array(s.ref('TagChange')), hasNext: s.bool() }),
+  EditVersion,
+  PageRevision,
+  ImageBox,
+  DuplicateReport,
+  EditHistory: s.object({ author: s.string(), items: s.array(s.ref('EditVersion')) }),
+  PageHistory: s.object({ title: s.string(), items: s.array(s.ref('PageRevision')) }),
+  ImageFavorites: s.object({ users: s.array(s.object({ name: s.string(), slug: s.string() })) }),
+  ImageBoxList: s.object({ items: s.array(s.ref('ImageBox')) }),
+  DuplicateReportList: s.object({ items: s.array(s.ref('DuplicateReport')), hasNext: s.bool() }),
+  CommissionPage,
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

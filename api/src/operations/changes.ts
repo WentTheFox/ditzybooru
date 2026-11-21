@@ -45,7 +45,7 @@ function sourceChanges(options: ChangeOptions) {
           select: {
             fields: {
               items: {
-                sel: 'table.table tbody tr',
+                sel: 'table.table > tbody > tr',
                 many: true,
                 fields: {
                   imageId: { sel: 'td:nth-child(1) a', text: true, as: 'int' },

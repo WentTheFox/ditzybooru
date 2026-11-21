@@ -75,6 +75,40 @@ export const listRules = defineOperation({
   },
 });
 
+/** One rule on its own page. */
+export const getRule = defineOperation({
+  operationId: 'getRule',
+  path: '/rules/{id}',
+  method: 'get',
+  summary: 'One rule with its text and examples. Only Philomena has this page.',
+  tags: ['pages'],
+  params: [{ name: 'id', in: 'path', schema: s.int(), required: true }],
+  response: s.ref('Rule'),
+  examples: { id: 1 },
+  philomena: {
+    routes: ['GET /rules/:id'],
+    auth: 'none',
+    strategies: [
+      {
+        kind: 'html',
+        flavors: ['philomena'],
+        request: { method: 'GET', path: '/rules/{id}' },
+        template: 'lib/philomena_web/templates/rule/show.html.slime',
+        select: {
+          root: 'article.rule',
+          fields: {
+            id: { attr: 'id', as: 'int' },
+            title: { sel: '.rule__title', text: true },
+            important: { sel: '.rule__badge--important', exists: true },
+            bodyHtml: { sel: '.rule__body .walloftext', html: true, as: 'sanitizedHtml' },
+            examplesHtml: { sel: '.rule__example .walloftext', html: true, optional: true, as: 'sanitizedHtml' },
+          },
+        },
+      },
+    ],
+  },
+});
+
 /** The staff list: groups (administrators, moderators, ...) with their members. */
 export const getStaff = defineOperation({
   operationId: 'getStaff',
@@ -115,6 +149,59 @@ export const getStaff = defineOperation({
                     description: { sel: '.staff-block__user-description', text: true },
                   },
                 },
+              },
+            },
+          },
+        },
+      },
+    ],
+  },
+});
+
+/** A user's commission listing: what they offer, at what price, and how to reach them. */
+export const getProfileCommission = defineOperation({
+  operationId: 'getProfileCommission',
+  path: '/profiles/{slug}/commission',
+  method: 'get',
+  summary: "A user's commission listing.",
+  tags: ['commissions'],
+  params: [{ name: 'slug', in: 'path', schema: s.string(), required: true }],
+  response: s.ref('CommissionPage'),
+  examples: { slug: 'Pleb' },
+  philomena: {
+    routes: ['GET /profiles/:profile_id/commission'],
+    auth: 'none',
+    strategies: [
+      {
+        kind: 'html',
+        flavors: ['philomena', 'furbooru'],
+        request: { method: 'GET', path: '/profiles/{slug}/commission' },
+        template: 'lib/philomena_web/templates/profile/commission/show.html.slime',
+        select: {
+          fields: {
+            artist: { sel: 'h1', text: true, as: "trimSuffix:'s Commissions" },
+            categories: { sel: '.commission__category', text: true, many: true, optional: true },
+            informationHtml: {
+              sel: '.column-layout__left .block:nth-child(1) .paragraph',
+              html: true,
+              as: 'sanitizedHtml',
+              optional: true,
+            },
+            contactHtml: {
+              sel: '.column-layout__left .block:nth-child(2) .paragraph',
+              html: true,
+              as: 'sanitizedHtml',
+              optional: true,
+            },
+            items: {
+              sel: '.column-layout__main table.table > tbody > tr',
+              many: true,
+              optional: true,
+              fields: {
+                description: { sel: 'td:nth-child(2)', text: true },
+                basePrice: { sel: 'td:nth-child(3)', text: true },
+                addOns: { sel: 'td:nth-child(4)', text: true },
+                exampleImageId: { sel: '.image-container', attr: 'data-image-id', as: 'int', optional: true },
               },
             },
           },

@@ -1885,11 +1885,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /conversations/:conversation_id/reports/new": {
     "controller": "PhilomenaWeb.Conversation.ReportController#new",
@@ -1911,11 +1911,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /conversations/new": {
     "controller": "PhilomenaWeb.ConversationController#new",
@@ -1936,11 +1936,11 @@
       "philomena"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 4,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Needs a signed-in session (account deactivation)."
   },
   "GET /dnp": {
     "controller": "PhilomenaWeb.DnpEntryController#index",
@@ -2007,8 +2007,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listDuplicateReports"
+    ],
     "note": ""
   },
   "GET /duplicate_reports/:id": {
@@ -2018,11 +2020,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form."
   },
   "GET /fetch/tags": {
     "controller": "PhilomenaWeb.Fetch.TagController#index",
@@ -2033,9 +2035,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Resolves tag ids for the site's own scripts; names and counts come from the tag pages and search."
   },
   "GET /filters": {
     "controller": "PhilomenaWeb.FilterController#index",
@@ -2182,11 +2184,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /forums/:forum_id/topics/:topic_id/posts/:id/edit": {
     "controller": "PhilomenaWeb.Topic.PostController#edit",
@@ -2210,8 +2212,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listPostHistory"
+    ],
     "note": ""
   },
   "GET /forums/:forum_id/topics/:topic_id/posts/:post_id/reports/new": {
@@ -2377,8 +2381,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listCommentHistory"
+    ],
     "note": ""
   },
   "GET /images/:image_id/comments/:comment_id/reports/new": {
@@ -2429,8 +2435,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listImageFavorites"
+    ],
     "note": ""
   },
   "GET /images/:image_id/navigate": {
@@ -2442,9 +2450,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Redirects to the neighbouring image; the page already navigates with a search sorted by id."
   },
   "GET /images/:image_id/related": {
     "controller": "PhilomenaWeb.Image.RelatedController#index",
@@ -2455,8 +2463,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listRelatedImages"
+    ],
     "note": ""
   },
   "GET /images/:image_id/reporting": {
@@ -2468,9 +2478,9 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The report form; the report itself is a write (phase 6)."
   },
   "GET /images/:image_id/reports/new": {
     "controller": "PhilomenaWeb.Image.ReportController#new",
@@ -2535,11 +2545,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form."
   },
   "GET /images/new": {
     "controller": "PhilomenaWeb.ImageController#new",
@@ -2626,11 +2636,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /notifications/categories/:id": {
     "controller": "PhilomenaWeb.Notification.CategoryController#show",
@@ -2639,11 +2649,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /notifications/unread": {
     "controller": "PhilomenaWeb.Notification.UnreadController#index",
@@ -2652,11 +2662,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /pages": {
     "controller": "PhilomenaWeb.PageController#index",
@@ -2708,8 +2718,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listPageHistory"
+    ],
     "note": ""
   },
   "GET /pages/new": {
@@ -2882,8 +2894,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getProfileCommission"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/commission/edit": {
@@ -3144,11 +3158,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "user",
+    "phase": 5,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not signed in to the sign-in form: a signed-in read."
   },
   "GET /rules": {
     "controller": "PhilomenaWeb.RuleController#index",
@@ -3172,8 +3186,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "getRule"
+    ],
     "note": ""
   },
   "GET /rules/:id/edit": {
@@ -3364,11 +3380,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form."
   },
   "GET /tags/:tag_id/image/edit": {
     "controller": "PhilomenaWeb.Tag.ImageController#edit",
