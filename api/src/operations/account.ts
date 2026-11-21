@@ -1,7 +1,7 @@
 import type { Operation } from '../dsl/operation.ts';
 import { defineOperation } from '../dsl/operation.ts';
 import { s } from '../dsl/schema.ts';
-import { sessionFields } from './session.ts';
+import { sessionFields } from './sessionFields.ts';
 
 const TOKEN = { sel: 'meta[name=csrf-token]', attr: 'content' };
 
