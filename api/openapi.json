@@ -3159,7 +3159,7 @@
           "profiles"
         ],
         "x-examples": {
-          "url": "http://web/img/view/2026/11/2/4.jpg"
+          "url": "http://host.containers.internal:8099/verify.png"
         },
         "x-philomena": {
           "auth": "session",
