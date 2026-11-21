@@ -718,8 +718,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "deleteCommission"
+    ],
     "note": ""
   },
   "DELETE /profiles/:profile_id/commission/items/:id": {
@@ -731,8 +733,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "deleteCommissionItem"
+    ],
     "note": ""
   },
   "DELETE /sessions": {
@@ -2044,8 +2048,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createDnpEntry"
+    ],
     "note": ""
   },
   "GET /duplicate_reports": {
@@ -2924,8 +2930,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "updateArtistLink"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/artist_links/new": {
@@ -2937,8 +2945,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createArtistLink"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/awards/:id/edit": {
@@ -2991,8 +3001,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommission"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/commission/items/:id/edit": {
@@ -3004,8 +3016,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommissionItem"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/commission/items/new": {
@@ -3017,8 +3031,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "addCommissionItem"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/commission/new": {
@@ -3030,8 +3046,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createCommission"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/commission/reports/new": {
@@ -3382,8 +3400,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateSettings"
+    ],
     "note": ""
   },
   "GET /staff": {
@@ -4035,8 +4055,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "updateArtistLink"
+    ],
     "note": ""
   },
   "PATCH /profiles/:profile_id/awards/:id": {
@@ -4061,8 +4083,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommission"
+    ],
     "note": ""
   },
   "PATCH /profiles/:profile_id/commission/items/:id": {
@@ -4074,8 +4098,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommissionItem"
+    ],
     "note": ""
   },
   "PATCH /profiles/:profile_id/description": {
@@ -4184,8 +4210,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateSettings"
+    ],
     "note": ""
   },
   "PATCH /tags/:id": {
@@ -4700,8 +4728,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createDnpEntry"
+    ],
     "note": ""
   },
   "POST /duplicate_reports": {
@@ -5489,8 +5519,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createArtistLink"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/awards": {
@@ -5515,8 +5547,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createCommission"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/commission/items": {
@@ -5528,8 +5562,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "addCommissionItem"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/commission/reports": {
@@ -6223,8 +6259,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "updateArtistLink"
+    ],
     "note": ""
   },
   "PUT /profiles/:profile_id/awards/:id": {
@@ -6249,8 +6287,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommission"
+    ],
     "note": ""
   },
   "PUT /profiles/:profile_id/commission/items/:id": {
@@ -6262,8 +6302,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateCommissionItem"
+    ],
     "note": ""
   },
   "PUT /profiles/:profile_id/description": {
@@ -6372,8 +6414,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateSettings"
+    ],
     "note": ""
   },
   "PUT /tags/:id": {

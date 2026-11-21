@@ -547,7 +547,15 @@ fn form_payload(
             fields.push(("_method".to_owned(), percent_encode(&form.request.method)));
         }
         for (name, template) in &form.request.body {
-            if let Some(value) = fill(template, params)? {
+            if name.ends_with("[]") {
+                // A list field (`categories[]`): the value is a comma separated
+                // list, sent as one field per item.
+                if let Some(list) = fill_with(template, params, false)? {
+                    for item in list.split(',').map(str::trim).filter(|i| !i.is_empty()) {
+                        fields.push((name.clone(), percent_encode(item)));
+                    }
+                }
+            } else if let Some(value) = fill(template, params)? {
                 fields.push((name.clone(), value));
             }
         }

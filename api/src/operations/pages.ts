@@ -198,6 +198,7 @@ export const getProfileCommission = defineOperation({
               many: true,
               optional: true,
               fields: {
+                id: { sel: 'a[href*="/items/"]', attr: 'href', as: 'lastInt', optional: true },
                 description: { sel: 'td:nth-child(2)', text: true },
                 basePrice: { sel: 'td:nth-child(3)', text: true },
                 addOns: { sel: 'td:nth-child(4)', text: true },

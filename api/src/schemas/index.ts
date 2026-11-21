@@ -144,6 +144,8 @@ const CommissionPage = s.object({
   contactHtml: s.optional(s.string()),
   items: s.array(
     s.object({
+      /** The item's id, which only its owner sees (for changing or removing it). */
+      id: s.optional(s.nullable(s.int())),
       description: s.string(),
       /** The price as the site words it, e.g. `$5.00`. */
       basePrice: s.string(),
@@ -644,6 +646,7 @@ export const schemas = {
   CommentPosted: s.object({ comments: s.array(s.ref('RenderedPost')) }),
   PostPreview: s.object({ bodyHtml: s.string() }),
   GallerySaved: s.object({ message: s.optional(s.string()), id: s.optional(s.nullable(s.int())) }),
+  ArtistLinkSaved: s.object({ message: s.optional(s.string()), id: s.optional(s.nullable(s.int())) }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

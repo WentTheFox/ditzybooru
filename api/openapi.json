@@ -13,6 +13,26 @@
         ],
         "type": "object"
       },
+      "ArtistLinkSaved": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
       "Channel": {
         "additionalProperties": false,
         "properties": {
@@ -366,6 +386,16 @@
                 },
                 "exampleImageId": {
                   "type": "integer"
+                },
+                "id": {
+                  "oneOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
@@ -5547,6 +5577,128 @@
                 }
               },
               "template": "lib/philomena_web/templates/dnp_entry/index.html.slime"
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "createDnpEntry",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "conditions": {
+                    "type": "string"
+                  },
+                  "dnpType": {
+                    "type": "string"
+                  },
+                  "hideReason": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "tagId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "tagId",
+                  "dnpType",
+                  "reason"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Ask for a restriction on uploading an artist’s work. Needs a verified artist link.",
+        "tags": [
+          "dnp"
+        ],
+        "x-examples": {
+          "dnpType": "No Edits",
+          "reason": "Requested by the verifier.",
+          "tagId": 31
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /dnp",
+            "GET /dnp/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/dnp/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "dnp_entry[conditions]": "{conditions}",
+                  "dnp_entry[dnp_type]": "{dnpType}",
+                  "dnp_entry[hide_reason]": "{hideReason|false}",
+                  "dnp_entry[reason]": "{reason}",
+                  "dnp_entry[tag_id]": "{tagId}"
+                },
+                "method": "POST",
+                "path": "/dnp"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
             }
           ]
         }
@@ -14220,7 +14372,382 @@
         }
       }
     },
+    "/profiles/{slug}/artist_links": {
+      "post": {
+        "operationId": "createArtistLink",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "public": {
+                    "type": "boolean"
+                  },
+                  "tagName": {
+                    "type": "string"
+                  },
+                  "uri": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uri"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtistLinkSaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Submit a link to the visitor’s art for the staff to verify as theirs. Answers the new link’s id.",
+        "tags": [
+          "profiles"
+        ],
+        "x-examples": {
+          "slug": "Pleb",
+          "tagName": "artist:assasinmonkey",
+          "uri": "https://example.com/verifier"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /profiles/:profile_id/artist_links",
+            "GET /profiles/:profile_id/artist_links/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/artist_links/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "artist_link[public]": "{public|true}",
+                  "artist_link[tag_name]": "{tagName}",
+                  "artist_link[uri]": "{uri}"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/artist_links"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/artist_links/{linkId}": {
+      "put": {
+        "operationId": "updateArtistLink",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "linkId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "public": {
+                    "type": "boolean"
+                  },
+                  "tagName": {
+                    "type": "string"
+                  },
+                  "uri": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "uri"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtistLinkSaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change a link the visitor submitted.",
+        "tags": [
+          "profiles"
+        ],
+        "x-examples": {
+          "linkId": 1,
+          "slug": "Pleb",
+          "tagName": "artist:assasinmonkey",
+          "uri": "https://example.com/verifier2"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /profiles/:profile_id/artist_links/:id",
+            "PATCH /profiles/:profile_id/artist_links/:id",
+            "GET /profiles/:profile_id/artist_links/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/artist_links/{linkId}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "artist_link[public]": "{public|true}",
+                  "artist_link[tag_name]": "{tagName}",
+                  "artist_link[uri]": "{uri}"
+                },
+                "method": "PUT",
+                "path": "/profiles/{slug}/artist_links/{linkId}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/profiles/{slug}/commission": {
+      "delete": {
+        "operationId": "deleteCommission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Delete the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /profiles/:profile_id/commission"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/profiles/{slug}/commission"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
       "get": {
         "operationId": "getProfileCommission",
         "parameters": [
@@ -14322,6 +14849,12 @@
                         "attr": "data-image-id",
                         "optional": true,
                         "sel": ".image-container"
+                      },
+                      "id": {
+                        "as": "lastInt",
+                        "attr": "href",
+                        "optional": true,
+                        "sel": "a[href*=\"/items/\"]"
                       }
                     },
                     "many": true,
@@ -14331,6 +14864,673 @@
                 }
               },
               "template": "lib/philomena_web/templates/profile/commission/show.html.slime"
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "createCommission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "categories": {
+                    "type": "string"
+                  },
+                  "contact": {
+                    "type": "string"
+                  },
+                  "information": {
+                    "type": "string"
+                  },
+                  "open": {
+                    "type": "boolean"
+                  },
+                  "willCreate": {
+                    "type": "string"
+                  },
+                  "willNotCreate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "information",
+                  "contact"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Create the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "categories": "Anthro,Comics",
+          "contact": "Message me on the site.",
+          "information": "Commissions are open.",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /profiles/:profile_id/commission",
+            "GET /profiles/:profile_id/commission/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "commission[categories][]": "{categories}",
+                  "commission[contact]": "{contact}",
+                  "commission[information]": "{information}",
+                  "commission[open]": "{open|true}",
+                  "commission[will_create]": "{willCreate}",
+                  "commission[will_not_create]": "{willNotCreate}"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/commission"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "put": {
+        "operationId": "updateCommission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "categories": {
+                    "type": "string"
+                  },
+                  "contact": {
+                    "type": "string"
+                  },
+                  "information": {
+                    "type": "string"
+                  },
+                  "open": {
+                    "type": "boolean"
+                  },
+                  "willCreate": {
+                    "type": "string"
+                  },
+                  "willNotCreate": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "information",
+                  "contact"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "categories": "Anthro,Comics",
+          "contact": "Message me on the site.",
+          "information": "Commissions are open.",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /profiles/:profile_id/commission",
+            "PATCH /profiles/:profile_id/commission",
+            "GET /profiles/:profile_id/commission/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "commission[categories][]": "{categories}",
+                  "commission[contact]": "{contact}",
+                  "commission[information]": "{information}",
+                  "commission[open]": "{open|true}",
+                  "commission[will_create]": "{willCreate}",
+                  "commission[will_not_create]": "{willNotCreate}"
+                },
+                "method": "PUT",
+                "path": "/profiles/{slug}/commission"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/commission/items": {
+      "post": {
+        "operationId": "addCommissionItem",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "addOns": {
+                    "type": "string"
+                  },
+                  "basePrice": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "exampleImageId": {
+                    "type": "integer"
+                  },
+                  "itemType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "itemType",
+                  "basePrice",
+                  "description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Add an item to the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "basePrice": 5,
+          "description": "A small icon.",
+          "exampleImageId": 1,
+          "itemType": "Sketch",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /profiles/:profile_id/commission/items",
+            "GET /profiles/:profile_id/commission/items/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/items/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "item[add_ons]": "{addOns}",
+                  "item[base_price]": "{basePrice}",
+                  "item[description]": "{description}",
+                  "item[example_image_id]": "{exampleImageId}",
+                  "item[item_type]": "{itemType}"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/commission/items"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/commission/items/{itemId}": {
+      "delete": {
+        "operationId": "deleteCommissionItem",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Remove an item from the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "itemId": 1,
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /profiles/:profile_id/commission/items/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/profiles/{slug}/commission/items/{itemId}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "put": {
+        "operationId": "updateCommissionItem",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "itemId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "addOns": {
+                    "type": "string"
+                  },
+                  "basePrice": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "exampleImageId": {
+                    "type": "integer"
+                  },
+                  "itemType": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "itemType",
+                  "basePrice",
+                  "description"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change an item of the visitor’s commission listing.",
+        "tags": [
+          "commissions"
+        ],
+        "x-examples": {
+          "basePrice": 5,
+          "description": "A small icon.",
+          "exampleImageId": 1,
+          "itemId": 1,
+          "itemType": "Sketch",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /profiles/:profile_id/commission/items/:id",
+            "PATCH /profiles/:profile_id/commission/items/:id",
+            "GET /profiles/:profile_id/commission/items/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/items/{itemId}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "item[add_ons]": "{addOns}",
+                  "item[base_price]": "{basePrice}",
+                  "item[description]": "{description}",
+                  "item[example_image_id]": "{exampleImageId}",
+                  "item[item_type]": "{itemType}"
+                },
+                "method": "PUT",
+                "path": "/profiles/{slug}/commission/items/{itemId}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
             }
           ]
         }
@@ -17042,6 +18242,329 @@
                       "attr": "data-user-slug",
                       "optional": true,
                       "sel": ".js-datastore"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/settings": {
+      "patch": {
+        "operationId": "updateSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymousByDefault": {
+                    "type": "boolean"
+                  },
+                  "autocompletePropertiesHidden": {
+                    "type": "boolean"
+                  },
+                  "autocompleteSearchHistoryHidden": {
+                    "type": "boolean"
+                  },
+                  "autocompleteSearchHistoryMaxSuggestionsWhenTyping": {
+                    "type": "integer"
+                  },
+                  "borderlessTags": {
+                    "type": "boolean"
+                  },
+                  "chanNsfw": {
+                    "type": "boolean"
+                  },
+                  "commentsAlwaysJumpToLast": {
+                    "type": "boolean"
+                  },
+                  "commentsNewestFirst": {
+                    "type": "boolean"
+                  },
+                  "commentsPerPage": {
+                    "type": "integer"
+                  },
+                  "delayHomeImages": {
+                    "type": "boolean"
+                  },
+                  "enableSearchAc": {
+                    "type": "boolean"
+                  },
+                  "fancyTagFieldOnEdit": {
+                    "type": "boolean"
+                  },
+                  "fancyTagFieldOnUpload": {
+                    "type": "boolean"
+                  },
+                  "hideScore": {
+                    "type": "boolean"
+                  },
+                  "hideUploader": {
+                    "type": "boolean"
+                  },
+                  "hideVoteCounts": {
+                    "type": "boolean"
+                  },
+                  "hidpi": {
+                    "type": "boolean"
+                  },
+                  "imagesPerPage": {
+                    "type": "integer"
+                  },
+                  "messagesNewestFirst": {
+                    "type": "boolean"
+                  },
+                  "noSpoileredInWatched": {
+                    "type": "boolean"
+                  },
+                  "roundedTags": {
+                    "type": "boolean"
+                  },
+                  "scaleLargeImages": {
+                    "type": "string"
+                  },
+                  "serveWebm": {
+                    "type": "boolean"
+                  },
+                  "showSidebarAndWatchedImages": {
+                    "type": "boolean"
+                  },
+                  "subscribeUrl": {
+                    "type": "string"
+                  },
+                  "themeColor": {
+                    "type": "string"
+                  },
+                  "themeName": {
+                    "type": "string"
+                  },
+                  "unfilterTagSuggestions": {
+                    "type": "boolean"
+                  },
+                  "unmuteVideos": {
+                    "type": "boolean"
+                  },
+                  "useCenteredLayout": {
+                    "type": "boolean"
+                  },
+                  "watchedImagesExcludeStr": {
+                    "type": "string"
+                  },
+                  "watchedImagesQueryStr": {
+                    "type": "string"
+                  },
+                  "watchedTagList": {
+                    "type": "string"
+                  },
+                  "watchOnNewTopic": {
+                    "type": "boolean"
+                  },
+                  "watchOnReply": {
+                    "type": "boolean"
+                  },
+                  "watchOnUpload": {
+                    "type": "boolean"
+                  },
+                  "webm": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change the visitor’s settings. Only the fields given change; the site’s own names, in camelCase.",
+        "tags": [
+          "account"
+        ],
+        "x-examples": {
+          "imagesPerPage": 15
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PATCH /settings",
+            "PUT /settings",
+            "GET /settings/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/settings/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "user[autocomplete_properties_hidden]": "{autocompletePropertiesHidden}",
+                  "user[autocomplete_search_history_hidden]": "{autocompleteSearchHistoryHidden}",
+                  "user[autocomplete_search_history_max_suggestions_when_typing]": "{autocompleteSearchHistoryMaxSuggestionsWhenTyping}",
+                  "user[chan_nsfw]": "{chanNsfw}",
+                  "user[enable_search_ac]": "{enableSearchAc}",
+                  "user[hide_score]": "{hideScore}",
+                  "user[hide_uploader]": "{hideUploader}",
+                  "user[hidpi]": "{hidpi}",
+                  "user[serve_webm]": "{serveWebm}",
+                  "user[settings][anonymous_by_default]": "{anonymousByDefault}",
+                  "user[settings][borderless_tags]": "{borderlessTags}",
+                  "user[settings][comments_always_jump_to_last]": "{commentsAlwaysJumpToLast}",
+                  "user[settings][comments_newest_first]": "{commentsNewestFirst}",
+                  "user[settings][comments_per_page]": "{commentsPerPage}",
+                  "user[settings][delay_home_images]": "{delayHomeImages}",
+                  "user[settings][fancy_tag_field_on_edit]": "{fancyTagFieldOnEdit}",
+                  "user[settings][fancy_tag_field_on_upload]": "{fancyTagFieldOnUpload}",
+                  "user[settings][hide_vote_counts]": "{hideVoteCounts}",
+                  "user[settings][images_per_page]": "{imagesPerPage}",
+                  "user[settings][messages_newest_first]": "{messagesNewestFirst}",
+                  "user[settings][no_spoilered_in_watched]": "{noSpoileredInWatched}",
+                  "user[settings][rounded_tags]": "{roundedTags}",
+                  "user[settings][scale_large_images]": "{scaleLargeImages}",
+                  "user[settings][show_sidebar_and_watched_images]": "{showSidebarAndWatchedImages}",
+                  "user[settings][theme_color]": "{themeColor}",
+                  "user[settings][theme_name]": "{themeName}",
+                  "user[settings][use_centered_layout]": "{useCenteredLayout}",
+                  "user[settings][watch_on_new_topic]": "{watchOnNewTopic}",
+                  "user[settings][watch_on_reply]": "{watchOnReply}",
+                  "user[settings][watch_on_upload]": "{watchOnUpload}",
+                  "user[settings][watched_images_exclude_str]": "{watchedImagesExcludeStr}",
+                  "user[settings][watched_images_query_str]": "{watchedImagesQueryStr}",
+                  "user[subscribe_url]": "{subscribeUrl}",
+                  "user[unfilter_tag_suggestions]": "{unfilterTagSuggestions}",
+                  "user[unmute_videos]": "{unmuteVideos}",
+                  "user[watched_tag_list]": "{watchedTagList}",
+                  "user[webm]": "{webm}"
+                },
+                "method": "PATCH",
+                "path": "/settings"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/settings/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "user[anonymous_by_default]": "{anonymousByDefault}",
+                  "user[autocomplete_properties_hidden]": "{autocompletePropertiesHidden}",
+                  "user[autocomplete_search_history_hidden]": "{autocompleteSearchHistoryHidden}",
+                  "user[autocomplete_search_history_max_suggestions_when_typing]": "{autocompleteSearchHistoryMaxSuggestionsWhenTyping}",
+                  "user[borderless_tags]": "{borderlessTags}",
+                  "user[chan_nsfw]": "{chanNsfw}",
+                  "user[comments_always_jump_to_last]": "{commentsAlwaysJumpToLast}",
+                  "user[comments_newest_first]": "{commentsNewestFirst}",
+                  "user[comments_per_page]": "{commentsPerPage}",
+                  "user[delay_home_images]": "{delayHomeImages}",
+                  "user[enable_search_ac]": "{enableSearchAc}",
+                  "user[fancy_tag_field_on_edit]": "{fancyTagFieldOnEdit}",
+                  "user[fancy_tag_field_on_upload]": "{fancyTagFieldOnUpload}",
+                  "user[hide_score]": "{hideScore}",
+                  "user[hide_uploader]": "{hideUploader}",
+                  "user[hide_vote_counts]": "{hideVoteCounts}",
+                  "user[hidpi]": "{hidpi}",
+                  "user[images_per_page]": "{imagesPerPage}",
+                  "user[messages_newest_first]": "{messagesNewestFirst}",
+                  "user[no_spoilered_in_watched]": "{noSpoileredInWatched}",
+                  "user[rounded_tags]": "{roundedTags}",
+                  "user[scale_large_images]": "{scaleLargeImages}",
+                  "user[serve_webm]": "{serveWebm}",
+                  "user[show_sidebar_and_watched_images]": "{showSidebarAndWatchedImages}",
+                  "user[subscribe_url]": "{subscribeUrl}",
+                  "user[theme_color]": "{themeColor}",
+                  "user[theme_name]": "{themeName}",
+                  "user[unfilter_tag_suggestions]": "{unfilterTagSuggestions}",
+                  "user[unmute_videos]": "{unmuteVideos}",
+                  "user[use_centered_layout]": "{useCenteredLayout}",
+                  "user[watch_on_new_topic]": "{watchOnNewTopic}",
+                  "user[watch_on_reply]": "{watchOnReply}",
+                  "user[watch_on_upload]": "{watchOnUpload}",
+                  "user[watched_images_exclude_str]": "{watchedImagesExcludeStr}",
+                  "user[watched_images_query_str]": "{watchedImagesQueryStr}",
+                  "user[watched_tag_list]": "{watchedTagList}",
+                  "user[webm]": "{webm}"
+                },
+                "method": "PATCH",
+                "path": "/settings"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
                     }
                   }
                 }

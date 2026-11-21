@@ -3,6 +3,7 @@ import * as account from './operations/account.ts';
 import * as changes from './operations/changes.ts';
 import * as channels from './operations/channels.ts';
 import * as discussion from './operations/discussion.ts';
+import * as commissions from './operations/commissions.ts';
 import * as directories from './operations/directories.ts';
 import * as forums from './operations/forums.ts';
 import * as histories from './operations/histories.ts';
@@ -40,6 +41,7 @@ export const operations: Operation[] = [
   ...Object.values(preferences),
   ...Object.values(discussion),
   ...Object.values(galleries),
+  ...Object.values(commissions),
   ...Object.values(reports),
   ...Object.values(profile),
   ...Object.values(uploads),

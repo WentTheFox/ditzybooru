@@ -1,5 +1,6 @@
+import { defineOperation } from '../dsl/operation.ts';
 import { s } from '../dsl/schema.ts';
-import { noticeForm } from './forms.ts';
+import { noticeForm, REJECTION, TOKEN } from './forms.ts';
 
 const slug = [{ name: 'slug', in: 'path' as const, schema: s.string(), required: true }];
 
@@ -93,4 +94,132 @@ export const deleteAvatar = noticeForm({
   follow: true,
   routes: ['DELETE /avatar'],
   examples: {},
+});
+
+/** Settings Philomena keeps on the user itself. Furbooru keeps all of them there. */
+const onUser = {
+  autocompleteSearchHistoryHidden: 'autocomplete_search_history_hidden',
+  autocompletePropertiesHidden: 'autocomplete_properties_hidden',
+  autocompleteSearchHistoryMaxSuggestionsWhenTyping: 'autocomplete_search_history_max_suggestions_when_typing',
+  chanNsfw: 'chan_nsfw',
+  enableSearchAc: 'enable_search_ac',
+  hideScore: 'hide_score',
+  hideUploader: 'hide_uploader',
+  hidpi: 'hidpi',
+  serveWebm: 'serve_webm',
+  unfilterTagSuggestions: 'unfilter_tag_suggestions',
+  unmuteVideos: 'unmute_videos',
+  watchedTagList: 'watched_tag_list',
+  subscribeUrl: 'subscribe_url',
+  webm: 'webm',
+} as const;
+
+/** Settings Philomena keeps in the user's settings record. */
+const inSettings = {
+  anonymousByDefault: 'anonymous_by_default',
+  borderlessTags: 'borderless_tags',
+  commentsAlwaysJumpToLast: 'comments_always_jump_to_last',
+  commentsNewestFirst: 'comments_newest_first',
+  commentsPerPage: 'comments_per_page',
+  delayHomeImages: 'delay_home_images',
+  fancyTagFieldOnEdit: 'fancy_tag_field_on_edit',
+  fancyTagFieldOnUpload: 'fancy_tag_field_on_upload',
+  hideVoteCounts: 'hide_vote_counts',
+  imagesPerPage: 'images_per_page',
+  messagesNewestFirst: 'messages_newest_first',
+  noSpoileredInWatched: 'no_spoilered_in_watched',
+  roundedTags: 'rounded_tags',
+  scaleLargeImages: 'scale_large_images',
+  showSidebarAndWatchedImages: 'show_sidebar_and_watched_images',
+  themeColor: 'theme_color',
+  themeName: 'theme_name',
+  useCenteredLayout: 'use_centered_layout',
+  watchOnNewTopic: 'watch_on_new_topic',
+  watchOnReply: 'watch_on_reply',
+  watchOnUpload: 'watch_on_upload',
+  watchedImagesExcludeStr: 'watched_images_exclude_str',
+  watchedImagesQueryStr: 'watched_images_query_str',
+} as const;
+
+const flags = new Set([
+  'autocompleteSearchHistoryHidden',
+  'autocompletePropertiesHidden',
+  'chanNsfw',
+  'enableSearchAc',
+  'hideScore',
+  'hideUploader',
+  'hidpi',
+  'serveWebm',
+  'unfilterTagSuggestions',
+  'unmuteVideos',
+  'webm',
+  'anonymousByDefault',
+  'borderlessTags',
+  'commentsAlwaysJumpToLast',
+  'commentsNewestFirst',
+  'delayHomeImages',
+  'fancyTagFieldOnEdit',
+  'fancyTagFieldOnUpload',
+  'hideVoteCounts',
+  'messagesNewestFirst',
+  'noSpoileredInWatched',
+  'roundedTags',
+  'showSidebarAndWatchedImages',
+  'useCenteredLayout',
+  'watchOnNewTopic',
+  'watchOnReply',
+  'watchOnUpload',
+]);
+
+const numbers = new Set(['autocompleteSearchHistoryMaxSuggestionsWhenTyping', 'commentsPerPage', 'imagesPerPage']);
+
+const settingFields = { ...onUser, ...inSettings };
+
+export const updateSettings = defineOperation({
+  operationId: 'updateSettings',
+  path: '/settings',
+  method: 'patch',
+  summary: 'Change the visitor’s settings. Only the fields given change; the site’s own names, in camelCase.',
+  tags: ['account'],
+  body: s.object(
+    Object.fromEntries(
+      Object.keys(settingFields).map(name => [
+        name,
+        flags.has(name) ? s.optional(s.bool()) : numbers.has(name) ? s.optional(s.int()) : s.optional(s.string()),
+      ]),
+    ),
+  ),
+  response: s.ref('Notice'),
+  examples: { imagesPerPage: 15 },
+  philomena: {
+    routes: ['PATCH /settings', 'PUT /settings', 'GET /settings/edit'],
+    auth: 'session',
+    strategies: ['philomena', 'furbooru'].map(flavor => ({
+      kind: 'form' as const,
+      flavors: [flavor],
+      form: { page: '/settings/edit', csrf: TOKEN },
+      request: {
+        method: 'PATCH' as const,
+        path: '/settings',
+        body: Object.fromEntries(
+          Object.entries(settingFields).map(([name, upstream]) => [
+            flavor === 'philomena' && name in inSettings ? `user[settings][${upstream}]` : `user[${upstream}]`,
+            `{${name}}`,
+          ]),
+        ),
+      },
+      result: {
+        page: '/',
+        follow: true as const,
+        select: {
+          fields: {
+            message: { sel: '.flash--success', text: true, optional: true },
+            _took: { sel: '.flash--success', exists: true },
+          },
+        },
+        must: ['/_took'],
+        errors: REJECTION,
+      },
+    })),
+  },
 });
