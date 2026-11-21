@@ -8,7 +8,7 @@ function user(attr: string, as?: FieldSpec['as']): FieldSpec {
 }
 
 /** Who the visitor is, as any page of the site tells it. */
-const sessionFields = {
+export const sessionFields = {
   signedIn: { sel: '.js-datastore', attr: 'data-user-is-signed-in', as: 'bool' },
   id: user('id', 'int'),
   name: user('name'),

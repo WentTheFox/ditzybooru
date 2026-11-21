@@ -267,8 +267,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "deactivateAccount"
+    ],
     "note": ""
   },
   "DELETE /duplicate_reports/:duplicate_report_id/claim": {
@@ -1942,8 +1944,10 @@
     "class": "html-page",
     "area": "user",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "deactivateAccount"
+    ],
     "note": "Needs a signed-in session (account deactivation)."
   },
   "GET /dnp": {

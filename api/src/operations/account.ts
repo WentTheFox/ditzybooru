@@ -1,6 +1,7 @@
 import type { Operation } from '../dsl/operation.ts';
 import { defineOperation } from '../dsl/operation.ts';
 import { s } from '../dsl/schema.ts';
+import { sessionFields } from './session.ts';
 
 const TOKEN = { sel: 'meta[name=csrf-token]', attr: 'content' };
 
@@ -254,4 +255,34 @@ export const requestEmailChange = noticeForm({
   follow: true,
   routes: ['POST /registrations/email'],
   examples: { currentPassword: 'philomena123', email: 'pleb.new@example.com' },
+});
+
+export const deactivateAccount = defineOperation({
+  operationId: 'deactivateAccount',
+  path: '/deactivations',
+  method: 'delete',
+  summary: 'Deactivate the signed-in visitor’s account and sign them out. Only Philomena has this.',
+  tags: ['account'],
+  response: s.ref('Session'),
+  philomena: {
+    routes: ['DELETE /deactivations', 'GET /deactivations'],
+    auth: 'session',
+    strategies: [
+      {
+        kind: 'form',
+        flavors: ['philomena'],
+        form: { page: '/deactivations', csrf: TOKEN },
+        request: { method: 'DELETE', path: '/deactivations' },
+        // The site signs the visitor out: the login link is back in the header.
+        result: {
+          page: '/',
+          select: {
+            fields: { ...sessionFields, _anonymous: { sel: 'a[href="/sessions/new"]', exists: true } },
+          },
+          must: ['/_anonymous'],
+          errors: REJECTION,
+        },
+      },
+    ],
+  },
 });

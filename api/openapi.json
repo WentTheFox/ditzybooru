@@ -3291,6 +3291,114 @@
         }
       }
     },
+    "/deactivations": {
+      "delete": {
+        "operationId": "deactivateAccount",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Deactivate the signed-in visitor’s account and sign them out. Only Philomena has this.",
+        "tags": [
+          "account"
+        ],
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /deactivations",
+            "GET /deactivations"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/deactivations"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/deactivations"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "must": [
+                  "/_anonymous"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_anonymous": {
+                      "exists": true,
+                      "sel": "a[href=\"/sessions/new\"]"
+                    },
+                    "avatarUrl": {
+                      "as": "url",
+                      "attr": "src",
+                      "optional": true,
+                      "sel": ".avatar--28px img"
+                    },
+                    "id": {
+                      "as": "int",
+                      "attr": "data-user-id",
+                      "optional": true,
+                      "sel": ".js-datastore"
+                    },
+                    "name": {
+                      "attr": "data-user-name",
+                      "optional": true,
+                      "sel": ".js-datastore"
+                    },
+                    "role": {
+                      "attr": "data-user-role",
+                      "optional": true,
+                      "sel": ".js-datastore"
+                    },
+                    "secondFactorRequired": {
+                      "exists": true,
+                      "sel": "form[action=\"/sessions/totp\"]"
+                    },
+                    "signedIn": {
+                      "as": "bool",
+                      "attr": "data-user-is-signed-in",
+                      "sel": ".js-datastore"
+                    },
+                    "slug": {
+                      "attr": "data-user-slug",
+                      "optional": true,
+                      "sel": ".js-datastore"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/dnp": {
       "get": {
         "operationId": "listDnpEntries",
