@@ -1825,6 +1825,55 @@
         ],
         "type": "object"
       },
+      "SourceChange": {
+        "additionalProperties": false,
+        "properties": {
+          "added": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "imageId": {
+            "type": "integer"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "imageId",
+          "sourceUrl",
+          "added",
+          "createdAt",
+          "user"
+        ],
+        "type": "object"
+      },
+      "SourceChangeList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SourceChange"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
+        ],
+        "type": "object"
+      },
       "StaffGroup": {
         "additionalProperties": false,
         "properties": {
@@ -2027,6 +2076,73 @@
           "impliedTags",
           "impliedByTags",
           "spoilerImageUrl"
+        ],
+        "type": "object"
+      },
+      "TagChange": {
+        "additionalProperties": false,
+        "properties": {
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "imageId": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "staff": {
+            "type": "boolean"
+          },
+          "user": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user",
+          "createdAt",
+          "staff",
+          "added",
+          "removed"
+        ],
+        "type": "object"
+      },
+      "TagChangeList": {
+        "additionalProperties": false,
+        "properties": {
+          "hasNext": {
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TagChange"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "hasNext"
         ],
         "type": "object"
       },
@@ -5360,6 +5476,245 @@
         }
       }
     },
+    "/images/{imageId}/source_changes": {
+      "get": {
+        "operationId": "listImageSourceChanges",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The source changes of one image, newest first.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /images/:image_id/source_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/images/{imageId}/source_changes",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "exists": true,
+                        "sel": "td.success"
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": "td:nth-child(5) time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "sel": "td:nth-child(1) a",
+                        "text": true
+                      },
+                      "sourceUrl": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "user": {
+                        "sel": "td:nth-child(6) strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "table.table tbody tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/source_change/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/images/{imageId}/tag_changes": {
+      "get": {
+        "operationId": "listImageTagChanges",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Tag change search, e.g. `added_tag:safe`.",
+            "in": "query",
+            "name": "tcq",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The tag changes of one image, newest first.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /images/:image_id/tag_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/images/{imageId}/tag_changes",
+                "query": {
+                  "page": "{page|1}",
+                  "tcq": "{tcq}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .added .tag__name",
+                        "text": true
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": ".tag__change-info time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "optional": true,
+                        "sel": ".tag__change-image .image-container"
+                      },
+                      "removed": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .removed .tag__name",
+                        "text": true
+                      },
+                      "staff": {
+                        "exists": true,
+                        "sel": ".tag__change-info .label--success"
+                      },
+                      "user": {
+                        "sel": ".tag__change-info strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": ".tag__change-block"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/tag_change/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/images/featured": {
       "get": {
         "operationId": "getFeatured",
@@ -5926,6 +6281,245 @@
                 }
               },
               "template": "lib/philomena_web/templates/profile/show.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/source_changes": {
+      "get": {
+        "operationId": "listProfileSourceChanges",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The source changes a user made, newest first.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /profiles/:profile_id/source_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/profiles/{slug}/source_changes",
+                "query": {
+                  "page": "{page|1}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "exists": true,
+                        "sel": "td.success"
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": "td:nth-child(5) time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "sel": "td:nth-child(1) a",
+                        "text": true
+                      },
+                      "sourceUrl": {
+                        "sel": "td:nth-child(3)",
+                        "text": true
+                      },
+                      "user": {
+                        "sel": "td:nth-child(6) strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": "table.table tbody tr"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/source_change/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/tag_changes": {
+      "get": {
+        "operationId": "listProfileTagChanges",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Tag change search, e.g. `added_tag:safe`.",
+            "in": "query",
+            "name": "tcq",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The tag changes a user made, newest first.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /profiles/:profile_id/tag_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/profiles/{slug}/tag_changes",
+                "query": {
+                  "page": "{page|1}",
+                  "tcq": "{tcq}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .added .tag__name",
+                        "text": true
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": ".tag__change-info time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "optional": true,
+                        "sel": ".tag__change-image .image-container"
+                      },
+                      "removed": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .removed .tag__name",
+                        "text": true
+                      },
+                      "staff": {
+                        "exists": true,
+                        "sel": ".tag__change-info .label--success"
+                      },
+                      "user": {
+                        "sel": ".tag__change-info strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": ".tag__change-block"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/tag_change/index.html.slime"
             }
           ]
         }
@@ -7051,6 +7645,124 @@
         }
       }
     },
+    "/tag_changes": {
+      "get": {
+        "operationId": "listTagChanges",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Tag change search, e.g. `added_tag:safe`.",
+            "in": "query",
+            "name": "tcq",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Every tag change on the site, newest first. Only Philomena has this page.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /tag_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/tag_changes",
+                "query": {
+                  "page": "{page|1}",
+                  "tcq": "{tcq}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .added .tag__name",
+                        "text": true
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": ".tag__change-info time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "optional": true,
+                        "sel": ".tag__change-image .image-container"
+                      },
+                      "removed": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .removed .tag__name",
+                        "text": true
+                      },
+                      "staff": {
+                        "exists": true,
+                        "sel": ".tag__change-info .label--success"
+                      },
+                      "user": {
+                        "sel": ".tag__change-info strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": ".tag__change-block"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/tag_change/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
     "/tags": {
       "get": {
         "operationId": "listTags",
@@ -7242,6 +7954,135 @@
                 "method": "GET",
                 "path": "/api/v1/json/tags/{slug}"
               }
+            }
+          ]
+        }
+      }
+    },
+    "/tags/{slug}/tag_changes": {
+      "get": {
+        "operationId": "listTagTagChanges",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Tag change search, e.g. `added_tag:safe`.",
+            "in": "query",
+            "name": "tcq",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagChangeList"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "The changes that added or removed one tag, newest first.",
+        "tags": [
+          "changes"
+        ],
+        "x-examples": {
+          "slug": "safe"
+        },
+        "x-philomena": {
+          "auth": "none",
+          "routes": [
+            "GET /tags/:tag_id/tag_changes"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "kind": "html",
+              "request": {
+                "method": "GET",
+                "path": "/tags/{slug}/tag_changes",
+                "query": {
+                  "page": "{page|1}",
+                  "tcq": "{tcq}"
+                }
+              },
+              "select": {
+                "fields": {
+                  "hasNext": {
+                    "exists": true,
+                    "sel": "nav.pagination a.js-next"
+                  },
+                  "items": {
+                    "fields": {
+                      "added": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .added .tag__name",
+                        "text": true
+                      },
+                      "createdAt": {
+                        "attr": "datetime",
+                        "sel": ".tag__change-info time"
+                      },
+                      "imageId": {
+                        "as": "int",
+                        "attr": "data-image-id",
+                        "optional": true,
+                        "sel": ".tag__change-image .image-container"
+                      },
+                      "removed": {
+                        "many": true,
+                        "optional": true,
+                        "sel": ".tag__change-tags .removed .tag__name",
+                        "text": true
+                      },
+                      "staff": {
+                        "exists": true,
+                        "sel": ".tag__change-info .label--success"
+                      },
+                      "user": {
+                        "sel": ".tag__change-info strong",
+                        "text": true
+                      }
+                    },
+                    "many": true,
+                    "sel": ".tag__change-block"
+                  }
+                }
+              },
+              "template": "lib/philomena_web/templates/tag_change/index.html.slime"
             }
           ]
         }

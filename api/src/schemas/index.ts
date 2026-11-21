@@ -80,6 +80,27 @@ const CommissionListing = s.object({
   offers: s.string(),
 });
 
+const SourceChange = s.object({
+  imageId: s.int(),
+  sourceUrl: s.string(),
+  /** Whether the source was added; `false` means removed. */
+  added: s.bool(),
+  createdAt: s.dateTime(),
+  /** The user's name, or the site's pseudonym for an anonymous one. */
+  user: s.string(),
+});
+
+const TagChange = s.object({
+  /** Absent or `null` on the page of a single image, which leaves its thumbnail out. */
+  imageId: s.optional(s.nullable(s.int())),
+  user: s.string(),
+  createdAt: s.dateTime(),
+  /** Whether the user is a staff member. */
+  staff: s.bool(),
+  added: s.array(s.string()),
+  removed: s.array(s.string()),
+});
+
 const ImageComments = s.object({
   /** Every comment of the image, across pages. */
   total: s.int(),
@@ -476,6 +497,10 @@ export const schemas = {
   CommissionListing,
   DnpList: s.object({ items: s.array(s.ref('DnpEntrySummary')), hasNext: s.bool() }),
   CommissionList: s.object({ items: s.array(s.ref('CommissionListing')), hasNext: s.bool() }),
+  SourceChange,
+  TagChange,
+  SourceChangeList: s.object({ items: s.array(s.ref('SourceChange')), hasNext: s.bool() }),
+  TagChangeList: s.object({ items: s.array(s.ref('TagChange')), hasNext: s.bool() }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

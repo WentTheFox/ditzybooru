@@ -2100,11 +2100,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /fingerprint_profiles/:fingerprint_profile_id/tag_changes": {
     "controller": "PhilomenaWeb.FingerprintProfile.TagChangeController#index",
@@ -2113,11 +2113,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /fingerprint_profiles/:id": {
     "controller": "PhilomenaWeb.FingerprintProfileController#show",
@@ -2126,11 +2126,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /forums": {
     "controller": "PhilomenaWeb.ForumController#index",
@@ -2507,8 +2507,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listImageSourceChanges"
+    ],
     "note": ""
   },
   "GET /images/:image_id/tag_changes": {
@@ -2520,8 +2522,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listImageTagChanges"
+    ],
     "note": ""
   },
   "GET /images/:image_id/tag_lock": {
@@ -2570,11 +2574,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /ip_profiles/:ip_profile_id/source_changes": {
     "controller": "PhilomenaWeb.IpProfile.SourceChangeController#index",
@@ -2583,11 +2587,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /ip_profiles/:ip_profile_id/tag_changes": {
     "controller": "PhilomenaWeb.IpProfile.TagChangeController#index",
@@ -2596,11 +2600,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /moderation_logs": {
     "controller": "PhilomenaWeb.ModerationLogController#index",
@@ -2785,11 +2789,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/artist_links": {
     "controller": "PhilomenaWeb.Profile.ArtistLinkController#index",
@@ -2798,11 +2802,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/artist_links/:id": {
     "controller": "PhilomenaWeb.Profile.ArtistLinkController#show",
@@ -2811,11 +2815,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/artist_links/:id/edit": {
     "controller": "PhilomenaWeb.Profile.ArtistLinkController#edit",
@@ -2966,11 +2970,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/fp_history": {
     "controller": "PhilomenaWeb.Profile.FpHistoryController#index",
@@ -2979,11 +2983,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/ip_history": {
     "controller": "PhilomenaWeb.Profile.IpHistoryController#index",
@@ -2992,11 +2996,11 @@
       "furbooru"
     ],
     "class": "html-page",
-    "area": "public",
-    "phase": 3,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Redirects a visitor who is not staff to the sign-in form, so it moves to the moderator phase."
   },
   "GET /profiles/:profile_id/reports/new": {
     "controller": "PhilomenaWeb.Profile.ReportController#new",
@@ -3033,8 +3037,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listProfileSourceChanges"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/tag_changes": {
@@ -3046,8 +3052,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listProfileTagChanges"
+    ],
     "note": ""
   },
   "GET /reactivations/:id": {
@@ -3287,8 +3295,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listTagChanges"
+    ],
     "note": ""
   },
   "GET /tags": {
@@ -3382,8 +3392,10 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "listTagTagChanges"
+    ],
     "note": ""
   },
   "GET /themes": {
