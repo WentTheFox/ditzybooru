@@ -56,7 +56,13 @@ fn write_fixtures(
         "json"
     };
     fs::create_dir_all(dir)?;
-    fs::write(dir.join(format!("{op_id}.{ext}")), responses.main)?;
+    // A JSON endpoint behind a form strategy answers the submission itself.
+    let main = if matches!(strategy, Strategy::Form(_)) && responses.main.is_empty() {
+        responses.submitted
+    } else {
+        responses.main
+    };
+    fs::write(dir.join(format!("{op_id}.{ext}")), main)?;
     for (join, body) in responses.joins {
         fs::write(dir.join(format!("{op_id}.{join}.json")), body)?;
     }
@@ -173,8 +179,7 @@ async fn run() -> Result<bool> {
             };
             let wanted: Vec<&str> = entry["instances"]
                 .as_array()
-                .map(|a| a.iter().filter_map(Value::as_str).collect())
-                .unwrap_or_default();
+                .map_or_else(Vec::new, |a| a.iter().filter_map(Value::as_str).collect());
             if !wanted.is_empty() && wanted.iter().all(|w| passed.contains(w)) {
                 entry["status"] = Value::from("verified");
             }

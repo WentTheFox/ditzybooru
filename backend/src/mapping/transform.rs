@@ -197,7 +197,12 @@ mod tests {
     #[test]
     fn strip_prefix_drops_the_start_when_it_is_there() {
         let at = |text: &str| {
-            apply("stripPrefix:Categories:", &Value::String(text.to_owned()), "").unwrap()
+            apply(
+                "stripPrefix:Categories:",
+                &Value::String(text.to_owned()),
+                "",
+            )
+            .unwrap()
         };
         assert_eq!(at("Categories: Art, Music"), "Art, Music");
         assert_eq!(at("Art"), "Art");

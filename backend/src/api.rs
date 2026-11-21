@@ -189,7 +189,7 @@ async fn handle(
                 .cache
                 .invalidate_prefix(format!("{}|{}|getImage|", upstream.origin, upstream.flavor));
         }
-        let cookies = session.map(Session::into_set_cookies).unwrap_or_default();
+        let cookies = session.map_or_else(Vec::new, Session::into_set_cookies);
         return respond(result, None, &cookies, secure);
     }
     let Ok(relevant) = relevant_params(strategy, params) else {

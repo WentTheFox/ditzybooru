@@ -47,6 +47,10 @@ fn fixtures_extract_and_validate() {
                 main: fs::read_to_string(&path).unwrap(),
                 ..Responses::default()
             };
+            if matches!(strategy, Strategy::Form(_)) {
+                // A form strategy's fixture is the submission's own answer.
+                responses.submitted = std::mem::take(&mut responses.main);
+            }
             if let Strategy::Json(json) = strategy {
                 for join in &json.joins {
                     let sidecar = dir.join(format!("{id}.{}.json", join.name));
