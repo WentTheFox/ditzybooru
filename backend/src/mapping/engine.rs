@@ -558,6 +558,7 @@ async fn fetch_form(
         (None, None) => bail!("nothing to send"),
     };
     let path = plan_request(&form.request, params)?;
+    let mut led_to = None;
     let submitted = match send(client, throttle, ctx, &path, Some(&sent), true).await? {
         Sent::Body(body) => body,
         // A JSON endpoint redirects a visitor it does not accept (no session,
@@ -567,7 +568,10 @@ async fn fetch_form(
                 "the site did not accept this: sign in again".to_owned(),
             )));
         }
-        Sent::Redirect(_) => String::new(),
+        Sent::Redirect(location) => {
+            led_to = Some(location);
+            String::new()
+        }
     };
     if form.result.json.is_some() {
         // The response itself is the result: there is no page to read.
@@ -577,8 +581,16 @@ async fn fetch_form(
         });
     }
 
-    let result = fill(&form.result.page, params)?
-        .ok_or_else(|| anyhow!("missing parameter in {:?}", form.result.page))?;
+    let result = match (&led_to, form.result.follow) {
+        // The page the submission sent the visitor to, where the site shows
+        // its message (a profile page whose address the submission decided).
+        (Some(location), true) => location
+            .strip_prefix(ctx.origin)
+            .unwrap_or(location)
+            .to_owned(),
+        _ => fill(&form.result.page, params)?
+            .ok_or_else(|| anyhow!("missing parameter in {:?}", form.result.page))?,
+    };
     let (main, location) = match send(client, throttle, ctx, &result, None, true).await? {
         Sent::Body(body) => (body, None),
         Sent::Redirect(location) => (String::new(), Some(location)),

@@ -87,7 +87,7 @@ fn key_for(op: &Operation, instance: &str) -> Result<Option<String>, String> {
     match op.auth.as_str() {
         // Optional keys are verified as the public sees the page. A session is
         // made in `session_for`, from the login in the environment.
-        "none" | "api-key-optional" | "session" | "session+csrf" => Ok(None),
+        "none" | "api-key-optional" | "session" | "session+csrf" | "session:anonymous" => Ok(None),
         "api-key" => std::env::var(&var)
             .map(Some)
             .map_err(|_| format!("needs an API key in {var}")),
@@ -104,6 +104,21 @@ fn with_login(
     examples: &BTreeMap<String, String>,
 ) -> BTreeMap<String, String> {
     let mut params = examples.clone();
+    // `VERIFY_PARAM_<NAME>_<INSTANCE>` replaces an example, for values that
+    // cannot be written down, such as the token of an email.
+    for (key, value) in &mut params {
+        let var = format!(
+            "VERIFY_PARAM_{}_{}",
+            key.to_ascii_uppercase(),
+            name.to_ascii_uppercase().replace('-', "_")
+        );
+        if let Ok(replacement) = std::env::var(var) {
+            value.clone_from(&replacement);
+        }
+    }
+    if op.auth.starts_with("session") {
+        params.insert("captchaToken".to_owned(), HCAPTCHA_TEST_RESPONSE.to_owned());
+    }
     if op.id == "createSession" {
         let var = format!(
             "VERIFY_LOGIN_{}",
@@ -116,7 +131,6 @@ fn with_login(
         {
             params.insert("email".to_owned(), email.to_owned());
             params.insert("password".to_owned(), password.to_owned());
-            params.insert("captchaToken".to_owned(), HCAPTCHA_TEST_RESPONSE.to_owned());
         }
     }
     params
@@ -131,10 +145,13 @@ async fn session_for(
     instance: &Instance,
     name: &str,
 ) -> Result<Option<Session>, String> {
-    if !matches!(op.auth.as_str(), "session" | "session+csrf") {
+    if !matches!(
+        op.auth.as_str(),
+        "session" | "session+csrf" | "session:anonymous"
+    ) {
         return Ok(None);
     }
-    if op.id == "createSession" {
+    if op.id == "createSession" || op.auth == "session:anonymous" {
         let fresh = Session::from_cookie_header("");
         fresh.ensure_fingerprint();
         return Ok(Some(fresh));

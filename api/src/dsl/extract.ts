@@ -150,6 +150,8 @@ type FormResult = (
   must?: string[];
   /** When the page read afterwards redirects, the answer for a `Location` ending in the key: for a redirect that is itself the result (to a second factor's form). */
   redirects?: Record<string, unknown>;
+  /** Read the page the submission redirected to instead of `page`, when it redirected. */
+  follow?: true;
   /** Selector of the messages that say why, on the result page or in the submission's own response. */
   errors?: string;
 };
@@ -157,8 +159,17 @@ type FormResult = (
 export type Strategy = JsonStrategy | HtmlStrategy | FormStrategy;
 
 /**
+ * `session`: acts as the signed-in visitor, with the cookies the browser sends.
+ * `session:anonymous`: the same cookies, for forms a signed-out visitor submits (sign up, password reset).
  * `api-key`: needs the visitor's Philomena API key (our `X-Api-Key` header, sent upstream as `key`).
  * `api-key-optional`: works without, and uses it when given (e.g. `my:watched` searches).
  */
 export type AuthLevel =
-  'none' | 'session' | 'session+csrf' | 'api-key' | 'api-key-optional' | 'role:moderator' | 'role:admin';
+  | 'none'
+  | 'session'
+  | 'session:anonymous'
+  | 'session+csrf'
+  | 'api-key'
+  | 'api-key-optional'
+  | 'role:moderator'
+  | 'role:admin';

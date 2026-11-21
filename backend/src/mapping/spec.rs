@@ -94,7 +94,7 @@ pub enum Strategy {
     /// Scrape server-rendered HTML.
     Html(HtmlStrategy),
     /// Submit a form and read what comes back.
-    Form(FormStrategy),
+    Form(Box<FormStrategy>),
 }
 
 impl Strategy {
@@ -369,6 +369,10 @@ pub struct FormResult {
     /// Path of the page, usually `/`. Unused when `json` is set.
     #[serde(default)]
     pub page: String,
+    /// Read the page the submission redirected to rather than `page`, when it
+    /// redirected somewhere local.
+    #[serde(default)]
+    pub follow: bool,
     /// What to take from the page. Unused when `json` is set.
     #[serde(default)]
     pub select: SelectSpec,

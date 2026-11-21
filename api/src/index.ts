@@ -1,4 +1,5 @@
 import type { Operation } from './dsl/operation.ts';
+import * as account from './operations/account.ts';
 import * as changes from './operations/changes.ts';
 import * as channels from './operations/channels.ts';
 import * as directories from './operations/directories.ts';
@@ -14,6 +15,7 @@ import * as session from './operations/session.ts';
 import * as search from './operations/search.ts';
 
 export const operations: Operation[] = [
+  ...Object.values(account),
   ...Object.values(channels),
   ...Object.values(changes),
   ...Object.values(directories),

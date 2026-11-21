@@ -563,6 +563,7 @@ export const schemas = {
   ImageBoxList: s.object({ items: s.array(s.ref('ImageBox')) }),
   DuplicateReportList: s.object({ items: s.array(s.ref('DuplicateReport')), hasNext: s.bool() }),
   CommissionPage,
+  Notice: s.object({ message: s.optional(s.string()) }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

@@ -156,7 +156,11 @@ async fn handle(
     };
     // The visitor's upstream session, for the operations that act as them. It
     // lives for this call only: the browser keeps the cookie, we just carry it.
-    let session = matches!(op.auth.as_str(), "session" | "session+csrf").then(|| {
+    let session = matches!(
+        op.auth.as_str(),
+        "session" | "session+csrf" | "session:anonymous"
+    )
+    .then(|| {
         Session::from_cookie_header(
             headers
                 .get(header::COOKIE)

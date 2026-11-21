@@ -1861,8 +1861,10 @@
     "class": "html-page",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "confirmAccount"
+    ],
     "note": ""
   },
   "GET /confirmations/new": {
@@ -1874,8 +1876,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "resendConfirmation"
+    ],
     "note": ""
   },
   "GET /conversations": {
@@ -2746,8 +2750,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "resetPassword"
+    ],
     "note": ""
   },
   "GET /passwords/new": {
@@ -2759,8 +2765,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "requestPasswordReset"
+    ],
     "note": ""
   },
   "GET /posts": {
@@ -3080,8 +3088,10 @@
     "class": "html-page",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reactivateAccount"
+    ],
     "note": ""
   },
   "GET /registrations/edit": {
@@ -3108,9 +3118,9 @@
     "class": "html-page",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Following the emailed link confirms the new email and redirects: a GET that changes state, which the site itself does in the browser."
   },
   "GET /registrations/name/edit": {
     "controller": "PhilomenaWeb.Registration.NameController#edit",
@@ -3121,8 +3131,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "changeName"
+    ],
     "note": ""
   },
   "GET /registrations/new": {
@@ -3134,8 +3146,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createRegistration"
+    ],
     "note": ""
   },
   "GET /registrations/totp/edit": {
@@ -3436,9 +3450,9 @@
     "class": "html-page",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Following the emailed link unlocks the account and redirects: a GET that changes state, which the site itself does in the browser."
   },
   "GET /unlocks/new": {
     "controller": "PhilomenaWeb.UnlockController#new",
@@ -3449,8 +3463,10 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "requestUnlock"
+    ],
     "note": ""
   },
   "PATCH /admin/adverts/:advert_id/image": {
@@ -3644,8 +3660,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "confirmAccount"
+    ],
     "note": ""
   },
   "PATCH /dnp/:id": {
@@ -3904,8 +3922,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "resetPassword"
+    ],
     "note": ""
   },
   "PATCH /profiles/:profile_id/artist_links/:id": {
@@ -3994,9 +4014,9 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The route is declared upstream, but RegistrationController has no update action."
   },
   "PATCH /registrations/name": {
     "controller": "PhilomenaWeb.Registration.NameController#update",
@@ -4007,8 +4027,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "changeName"
+    ],
     "note": ""
   },
   "PATCH /registrations/password": {
@@ -4020,8 +4042,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "changePassword"
+    ],
     "note": ""
   },
   "PATCH /registrations/totp": {
@@ -4465,8 +4489,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "resendConfirmation"
+    ],
     "note": ""
   },
   "POST /conversations": {
@@ -5275,8 +5301,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "requestPasswordReset"
+    ],
     "note": ""
   },
   "POST /posts/preview": {
@@ -5390,8 +5418,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reactivateAccount"
+    ],
     "note": ""
   },
   "POST /registrations": {
@@ -5403,8 +5433,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createRegistration"
+    ],
     "note": ""
   },
   "POST /registrations/email": {
@@ -5416,8 +5448,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "requestEmailChange"
+    ],
     "note": ""
   },
   "POST /rules": {
@@ -5535,8 +5569,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "requestUnlock"
+    ],
     "note": ""
   },
   "PUT /admin/adverts/:advert_id/image": {
@@ -5730,8 +5766,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "confirmAccount"
+    ],
     "note": ""
   },
   "PUT /dnp/:id": {
@@ -5990,8 +6028,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "resetPassword"
+    ],
     "note": ""
   },
   "PUT /profiles/:profile_id/artist_links/:id": {
@@ -6080,9 +6120,9 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "The route is declared upstream, but RegistrationController has no update action."
   },
   "PUT /registrations/name": {
     "controller": "PhilomenaWeb.Registration.NameController#update",
@@ -6093,8 +6133,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "changeName"
+    ],
     "note": ""
   },
   "PUT /registrations/password": {
@@ -6106,8 +6148,10 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "changePassword"
+    ],
     "note": ""
   },
   "PUT /registrations/totp": {
