@@ -525,6 +525,12 @@
         ],
         "type": "object"
       },
+      "Done": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
       "DuplicateReport": {
         "additionalProperties": false,
         "properties": {
@@ -866,6 +872,26 @@
           "page",
           "perPage"
         ],
+        "type": "object"
+      },
+      "FilterSaved": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [],
         "type": "object"
       },
       "Forum": {
@@ -2511,6 +2537,18 @@
         ],
         "type": "object"
       },
+      "Subscription": {
+        "additionalProperties": false,
+        "properties": {
+          "subscribed": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "subscribed"
+        ],
+        "type": "object"
+      },
       "Tag": {
         "additionalProperties": false,
         "properties": {
@@ -3035,6 +3073,429 @@
                 }
               },
               "template": "lib/philomena_web/templates/channel/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/channels/{id}/read": {
+      "post": {
+        "operationId": "markChannelRead",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a channel's notifications as read for the visitor.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 2
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /channels/:channel_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/channels/{id}/read"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/channels/{id}/subscription": {
+      "delete": {
+        "operationId": "unsubscribeChannel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unsubscribe from a channel for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 2
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /channels/:channel_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/channels/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "subscribeChannel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Subscribe to a channel for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 2
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /channels/:channel_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/channels/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/channels/nsfw": {
+      "delete": {
+        "operationId": "hideNsfwChannels",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Hide NSFW livestream channels from the list.",
+        "tags": [
+          "channels"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /channels/nsfw"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/channels"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/channels/nsfw"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "showNsfwChannels",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Show NSFW livestream channels in the list.",
+        "tags": [
+          "channels"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /channels/nsfw"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/channels"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "POST",
+                "path": "/channels/nsfw"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
             }
           ]
         }
@@ -3825,6 +4286,422 @@
         }
       }
     },
+    "/conversations/{slug}/hide": {
+      "delete": {
+        "operationId": "restoreConversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Bring a hidden conversation back.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /conversations/:conversation_id/hide"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/conversations/{slug}/hide"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "hideConversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Hide a conversation from the visitor’s list.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /conversations/:conversation_id/hide"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "POST",
+                "path": "/conversations/{slug}/hide"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/conversations/{slug}/read": {
+      "delete": {
+        "operationId": "markConversationUnread",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a conversation as unread.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /conversations/:conversation_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/conversations/{slug}/read"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "markConversationRead",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a conversation as read.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /conversations/:conversation_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "POST",
+                "path": "/conversations/{slug}/read"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/deactivations": {
       "delete": {
         "operationId": "deactivateAccount",
@@ -4323,9 +5200,247 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createFilter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "hiddenComplex": {
+                    "type": "string"
+                  },
+                  "hiddenTags": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "public": {
+                    "type": "boolean"
+                  },
+                  "spoileredComplex": {
+                    "type": "string"
+                  },
+                  "spoileredTags": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterSaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Create a filter. Answers the site’s message and the new filter’s id.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "description": "made by the verifier",
+          "hiddenTags": "hidden",
+          "name": "Verify filter",
+          "spoileredTags": "spoiler"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /filters",
+            "GET /filters/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "filter[description]": "{description}",
+                  "filter[hidden_complex_str]": "{hiddenComplex}",
+                  "filter[hidden_tag_list]": "{hiddenTags}",
+                  "filter[name]": "{name}",
+                  "filter[public]": "{public}",
+                  "filter[spoilered_complex_str]": "{spoileredComplex}",
+                  "filter[spoilered_tag_list]": "{spoileredTags}"
+                },
+                "method": "POST",
+                "path": "/filters"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a.button[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/filters/{id}": {
+      "delete": {
+        "operationId": "deleteFilter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Delete one of the visitor’s own filters, when nothing uses it.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "id": 9999
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /filters/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/filters/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
       "get": {
         "operationId": "getFilter",
         "parameters": [
@@ -4392,6 +5507,953 @@
               "request": {
                 "method": "GET",
                 "path": "/api/v1/json/filters/{id}"
+              }
+            }
+          ]
+        }
+      },
+      "put": {
+        "operationId": "updateFilter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "hiddenComplex": {
+                    "type": "string"
+                  },
+                  "hiddenTags": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "spoileredComplex": {
+                    "type": "string"
+                  },
+                  "spoileredTags": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterSaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change one of the visitor’s own filters.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "description": "A filter of the dev user’s own.",
+          "id": 3,
+          "name": "My dev filter"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /filters/:id",
+            "PATCH /filters/:id",
+            "GET /filters/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters/{id}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "filter[description]": "{description}",
+                  "filter[hidden_complex_str]": "{hiddenComplex}",
+                  "filter[hidden_tag_list]": "{hiddenTags}",
+                  "filter[name]": "{name}",
+                  "filter[spoilered_complex_str]": "{spoileredComplex}",
+                  "filter[spoilered_tag_list]": "{spoileredTags}"
+                },
+                "method": "PUT",
+                "path": "/filters/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a.button[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/{id}/current": {
+      "put": {
+        "operationId": "setCurrentFilter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Switch to a filter.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "id": 3
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /filters/current",
+            "PATCH /filters/current"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "PUT",
+                "path": "/filters/current?id={id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/{id}/public": {
+      "post": {
+        "operationId": "makeFilterPublic",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Make one of the visitor’s filters public. It cannot be made private again.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "id": 3
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /filters/:filter_id/public"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "POST",
+                "path": "/filters/{id}/public"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/hide": {
+      "delete": {
+        "operationId": "unhideTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Remove a tag from the hidden tags of the visitor’s current filter.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "tag": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /filters/hide"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "tag": "{tag}"
+                },
+                "method": "DELETE",
+                "path": "/filters/hide"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "hideTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Add a tag to the hidden tags of the visitor’s current filter.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "tag": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /filters/hide"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "tag": "{tag}"
+                },
+                "method": "POST",
+                "path": "/filters/hide"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/recent": {
+      "delete": {
+        "operationId": "clearRecentFilters",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Clear the list of recently used filters.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /filters/clear_recent"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/filters/clear_recent"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/spoiler": {
+      "delete": {
+        "operationId": "unspoilerTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Remove a tag from the spoilered tags of the visitor’s current filter.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "tag": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /filters/spoiler"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "tag": "{tag}"
+                },
+                "method": "DELETE",
+                "path": "/filters/spoiler"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "spoilerTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Add a tag to the spoilered tags of the visitor’s current filter.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "tag": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /filters/spoiler"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "tag": "{tag}"
+                },
+                "method": "POST",
+                "path": "/filters/spoiler"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/filters/spoiler_type": {
+      "put": {
+        "operationId": "setSpoilerType",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "spoilerType": {
+                    "enum": [
+                      "static",
+                      "click",
+                      "hover",
+                      "off"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "spoilerType"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Choose how spoilered images show: `static`, `click`, `hover` or `off`.",
+        "tags": [
+          "filters"
+        ],
+        "x-examples": {
+          "spoilerType": "static"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /filters/spoiler_type",
+            "PATCH /filters/spoiler_type"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "settings[spoiler_type]": "{spoilerType}"
+                },
+                "method": "PUT",
+                "path": "/filters/spoiler_type"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/filters"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "user[spoiler_type]": "{spoilerType}"
+                },
+                "method": "PUT",
+                "path": "/filters/spoiler_type"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
               }
             }
           ]
@@ -4750,6 +6812,168 @@
               "request": {
                 "method": "GET",
                 "path": "/api/v1/json/forums/{forum}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/forums/{forum}/subscription": {
+      "delete": {
+        "operationId": "unsubscribeForum",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unsubscribe from a forum for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "forum": "dis"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /forums/:forum_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/forums/{forum}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "subscribeForum",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Subscribe to a forum for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "forum": "dis"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/forums/{forum}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
               }
             }
           ]
@@ -5402,6 +7626,272 @@
         }
       }
     },
+    "/forums/{forum}/topics/{topic}/read": {
+      "post": {
+        "operationId": "markTopicRead",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a topic's notifications as read for the visitor.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics/:topic_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/read"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/forums/{forum}/topics/{topic}/subscription": {
+      "delete": {
+        "operationId": "unsubscribeTopic",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unsubscribe from a topic for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /forums/:forum_id/topics/:topic_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/forums/{forum}/topics/{topic}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "subscribeTopic",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Subscribe to a topic for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics/:topic_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/galleries": {
       "get": {
         "operationId": "listGalleries",
@@ -5690,6 +8180,245 @@
                 "query": {
                   "per_page": "1",
                   "q": "id:{id}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/galleries/{id}/read": {
+      "post": {
+        "operationId": "markGalleryRead",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a gallery's notifications as read for the visitor.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /galleries/:gallery_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/galleries/{id}/read"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/galleries/{id}/subscription": {
+      "delete": {
+        "operationId": "unsubscribeGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unsubscribe from a gallery for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /galleries/:gallery_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/galleries/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "subscribeGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Subscribe to a gallery for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /galleries/:gallery_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/galleries/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
                 }
               }
             }
@@ -6661,6 +9390,245 @@
                 }
               },
               "template": "lib/philomena_web/templates/layout/app.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/images/{id}/read": {
+      "post": {
+        "operationId": "markImageRead",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Mark a image's notifications as read for the visitor.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images/:image_id/read"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/images/{id}/read"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/images/{id}/subscription": {
+      "delete": {
+        "operationId": "unsubscribeImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Unsubscribe from a image for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /images/:image_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/images/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "subscribeImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Subscription"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Subscribe to a image for notifications. Answers whether the visitor is subscribed now.",
+        "tags": [
+          "subscriptions"
+        ],
+        "x-examples": {
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images/:image_id/subscription"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/images/{id}/subscription"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "subscribed": {
+                      "exists": true,
+                      "sel": "a.js-subscription-link[data-method=\"delete\"]:not(.hidden)"
+                    }
+                  }
+                }
+              }
             }
           ]
         }
@@ -11489,6 +14457,158 @@
                 }
               },
               "template": "lib/philomena_web/templates/tag_change/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/tags/{slug}/watch": {
+      "delete": {
+        "operationId": "unwatchTag",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Stop watching a tag.",
+        "tags": [
+          "tags"
+        ],
+        "x-examples": {
+          "slug": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /tags/:tag_id/watch"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "DELETE",
+                "path": "/tags/{slug}/watch"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "watchTag",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Watch a tag: its new images show on the watched page.",
+        "tags": [
+          "tags"
+        ],
+        "x-examples": {
+          "slug": "safe"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /tags/:tag_id/watch"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "method": "POST",
+                "path": "/tags/{slug}/watch"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {}
+                }
+              }
             }
           ]
         }

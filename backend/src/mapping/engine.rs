@@ -584,7 +584,7 @@ async fn fetch_form(
             String::new()
         }
     };
-    if form.result.json.is_some() {
+    if form.result.json.is_some() || form.result.answer {
         // The response itself is the result: there is no page to read.
         return Ok(Responses {
             submitted,
@@ -683,7 +683,8 @@ pub fn extract(
                     },
                 );
             }
-            if let Some(location) = &responses.location {
+            let answered = form.result.answer;
+            if let Some(location) = responses.location.as_ref().filter(|_| !answered) {
                 // A redirect can be the answer (to a second factor's form).
                 let path = location
                     .strip_prefix(ctx.origin)
@@ -699,7 +700,12 @@ pub fn extract(
                     .map(|(_, answer)| answer.clone())
                     .ok_or_else(|| anyhow::Error::new(FormRejected(format!("it led to {path}"))));
             }
-            let value = html::select(&responses.main, &form.result.select, ctx.origin)?;
+            let page = if answered {
+                &responses.submitted
+            } else {
+                &responses.main
+            };
+            let value = html::select(page, &form.result.select, ctx.origin)?;
             let accepted = form.result.must.is_empty()
                 || form
                     .result

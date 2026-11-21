@@ -13,7 +13,13 @@ use reqwest::header::{HeaderMap, SET_COOKIE};
 /// The only cookies that cross. Everything else the upstream sets stays out of
 /// the visitor's browser, and nothing else the browser holds reaches the
 /// upstream.
-const CROSSING: &[&str] = &["_philomena_key", "_ses", "user_totp_auth"];
+const CROSSING: &[&str] = &[
+    "_philomena_key",
+    "_ses",
+    "user_totp_auth",
+    "chan_nsfw",
+    "filter_id",
+];
 
 /// `len` random lowercase hex digits. The standard hasher is seeded by the
 /// operating system for each `RandomState`, which is all an id needs.

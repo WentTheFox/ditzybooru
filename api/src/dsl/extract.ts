@@ -150,6 +150,8 @@ type FormResult = (
   must?: string[];
   /** When the page read afterwards redirects, the answer for a `Location` ending in the key: for a redirect that is itself the result (to a second factor's form). */
   redirects?: Record<string, unknown>;
+  /** The submission's own response is an HTML fragment, read with `select` like a page. */
+  answer?: true;
   /** The site accepts by redirecting: a page rendered in answer is a rejection (`errors` says why). */
   requireRedirect?: true;
   /** Read the page the submission redirected to instead of `page`, when it redirected. */

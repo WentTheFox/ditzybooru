@@ -12,6 +12,8 @@ import * as items from './operations/items.ts';
 import * as listings from './operations/listings.ts';
 import * as pages from './operations/pages.ts';
 import * as uploads from './operations/uploads.ts';
+import * as watching from './operations/watching.ts';
+import * as preferences from './operations/preferences.ts';
 import * as session from './operations/session.ts';
 import * as search from './operations/search.ts';
 
@@ -30,5 +32,7 @@ export const operations: Operation[] = [
   ...Object.values(session),
   ...Object.values(interactions),
   ...Object.values(inbox),
+  ...Object.values(watching),
+  ...Object.values(preferences),
   ...Object.values(uploads),
 ];

@@ -373,6 +373,10 @@ pub struct FormResult {
     /// redirected somewhere local.
     #[serde(default)]
     pub follow: bool,
+    /// The submission's own response is an HTML fragment, read with `select`
+    /// like a page (the site's scripts swap it into the page).
+    #[serde(default)]
+    pub answer: bool,
     /// The site accepts the submission by redirecting; a page rendered in
     /// answer is a rejection, and `errors` says why.
     #[serde(default)]

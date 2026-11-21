@@ -638,6 +638,9 @@ export const schemas = {
     /** One-time backup codes, shown right after 2FA is turned on. */
     backupCodes: s.array(s.string()),
   }),
+  Subscription: s.object({ subscribed: s.bool() }),
+  Done: s.object({}),
+  FilterSaved: s.object({ message: s.optional(s.string()), id: s.optional(s.nullable(s.int())) }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

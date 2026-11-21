@@ -203,8 +203,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unsubscribeChannel"
+    ],
     "note": ""
   },
   "DELETE /channels/:id": {
@@ -214,11 +216,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /channels/nsfw": {
     "controller": "PhilomenaWeb.Channel.NsfwController#delete",
@@ -229,8 +231,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "hideNsfwChannels"
+    ],
     "note": ""
   },
   "DELETE /conversations/:conversation_id/hide": {
@@ -242,8 +246,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "restoreConversation"
+    ],
     "note": ""
   },
   "DELETE /conversations/:conversation_id/read": {
@@ -255,8 +261,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markConversationUnread"
+    ],
     "note": ""
   },
   "DELETE /deactivations": {
@@ -280,11 +288,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /filters/:id": {
     "controller": "PhilomenaWeb.FilterController#delete",
@@ -295,8 +303,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "deleteFilter"
+    ],
     "note": ""
   },
   "DELETE /filters/clear_recent": {
@@ -308,8 +318,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "clearRecentFilters"
+    ],
     "note": ""
   },
   "DELETE /filters/hide": {
@@ -321,8 +333,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unhideTag"
+    ],
     "note": ""
   },
   "DELETE /filters/spoiler": {
@@ -334,8 +348,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unspoilerTag"
+    ],
     "note": ""
   },
   "DELETE /forums/:forum_id/subscription": {
@@ -347,8 +363,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unsubscribeForum"
+    ],
     "note": ""
   },
   "DELETE /forums/:forum_id/topics/:topic_id/hide": {
@@ -358,11 +376,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /forums/:forum_id/topics/:topic_id/lock": {
     "controller": "PhilomenaWeb.Topic.LockController#delete",
@@ -371,11 +389,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /forums/:forum_id/topics/:topic_id/poll/votes/:id": {
     "controller": "PhilomenaWeb.Topic.Poll.VoteController#delete",
@@ -384,11 +402,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /forums/:forum_id/topics/:topic_id/posts/:post_id/hide": {
     "controller": "PhilomenaWeb.Topic.Post.HideController#delete",
@@ -397,11 +415,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /forums/:forum_id/topics/:topic_id/stick": {
     "controller": "PhilomenaWeb.Topic.StickController#delete",
@@ -410,11 +428,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /forums/:forum_id/topics/:topic_id/subscription": {
     "controller": "PhilomenaWeb.Topic.SubscriptionController#delete",
@@ -425,8 +443,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unsubscribeTopic"
+    ],
     "note": ""
   },
   "DELETE /galleries/:gallery_id/images": {
@@ -451,8 +471,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unsubscribeGallery"
+    ],
     "note": ""
   },
   "DELETE /galleries/:id": {
@@ -488,11 +510,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/comments/:comment_id/hide": {
     "controller": "PhilomenaWeb.Image.Comment.HideController#delete",
@@ -501,11 +523,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/delete": {
     "controller": "PhilomenaWeb.Image.DeleteController#delete",
@@ -527,11 +549,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/fave": {
     "controller": "PhilomenaWeb.Image.FaveController#delete",
@@ -583,11 +605,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/subscription": {
     "controller": "PhilomenaWeb.Image.SubscriptionController#delete",
@@ -598,8 +620,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unsubscribeImage"
+    ],
     "note": ""
   },
   "DELETE /images/:image_id/tag_changes/:id": {
@@ -608,11 +632,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/tag_lock": {
     "controller": "PhilomenaWeb.Image.TagLockController#delete",
@@ -621,11 +645,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /images/:image_id/vote": {
     "controller": "PhilomenaWeb.Image.VoteController#delete",
@@ -673,11 +697,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /profiles/:profile_id/commission": {
     "controller": "PhilomenaWeb.Profile.CommissionController#delete",
@@ -726,11 +750,11 @@
       "philomena"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /tags/:id": {
     "controller": "PhilomenaWeb.TagController#delete",
@@ -739,11 +763,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /tags/:tag_id/alias": {
     "controller": "PhilomenaWeb.Tag.AliasController#delete",
@@ -765,11 +789,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "DELETE /tags/:tag_id/watch": {
     "controller": "PhilomenaWeb.Tag.WatchController#delete",
@@ -780,8 +804,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "unwatchTag"
+    ],
     "note": ""
   },
   "GET /": {
@@ -1805,11 +1831,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /channels/new": {
     "controller": "PhilomenaWeb.ChannelController#new",
@@ -1818,11 +1844,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /comments": {
     "controller": "PhilomenaWeb.CommentController#index",
@@ -1991,11 +2017,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /dnp/new": {
     "controller": "PhilomenaWeb.DnpEntryController#new",
@@ -2090,8 +2116,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateFilter"
+    ],
     "note": ""
   },
   "GET /filters/new": {
@@ -2103,8 +2131,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createFilter"
+    ],
     "note": ""
   },
   "GET /fingerprint_profiles/:fingerprint_profile_id/source_changes": {
@@ -2183,11 +2213,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /forums/:forum_id/topics/:topic_id/poll/votes": {
     "controller": "PhilomenaWeb.Topic.Poll.VoteController#index",
@@ -2721,11 +2751,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /pages/:page_id/history": {
     "controller": "PhilomenaWeb.Page.HistoryController#index",
@@ -2749,11 +2779,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /passwords/:id/edit": {
     "controller": "PhilomenaWeb.PasswordController#edit",
@@ -2888,11 +2918,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /profiles/:profile_id/awards/new": {
     "controller": "PhilomenaWeb.Profile.AwardController#new",
@@ -2901,11 +2931,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /profiles/:profile_id/commission": {
     "controller": "PhilomenaWeb.Profile.CommissionController#show",
@@ -3230,11 +3260,11 @@
       "philomena"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /rules/new": {
     "controller": "PhilomenaWeb.RuleController#new",
@@ -3242,11 +3272,11 @@
       "philomena"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /search": {
     "controller": "PhilomenaWeb.SearchController#index",
@@ -3386,11 +3416,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /tags/:tag_id/alias/edit": {
     "controller": "PhilomenaWeb.Tag.AliasController#edit",
@@ -3425,11 +3455,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "GET /tags/:tag_id/tag_changes": {
     "controller": "PhilomenaWeb.Tag.TagChangeController#index",
@@ -3663,11 +3693,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /confirmations/:id": {
     "controller": "PhilomenaWeb.ConfirmationController#update",
@@ -3691,11 +3721,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /filters/:id": {
     "controller": "PhilomenaWeb.FilterController#update",
@@ -3706,8 +3736,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateFilter"
+    ],
     "note": ""
   },
   "PATCH /filters/current": {
@@ -3719,8 +3751,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "setCurrentFilter"
+    ],
     "note": ""
   },
   "PATCH /filters/spoiler_type": {
@@ -3732,8 +3766,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "setSpoilerType"
+    ],
     "note": ""
   },
   "PATCH /forums/:forum_id/topics/:id": {
@@ -3756,11 +3792,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /forums/:forum_id/topics/:topic_id/posts/:id": {
     "controller": "PhilomenaWeb.Topic.PostController#update",
@@ -3886,11 +3922,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /images/:image_id/tags": {
     "controller": "PhilomenaWeb.Image.TagController#update",
@@ -3899,11 +3935,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /images/:image_id/uploader": {
     "controller": "PhilomenaWeb.Image.UploaderController#update",
@@ -3925,11 +3961,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /passwords/:id": {
     "controller": "PhilomenaWeb.PasswordController#update",
@@ -3966,11 +4002,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /profiles/:profile_id/commission": {
     "controller": "PhilomenaWeb.Profile.CommissionController#update",
@@ -4087,11 +4123,11 @@
       "philomena"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /settings": {
     "controller": "PhilomenaWeb.SettingController#update",
@@ -4113,11 +4149,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PATCH /tags/:tag_id/alias": {
     "controller": "PhilomenaWeb.Tag.AliasController#update",
@@ -4139,11 +4175,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /admin/adverts": {
     "controller": "PhilomenaWeb.Admin.AdvertController#create",
@@ -4455,11 +4491,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /channels/:channel_id/read": {
     "controller": "PhilomenaWeb.Channel.ReadController#create",
@@ -4470,8 +4506,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markChannelRead"
+    ],
     "note": ""
   },
   "POST /channels/:channel_id/subscription": {
@@ -4483,8 +4521,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "subscribeChannel"
+    ],
     "note": ""
   },
   "POST /channels/nsfw": {
@@ -4496,8 +4536,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "showNsfwChannels"
+    ],
     "note": ""
   },
   "POST /confirmations": {
@@ -4537,8 +4579,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "hideConversation"
+    ],
     "note": ""
   },
   "POST /conversations/:conversation_id/messages": {
@@ -4561,11 +4605,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /conversations/:conversation_id/read": {
     "controller": "PhilomenaWeb.Conversation.ReadController#create",
@@ -4576,8 +4620,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markConversationRead"
+    ],
     "note": ""
   },
   "POST /conversations/:conversation_id/reports": {
@@ -4626,11 +4672,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /duplicate_reports/:duplicate_report_id/accept_reverse": {
     "controller": "PhilomenaWeb.DuplicateReport.AcceptReverseController#create",
@@ -4639,11 +4685,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /duplicate_reports/:duplicate_report_id/claim": {
     "controller": "PhilomenaWeb.DuplicateReport.ClaimController#create",
@@ -4652,11 +4698,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /duplicate_reports/:duplicate_report_id/reject": {
     "controller": "PhilomenaWeb.DuplicateReport.RejectController#create",
@@ -4665,11 +4711,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /filters": {
     "controller": "PhilomenaWeb.FilterController#create",
@@ -4680,8 +4726,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createFilter"
+    ],
     "note": ""
   },
   "POST /filters/:filter_id/public": {
@@ -4693,8 +4741,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "makeFilterPublic"
+    ],
     "note": ""
   },
   "POST /filters/hide": {
@@ -4706,8 +4756,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "hideTag"
+    ],
     "note": ""
   },
   "POST /filters/spoiler": {
@@ -4719,8 +4771,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "spoilerTag"
+    ],
     "note": ""
   },
   "POST /fingerprint_profiles/:fingerprint_profile_id/tag_changes/revert": {
@@ -4744,8 +4798,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "subscribeForum"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics": {
@@ -4768,11 +4824,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/lock": {
     "controller": "PhilomenaWeb.Topic.LockController#create",
@@ -4781,11 +4837,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/move": {
     "controller": "PhilomenaWeb.Topic.MoveController#create",
@@ -4794,11 +4850,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/poll/votes": {
     "controller": "PhilomenaWeb.Topic.Poll.VoteController#create",
@@ -4833,11 +4889,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/posts/:post_id/delete": {
     "controller": "PhilomenaWeb.Topic.Post.DeleteController#create",
@@ -4846,11 +4902,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/posts/:post_id/hide": {
     "controller": "PhilomenaWeb.Topic.Post.HideController#create",
@@ -4859,11 +4915,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/posts/:post_id/reports": {
     "controller": "PhilomenaWeb.Topic.Post.ReportController#create",
@@ -4887,8 +4943,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markTopicRead"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics/:topic_id/stick": {
@@ -4898,11 +4956,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /forums/:forum_id/topics/:topic_id/subscription": {
     "controller": "PhilomenaWeb.Topic.SubscriptionController#create",
@@ -4913,8 +4971,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "subscribeTopic"
+    ],
     "note": ""
   },
   "POST /galleries": {
@@ -4952,8 +5012,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markGalleryRead"
+    ],
     "note": ""
   },
   "POST /galleries/:gallery_id/reports": {
@@ -4978,8 +5040,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "subscribeGallery"
+    ],
     "note": ""
   },
   "POST /images": {
@@ -5028,11 +5092,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/comments": {
     "controller": "PhilomenaWeb.Image.CommentController#create",
@@ -5054,11 +5118,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/comments/:comment_id/delete": {
     "controller": "PhilomenaWeb.Image.Comment.DeleteController#create",
@@ -5067,11 +5131,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/comments/:comment_id/hide": {
     "controller": "PhilomenaWeb.Image.Comment.HideController#create",
@@ -5080,11 +5144,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/comments/:comment_id/reports": {
     "controller": "PhilomenaWeb.Image.Comment.ReportController#create",
@@ -5119,11 +5183,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/destroy": {
     "controller": "PhilomenaWeb.Image.DestroyController#create",
@@ -5190,8 +5254,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "markImageRead"
+    ],
     "note": ""
   },
   "POST /images/:image_id/repair": {
@@ -5229,8 +5295,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "subscribeImage"
+    ],
     "note": ""
   },
   "POST /images/:image_id/tag_lock": {
@@ -5240,11 +5308,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /images/:image_id/tamper": {
     "controller": "PhilomenaWeb.Image.TamperController#create",
@@ -5306,11 +5374,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /passwords": {
     "controller": "PhilomenaWeb.PasswordController#create",
@@ -5360,11 +5428,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /profiles/:profile_id/commission": {
     "controller": "PhilomenaWeb.Profile.CommissionController#create",
@@ -5480,11 +5548,11 @@
       "philomena"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /search/reverse": {
     "controller": "PhilomenaWeb.Search.ReverseController#create",
@@ -5535,11 +5603,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /tag_changes/revert": {
     "controller": "PhilomenaWeb.TagChange.RevertController#create",
@@ -5561,11 +5629,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "POST /tags/:tag_id/watch": {
     "controller": "PhilomenaWeb.Tag.WatchController#create",
@@ -5576,8 +5644,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "watchTag"
+    ],
     "note": ""
   },
   "POST /unlocks": {
@@ -5771,11 +5841,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /confirmations/:id": {
     "controller": "PhilomenaWeb.ConfirmationController#update",
@@ -5799,11 +5869,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /filters/:id": {
     "controller": "PhilomenaWeb.FilterController#update",
@@ -5814,8 +5884,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateFilter"
+    ],
     "note": ""
   },
   "PUT /filters/current": {
@@ -5827,8 +5899,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "setCurrentFilter"
+    ],
     "note": ""
   },
   "PUT /filters/spoiler_type": {
@@ -5840,8 +5914,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "setSpoilerType"
+    ],
     "note": ""
   },
   "PUT /forums/:forum_id/topics/:id": {
@@ -5864,11 +5940,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /forums/:forum_id/topics/:topic_id/posts/:id": {
     "controller": "PhilomenaWeb.Topic.PostController#update",
@@ -5994,11 +6070,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /images/:image_id/tags": {
     "controller": "PhilomenaWeb.Image.TagController#update",
@@ -6007,11 +6083,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /images/:image_id/uploader": {
     "controller": "PhilomenaWeb.Image.UploaderController#update",
@@ -6033,11 +6109,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /passwords/:id": {
     "controller": "PhilomenaWeb.PasswordController#update",
@@ -6074,11 +6150,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /profiles/:profile_id/commission": {
     "controller": "PhilomenaWeb.Profile.CommissionController#update",
@@ -6195,11 +6271,11 @@
       "philomena"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /settings": {
     "controller": "PhilomenaWeb.SettingController#update",
@@ -6221,11 +6297,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   },
   "PUT /tags/:tag_id/alias": {
     "controller": "PhilomenaWeb.Tag.AliasController#update",
@@ -6247,10 +6323,10 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Staff action: moved to the moderator phase."
   }
 }
