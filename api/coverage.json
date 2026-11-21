@@ -2928,13 +2928,11 @@
       "furbooru"
     ],
     "class": "html-form",
-    "area": "public",
-    "phase": 6,
-    "status": "mapped",
-    "operations": [
-      "updateArtistLink"
-    ],
-    "note": ""
+    "area": "moderator",
+    "phase": 7,
+    "status": "todo",
+    "operations": [],
+    "note": "Staff only: the site redirects the link’s own submitter away from the edit form."
   },
   "GET /profiles/:profile_id/artist_links/new": {
     "controller": "PhilomenaWeb.Profile.ArtistLinkController#new",
@@ -4053,13 +4051,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
-    "status": "mapped",
-    "operations": [
-      "updateArtistLink"
-    ],
-    "note": ""
+    "area": "moderator",
+    "phase": 7,
+    "status": "todo",
+    "operations": [],
+    "note": "Staff only: the site redirects the link’s own submitter away from the edit form."
   },
   "PATCH /profiles/:profile_id/awards/:id": {
     "controller": "PhilomenaWeb.Profile.AwardController#update",
@@ -6257,13 +6253,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
-    "status": "mapped",
-    "operations": [
-      "updateArtistLink"
-    ],
-    "note": ""
+    "area": "moderator",
+    "phase": 7,
+    "status": "todo",
+    "operations": [],
+    "note": "Staff only: the site redirects the link’s own submitter away from the edit form."
   },
   "PUT /profiles/:profile_id/awards/:id": {
     "controller": "PhilomenaWeb.Profile.AwardController#update",

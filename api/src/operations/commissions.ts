@@ -195,29 +195,6 @@ export const createArtistLink = noticeForm({
   examples: { slug: 'Pleb', tagName: 'artist:assasinmonkey', uri: 'https://example.com/verifier' },
 });
 
-export const updateArtistLink = noticeForm({
-  operationId: 'updateArtistLink',
-  group: 'profiles',
-  method: 'put',
-  path: '/profiles/{slug}/artist_links/{linkId}',
-  summary: 'Change a link the visitor submitted.',
-  params: [slug, { name: 'linkId', in: 'path', schema: s.int(), required: true }],
-  body: artistLinkBody,
-  formPage: '/profiles/{slug}/artist_links/{linkId}/edit',
-  request: { path: '/profiles/{slug}/artist_links/{linkId}', body: artistLinkFields },
-  verb: 'PUT',
-  signedIn: true,
-  follow: true,
-  extraFields: { id: artistLinkId },
-  response: 'ArtistLinkSaved',
-  routes: [
-    'PUT /profiles/:profile_id/artist_links/:id',
-    'PATCH /profiles/:profile_id/artist_links/:id',
-    'GET /profiles/:profile_id/artist_links/:id/edit',
-  ],
-  examples: { slug: 'Pleb', linkId: 1, tagName: 'artist:assasinmonkey', uri: 'https://example.com/verifier2' },
-});
-
 export const createDnpEntry = noticeForm({
   operationId: 'createDnpEntry',
   group: 'dnp',
