@@ -2241,8 +2241,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updatePost"
+    ],
     "note": ""
   },
   "GET /forums/:forum_id/topics/:topic_id/posts/:post_id/history": {
@@ -2282,8 +2284,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createTopic"
+    ],
     "note": ""
   },
   "GET /forums/:id": {
@@ -2464,8 +2468,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateComment"
+    ],
     "note": ""
   },
   "GET /images/:image_id/favorites": {
@@ -3779,11 +3785,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Renaming a topic is a staff action: the site refuses the topic author."
   },
   "PATCH /forums/:forum_id/topics/:topic_id/poll": {
     "controller": "PhilomenaWeb.Topic.PollController#update",
@@ -3807,8 +3813,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updatePost"
+    ],
     "note": ""
   },
   "PATCH /galleries/:gallery_id/order": {
@@ -3846,8 +3854,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateComment"
+    ],
     "note": ""
   },
   "PATCH /images/:image_id/delete": {
@@ -4813,8 +4823,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createTopic"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics/:topic_id/hide": {
@@ -4878,8 +4890,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createPost"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics/:topic_id/posts/:post_id/approve": {
@@ -5107,8 +5121,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createComment"
+    ],
     "note": ""
   },
   "POST /images/:image_id/comments/:comment_id/approve": {
@@ -5404,8 +5420,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "previewPost"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/artist_links": {
@@ -5927,11 +5945,11 @@
       "furbooru"
     ],
     "class": "mutation",
-    "area": "public",
-    "phase": 6,
+    "area": "moderator",
+    "phase": 7,
     "status": "todo",
     "operations": [],
-    "note": ""
+    "note": "Renaming a topic is a staff action: the site refuses the topic author."
   },
   "PUT /forums/:forum_id/topics/:topic_id/poll": {
     "controller": "PhilomenaWeb.Topic.PollController#update",
@@ -5955,8 +5973,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updatePost"
+    ],
     "note": ""
   },
   "PUT /galleries/:gallery_id/order": {
@@ -5994,8 +6014,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateComment"
+    ],
     "note": ""
   },
   "PUT /images/:image_id/delete": {

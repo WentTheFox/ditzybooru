@@ -236,6 +236,22 @@
         ],
         "type": "object"
       },
+      "CommentPosted": {
+        "additionalProperties": false,
+        "properties": {
+          "comments": {
+            "items": {
+              "$ref": "#/components/schemas/RenderedPost"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "comments"
+        ],
+        "type": "object"
+      },
       "CommentResults": {
         "additionalProperties": false,
         "properties": {
@@ -1891,6 +1907,18 @@
           "author",
           "avatarUrl",
           "userId"
+        ],
+        "type": "object"
+      },
+      "PostPreview": {
+        "additionalProperties": false,
+        "properties": {
+          "bodyHtml": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "bodyHtml"
         ],
         "type": "object"
       },
@@ -7085,6 +7113,129 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createTopic",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Start a topic. The site allows one every 5 minutes.",
+        "tags": [
+          "forums"
+        ],
+        "x-examples": {
+          "body": "A topic made by the verifier.",
+          "forum": "dis",
+          "title": "Verifier topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics",
+            "GET /forums/:forum_id/topics/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "topic[anonymous]": "{anonymous|false}",
+                  "topic[posts][0][body]": "{body}",
+                  "topic[title]": "{title}"
+                },
+                "method": "POST",
+                "path": "/forums/{forum}/topics"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/forums/{forum}/topics/{topic}": {
@@ -7415,6 +7566,269 @@
                 "query": {
                   "page": "{page|1}",
                   "per_page": "{perPage|25}"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "createPost",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Reply in a topic. The site allows one every 15 seconds.",
+        "tags": [
+          "forums"
+        ],
+        "x-examples": {
+          "body": "Replied by the verifier.",
+          "forum": "dis",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics/:topic_id/posts"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/{topic}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "post[anonymous]": "{anonymous|false}",
+                  "post[body]": "{body}"
+                },
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/posts"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/forums/{forum}/topics/{topic}/posts/{id}": {
+      "put": {
+        "operationId": "updatePost",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "editReason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Edit one of the visitor’s own posts.",
+        "tags": [
+          "forums"
+        ],
+        "x-examples": {
+          "body": "Edited post, by the verifier.",
+          "forum": "dis",
+          "id": 1,
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /forums/:forum_id/topics/:topic_id/posts/:id",
+            "PATCH /forums/:forum_id/topics/:topic_id/posts/:id",
+            "GET /forums/:forum_id/topics/:topic_id/posts/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/{topic}/posts/{id}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "post[body]": "{body}",
+                  "post[edit_reason]": "{editReason}"
+                },
+                "method": "PUT",
+                "path": "/forums/{forum}/topics/{topic}/posts/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
                 }
               }
             }
@@ -9008,6 +9422,153 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentPosted"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Comment on an image. Answers the new comment as the site renders it. The site allows one every 15 seconds.",
+        "tags": [
+          "comments"
+        ],
+        "x-examples": {
+          "anonymous": "false",
+          "body": "Posted by the verifier.",
+          "id": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images/:image_id/comments"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "comment[anonymous]": "{anonymous|false}",
+                  "comment[body]": "{body}"
+                },
+                "method": "POST",
+                "path": "/images/{id}/comments"
+              },
+              "result": {
+                "answer": true,
+                "errors": ".flash--warning, .flash--error",
+                "must": [
+                  "/_posted"
+                ],
+                "page": "",
+                "select": {
+                  "fields": {
+                    "_posted": {
+                      "exists": true,
+                      "sel": "article.communication"
+                    },
+                    "comments": {
+                      "fields": {
+                        "author": {
+                          "sel": ".communication__body__sender-name strong",
+                          "text": true
+                        },
+                        "authorSlug": {
+                          "as": "lastSegment",
+                          "attr": "href",
+                          "optional": true,
+                          "sel": ".communication__body__sender-name strong a"
+                        },
+                        "avatarUrl": {
+                          "as": "url",
+                          "attr": "src",
+                          "optional": true,
+                          "sel": ".communication__body__avatar img"
+                        },
+                        "bodyHtml": {
+                          "as": "sanitizedHtml",
+                          "html": true,
+                          "sel": ".communication__body__text"
+                        },
+                        "createdAt": {
+                          "attr": "datetime",
+                          "sel": ".communication__options time"
+                        },
+                        "id": {
+                          "as": "lastInt",
+                          "attr": "id"
+                        }
+                      },
+                      "many": true,
+                      "sel": "article.communication"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/images/{id}/fave": {
@@ -9912,6 +10473,135 @@
                 }
               },
               "template": "lib/philomena_web/templates/image/comment/history/index.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/images/{imageId}/comments/{id}": {
+      "put": {
+        "operationId": "updateComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "editReason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Edit one of the visitor’s own comments.",
+        "tags": [
+          "comments"
+        ],
+        "x-examples": {
+          "body": "Edited by the verifier.",
+          "id": 1,
+          "imageId": 1
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /images/:image_id/comments/:id",
+            "PATCH /images/:image_id/comments/:id",
+            "GET /images/:image_id/comments/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{imageId}/comments/{id}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "comment[body]": "{body}",
+                  "comment[edit_reason]": "{editReason}"
+                },
+                "method": "PUT",
+                "path": "/images/{imageId}/comments/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
             }
           ]
         }
@@ -11433,6 +12123,108 @@
               "request": {
                 "method": "GET",
                 "path": "/api/v1/json/posts/{id}"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/posts/preview": {
+      "post": {
+        "operationId": "previewPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostPreview"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Render text as the site would show a post or comment, to preview it before sending.",
+        "tags": [
+          "comments"
+        ],
+        "x-examples": {
+          "anonymous": "false",
+          "body": "**bold** and *italic*"
+        },
+        "x-philomena": {
+          "auth": "session:anonymous",
+          "cacheSeconds": 0,
+          "routes": [
+            "POST /posts/preview"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "anonymous": "{anonymous|false}",
+                  "body": "{body}"
+                },
+                "encoding": "json",
+                "method": "POST",
+                "path": "/posts/preview"
+              },
+              "result": {
+                "answer": true,
+                "page": "",
+                "select": {
+                  "fields": {
+                    "bodyHtml": {
+                      "as": "sanitizedHtml",
+                      "html": true,
+                      "sel": ".communication__body__text"
+                    }
+                  }
+                }
               }
             }
           ]

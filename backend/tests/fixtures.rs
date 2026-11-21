@@ -47,7 +47,8 @@ fn fixtures_extract_and_validate() {
                 main: fs::read_to_string(&path).unwrap(),
                 ..Responses::default()
             };
-            if matches!(strategy, Strategy::Form(form) if form.result.json.is_some()) {
+            if matches!(strategy, Strategy::Form(form) if form.result.json.is_some() || form.result.answer)
+            {
                 // A form strategy that reads JSON has the submission's own answer as its fixture.
                 responses.submitted = std::mem::take(&mut responses.main);
             }

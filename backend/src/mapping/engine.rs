@@ -505,6 +505,49 @@ const CHALLENGE_BACKOFF: std::time::Duration = std::time::Duration::from_secs(15
 /// is 15 minutes; one more minute is the margin.
 const BLOCKED_BACKOFF: std::time::Duration = std::time::Duration::from_mins(16);
 
+/// The body of a form submission: fields (names raw, values percent-encoded) or
+/// a JSON document, by the request's encoding.
+type FormBody = (Option<Vec<(String, String)>>, Option<String>);
+
+fn form_payload(
+    form: &FormStrategy,
+    params: &BTreeMap<String, String>,
+    token: &str,
+) -> Result<FormBody> {
+    Ok(if form.request.encoding.as_deref() == Some("json") {
+        let mut object = serde_json::Map::new();
+        for (name, template) in &form.request.body {
+            if let Some(value) = fill_with(template, params, false)? {
+                // The site's scripts send real booleans, and some forks
+                // compare against them.
+                let typed = match value.as_str() {
+                    "true" => Value::Bool(true),
+                    "false" => Value::Bool(false),
+                    _ => Value::String(value),
+                };
+                object.insert(name.clone(), typed);
+            }
+        }
+        (None, Some(Value::Object(object).to_string()))
+    } else {
+        // Form values go out percent-encoded; `fill` encodes the ones it fills.
+        let mut fields = vec![];
+        if form.form.is_some() {
+            fields.push(("_csrf_token".to_owned(), percent_encode(token)));
+        }
+        // Phoenix reads the real verb of a form from `_method`.
+        if form.request.method != "POST" {
+            fields.push(("_method".to_owned(), percent_encode(&form.request.method)));
+        }
+        for (name, template) in &form.request.body {
+            if let Some(value) = fill(template, params)? {
+                fields.push((name.clone(), value));
+            }
+        }
+        (Some(fields), None)
+    })
+}
+
 /// Fetches the form for its token, submits it, then fetches the page it leads
 /// to. All three share the session's cookies, so the token matches the cookie.
 async fn fetch_form(
@@ -528,38 +571,7 @@ async fn fetch_form(
         None => String::new(),
     };
 
-    let payload = if form.request.encoding.as_deref() == Some("json") {
-        let mut object = serde_json::Map::new();
-        for (name, template) in &form.request.body {
-            if let Some(value) = fill_with(template, params, false)? {
-                // The site's scripts send real booleans, and some forks
-                // compare against them.
-                let typed = match value.as_str() {
-                    "true" => Value::Bool(true),
-                    "false" => Value::Bool(false),
-                    _ => Value::String(value),
-                };
-                object.insert(name.clone(), typed);
-            }
-        }
-        (None, Some(Value::Object(object).to_string()))
-    } else {
-        // Form values go out percent-encoded; `fill` encodes the ones it fills.
-        let mut fields = vec![];
-        if form.form.is_some() {
-            fields.push(("_csrf_token".to_owned(), percent_encode(&token)));
-        }
-        // Phoenix reads the real verb of a form from `_method`.
-        if form.request.method != "POST" {
-            fields.push(("_method".to_owned(), percent_encode(&form.request.method)));
-        }
-        for (name, template) in &form.request.body {
-            if let Some(value) = fill(template, params)? {
-                fields.push((name.clone(), value));
-            }
-        }
-        (Some(fields), None)
-    };
+    let payload = form_payload(form, params, &token)?;
     let sent = match &payload {
         (Some(fields), _) => Payload::Form(fields),
         (None, Some(body)) => Payload::Json {
@@ -585,13 +597,21 @@ async fn fetch_form(
         }
     };
     if form.result.json.is_some() || form.result.answer {
-        // The response itself is the result: there is no page to read.
+        // The response itself is the result: there is no page to read. When
+        // the site redirects instead (to the list the new item is on, or to a
+        // page that says why it refused), the answer is what that page says.
+        let mut submitted = submitted;
+        if let (Some(location), true) = (&led_to, form.result.answer) {
+            let path = location.strip_prefix(ctx.origin).unwrap_or(location);
+            if let Sent::Body(page) = send(client, throttle, ctx, path, None, true).await? {
+                submitted = page;
+            }
+        }
         return Ok(Responses {
             submitted,
             ..Responses::default()
         });
     }
-
     if form.result.require_redirect && led_to.is_none() {
         let mut messages = vec![];
         if let Some(css) = &form.result.errors {
