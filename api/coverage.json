@@ -540,7 +540,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "unfaveImage"
     ],
@@ -568,7 +568,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "unhideImage"
     ],
@@ -634,7 +634,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "removeVote"
     ],
@@ -712,7 +712,7 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "deleteSession"
     ],
@@ -791,7 +791,7 @@
     "class": "html-page",
     "area": "public",
     "phase": 3,
-    "status": "skipped",
+    "status": "verified",
     "operations": [
       "getSession"
     ],
@@ -3093,7 +3093,7 @@
     "class": "html-form",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "getApiKey"
     ],
@@ -5101,7 +5101,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "faveImage"
     ],
@@ -5129,7 +5129,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "hideImage"
     ],
@@ -5222,7 +5222,7 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "voteImage"
     ],
@@ -5454,7 +5454,7 @@
     "class": "mutation",
     "area": "auth",
     "phase": 4,
-    "status": "mapped",
+    "status": "verified",
     "operations": [
       "createSession"
     ],

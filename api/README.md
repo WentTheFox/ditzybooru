@@ -20,7 +20,12 @@ upstream route and is the resume point.
 5. `cargo run -p backend --bin api-verify -- --all` fetches from the local
    instances, validates, saves fixtures and sets `verified`. Add `--remote` to
    include live third-party instances such as Derpibooru; it rate limits, so
-   do that sparingly.
+   do that sparingly. Operations that need a key read `VERIFY_KEY_<INSTANCE>`
+   (a user's API key); operations that need a session sign in with
+   `VERIFY_LOGIN_<INSTANCE>` (`email:password`, e.g. `user@example.com:philomena123`
+   for the dev seed). The dev stacks run hCaptcha's test secret, so the verifier
+   signs in with its published test response. Mutations really happen on those
+   stacks, so give them examples that are safe to repeat.
 6. Commit the batch. Resume = rerun step 2.
 
 ## Conventions

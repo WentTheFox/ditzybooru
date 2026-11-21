@@ -143,7 +143,10 @@ type FormResult = (
   /** An endpoint that answers in JSON: the submission's own response, mapped by `json`. */
   | { json: JsonMap }
 ) & {
-  /** Pointers to booleans in the extracted result; at least one must be true, or the submission counts as rejected. */
+  /**
+   * Pointers to booleans in the extracted result; at least one must be true, or the submission counts as rejected.
+   * A top-level field whose name starts with `_` only serves this check and is left out of the answer.
+   */
   must?: string[];
   /** When the page read afterwards redirects, the answer for a `Location` ending in the key: for a redirect that is itself the result (to a second factor's form). */
   redirects?: Record<string, unknown>;

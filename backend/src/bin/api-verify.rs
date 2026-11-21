@@ -13,11 +13,15 @@ use std::{
 
 use anyhow::{Context as _, Result};
 use backend::mapping::{
-    Context, Document, Operation, Responses, Strategy, Throttle, extract, fetch, select_strategy,
-    validate,
+    Context, Document, Operation, Responses, Session, Strategy, Throttle, extract, fetch,
+    select_strategy, validate,
 };
 use serde::Deserialize;
 use serde_json::Value;
+
+/// hCaptcha's published test response. The local stacks run with its test
+/// secret key, so it passes their sign-in captcha.
+const HCAPTCHA_TEST_RESPONSE: &str = "10000000-aaaa-bbbb-cccc-000000000001";
 
 #[derive(Debug, Deserialize)]
 struct Instance {
@@ -81,14 +85,123 @@ fn key_for(op: &Operation, instance: &str) -> Result<Option<String>, String> {
         instance.to_ascii_uppercase().replace('-', "_")
     );
     match op.auth.as_str() {
-        // Optional keys are verified as the public sees the page.
-        "none" | "api-key-optional" => Ok(None),
+        // Optional keys are verified as the public sees the page. A session is
+        // made in `session_for`, from the login in the environment.
+        "none" | "api-key-optional" | "session" | "session+csrf" => Ok(None),
         "api-key" => std::env::var(&var)
             .map(Some)
             .map_err(|_| format!("needs an API key in {var}")),
         other => Err(format!(
             "auth {other:?} is not supported by the verifier yet"
         )),
+    }
+}
+
+/// The example parameters of `op`; for `createSession`, the login of the instance.
+fn with_login(
+    op: &Operation,
+    name: &str,
+    examples: &BTreeMap<String, String>,
+) -> BTreeMap<String, String> {
+    let mut params = examples.clone();
+    if op.id == "createSession" {
+        let var = format!(
+            "VERIFY_LOGIN_{}",
+            name.to_ascii_uppercase().replace('-', "_")
+        );
+        if let Some((email, password)) = std::env::var(var)
+            .ok()
+            .as_deref()
+            .and_then(|v| v.split_once(':'))
+        {
+            params.insert("email".to_owned(), email.to_owned());
+            params.insert("password".to_owned(), password.to_owned());
+            params.insert("captchaToken".to_owned(), HCAPTCHA_TEST_RESPONSE.to_owned());
+        }
+    }
+    params
+}
+
+/// The session an operation runs with: none for the public ones, a fresh one for
+/// `createSession` (which signs in itself) and a signed-in one for the rest.
+async fn session_for(
+    client: &reqwest::Client,
+    document: &Document,
+    op: &Operation,
+    instance: &Instance,
+    name: &str,
+) -> Result<Option<Session>, String> {
+    if !matches!(op.auth.as_str(), "session" | "session+csrf") {
+        return Ok(None);
+    }
+    if op.id == "createSession" {
+        let fresh = Session::from_cookie_header("");
+        fresh.ensure_fingerprint();
+        return Ok(Some(fresh));
+    }
+    sign_in(client, document, instance, name).await.map(Some)
+}
+
+/// A signed-in session on `instance`, from `VERIFY_LOGIN_<INSTANCE>` (`email:password`),
+/// made by running the `createSession` operation like a browser would.
+/// `Err` says why the operation cannot be verified.
+async fn sign_in(
+    client: &reqwest::Client,
+    document: &Document,
+    instance: &Instance,
+    name: &str,
+) -> Result<Session, String> {
+    let var = format!(
+        "VERIFY_LOGIN_{}",
+        name.to_ascii_uppercase().replace('-', "_")
+    );
+    let login =
+        std::env::var(&var).map_err(|_| format!("needs a login in {var} (email:password)"))?;
+    let (email, password) = login
+        .split_once(':')
+        .ok_or_else(|| format!("{var} must be email:password"))?;
+    let op = document
+        .operation("createSession")
+        .ok_or("no createSession operation to sign in with")?;
+    let strategy = select_strategy(op, &instance.flavor)
+        .ok_or_else(|| format!("no sign-in for flavor {}", instance.flavor))?;
+    let session = Session::from_cookie_header("");
+    session.ensure_fingerprint();
+    let ctx = Context {
+        origin: &instance.origin,
+        flavor: &instance.flavor,
+        api_key: None,
+        session: Some(&session),
+    };
+    let params: BTreeMap<String, String> = [
+        ("email".to_owned(), email.to_owned()),
+        ("password".to_owned(), password.to_owned()),
+        ("captchaToken".to_owned(), HCAPTCHA_TEST_RESPONSE.to_owned()),
+    ]
+    .into();
+    let responses = fetch(client, &Throttle::default(), ctx, strategy, &params)
+        .await
+        .map_err(|err| format!("signing in failed: {err:#}"))?;
+    let answer = extract(strategy, &responses, ctx, &params)
+        .map_err(|err| format!("signing in failed: {err:#}"))?;
+    if answer.get("signedIn") != Some(&Value::Bool(true)) {
+        return Err("signing in did not sign in".to_owned());
+    }
+    Ok(session)
+}
+
+/// Marks the routes of `op` verified when every instance they live on passed.
+fn mark_verified(coverage: &mut Value, op: &Operation, passed: &[&str]) {
+    for route in &op.routes {
+        let Some(entry) = coverage.get_mut(route) else {
+            continue;
+        };
+        let wanted: Vec<&str> = entry["instances"]
+            .as_array()
+            .map_or_else(Vec::new, |a| a.iter().filter_map(Value::as_str).collect());
+        if !wanted.is_empty() && wanted.iter().all(|w| passed.contains(w)) {
+            entry["status"] = Value::from("verified");
+        }
     }
 }
 
@@ -113,6 +226,8 @@ async fn run() -> Result<bool> {
 
     let client = reqwest::Client::builder()
         .user_agent("ditzybooru-api-verify")
+        // Like the server: a submission's redirect is read, not followed.
+        .redirect(reqwest::redirect::Policy::none())
         .build()?;
     let mut all_ok = true;
     for op in selected {
@@ -134,17 +249,25 @@ async fn run() -> Result<bool> {
                 println!("SKIP {label}: no strategy for flavor {}", instance.flavor);
                 continue;
             };
+            let session = match session_for(&client, &document, op, instance, name).await {
+                Ok(session) => session,
+                Err(reason) => {
+                    println!("SKIP {label}: {reason}");
+                    continue;
+                }
+            };
+            let params = with_login(op, name, &op.examples);
             let ctx = Context {
                 origin: &instance.origin,
                 flavor: &instance.flavor,
                 // Optional operations are verified as the public sees them.
                 api_key: api_key.as_deref(),
-                session: None,
+                session: session.as_ref(),
             };
             let result = async {
                 let responses =
-                    fetch(&client, &Throttle::default(), ctx, strategy, &op.examples).await?;
-                let value = extract(strategy, &responses, ctx, &op.examples)?;
+                    fetch(&client, &Throttle::default(), ctx, strategy, &params).await?;
+                let value = extract(strategy, &responses, ctx, &params)?;
                 validate(&document, op, &value)?;
                 if value
                     .get("items")
@@ -173,17 +296,7 @@ async fn run() -> Result<bool> {
                 }
             }
         }
-        for route in &op.routes {
-            let Some(entry) = coverage.get_mut(route) else {
-                continue;
-            };
-            let wanted: Vec<&str> = entry["instances"]
-                .as_array()
-                .map_or_else(Vec::new, |a| a.iter().filter_map(Value::as_str).collect());
-            if !wanted.is_empty() && wanted.iter().all(|w| passed.contains(w)) {
-                entry["status"] = Value::from("verified");
-            }
-        }
+        mark_verified(&mut coverage, op, &passed);
     }
     let mut text = serde_json::to_string_pretty(&coverage).context("serializing coverage")?;
     text.push('\n');

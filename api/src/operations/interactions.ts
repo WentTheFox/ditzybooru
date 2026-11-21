@@ -41,6 +41,7 @@ function interaction(options: InteractionOptions) {
     params: [{ name: 'id', in: 'path', schema: s.int(), required: true }],
     ...(options.input ? { body: options.input } : {}),
     response: s.ref('ImageCounters'),
+    examples: { id: 4, up: 'true' },
     philomena: {
       routes: [`${options.method} /images/:image_id/${options.what}`],
       auth: 'session',

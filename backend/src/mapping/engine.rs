@@ -684,7 +684,12 @@ pub fn extract(
                 }
                 return Err(anyhow::Error::new(FormRejected(messages.join(" "))));
             }
-            Ok(value)
+            // Fields named `_...` only served `must`: they are not part of the answer.
+            let Value::Object(mut object) = value else {
+                return Ok(value);
+            };
+            object.retain(|name, _| !name.starts_with('_'));
+            Ok(Value::Object(object))
         }
     }
 }

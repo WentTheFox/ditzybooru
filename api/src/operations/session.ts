@@ -209,8 +209,8 @@ export const deleteSession = defineOperation({
         // The login link is back in the header.
         result: {
           page: '/',
-          select: { fields: { ...sessionFields, anonymous: { sel: 'a[href="/sessions/new"]', exists: true } } },
-          must: ['/anonymous'],
+          select: { fields: { ...sessionFields, _anonymous: { sel: 'a[href="/sessions/new"]', exists: true } } },
+          must: ['/_anonymous'],
           errors: REJECTION,
         },
       },

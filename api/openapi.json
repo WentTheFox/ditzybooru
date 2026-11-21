@@ -5455,6 +5455,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -5528,6 +5532,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -5603,6 +5611,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -5676,6 +5688,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -5824,6 +5840,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -5916,6 +5936,10 @@
         "tags": [
           "interactions"
         ],
+        "x-examples": {
+          "id": 4,
+          "up": "true"
+        },
         "x-philomena": {
           "auth": "session",
           "routes": [
@@ -8128,12 +8152,12 @@
               "result": {
                 "errors": ".flash--warning, .flash--danger, .flash--error, .alert",
                 "must": [
-                  "/anonymous"
+                  "/_anonymous"
                 ],
                 "page": "/",
                 "select": {
                   "fields": {
-                    "anonymous": {
+                    "_anonymous": {
                       "exists": true,
                       "sel": "a[href=\"/sessions/new\"]"
                     },
