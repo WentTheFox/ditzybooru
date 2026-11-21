@@ -1723,9 +1723,9 @@
     "class": "rss",
     "area": "public",
     "phase": 1,
-    "status": "todo",
+    "status": "skipped",
     "operations": [],
-    "note": ""
+    "note": "Superseded by searchImages with q=my:watched and the visitor's API key: the same images as JSON, paged, instead of RSS (XML, which the engine does not read)."
   },
   "GET /autocomplete/compiled": {
     "controller": "PhilomenaWeb.Autocomplete.CompiledController#show",
@@ -4349,8 +4349,10 @@
     "class": "api-json",
     "area": "public",
     "phase": 1,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "createImage"
+    ],
     "note": ""
   },
   "POST /api/v1/json/search/reverse": {
@@ -4362,8 +4364,10 @@
     "class": "api-json",
     "area": "public",
     "phase": 1,
-    "status": "todo",
-    "operations": [],
+    "status": "mapped",
+    "operations": [
+      "reverseSearch"
+    ],
     "note": ""
   },
   "POST /channels": {

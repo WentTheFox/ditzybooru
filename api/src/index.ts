@@ -6,6 +6,7 @@ import * as interactions from './operations/interactions.ts';
 import * as items from './operations/items.ts';
 import * as listings from './operations/listings.ts';
 import * as pages from './operations/pages.ts';
+import * as uploads from './operations/uploads.ts';
 import * as session from './operations/session.ts';
 import * as search from './operations/search.ts';
 
@@ -19,4 +20,5 @@ export const operations: Operation[] = [
   ...Object.values(pages),
   ...Object.values(session),
   ...Object.values(interactions),
+  ...Object.values(uploads),
 ];

@@ -126,8 +126,11 @@ interface HtmlStrategy extends StrategyBase {
 
 interface FormStrategy extends StrategyBase {
   kind: 'form';
-  /** The page that carries the form's CSRF token. Fetched with the visitor's cookies, so the token matches them. */
-  form: { page: string; csrf: { sel: string; attr: string } };
+  /**
+   * The page that carries the form's CSRF token. Fetched with the visitor's cookies, so the token matches them.
+   * Absent for the site's JSON API, which takes the visitor's key instead and has no token.
+   */
+  form?: { page: string; csrf: { sel: string; attr: string } };
   /** The submission. A method other than `POST` is sent as a `POST` with a `_method` field. `body` fields whose placeholders have no value are left out. */
   request: UpstreamRequest;
   /** What is read afterwards, to see what the submission did. */

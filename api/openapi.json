@@ -1548,6 +1548,26 @@
         ],
         "type": "object"
       },
+      "ReverseSearchResults": {
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Media"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "type": "object"
+      },
       "Rule": {
         "additionalProperties": false,
         "properties": {
@@ -3790,6 +3810,146 @@
         }
       }
     },
+    "/images": {
+      "post": {
+        "operationId": "createImage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "sourceUrl": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url",
+                  "tags"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Media"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Upload an image the site fetches from a URL. Answers the new image.",
+        "tags": [
+          "images"
+        ],
+        "x-philomena": {
+          "auth": "api-key",
+          "cacheSeconds": 0,
+          "routes": [
+            "POST /api/v1/json/images"
+          ],
+          "strategies": [
+            {
+              "kind": "form",
+              "request": {
+                "body": {
+                  "image[description]": "{description}",
+                  "image[source_url]": "{sourceUrl}",
+                  "image[tag_input]": "{tags}",
+                  "url": "{url}"
+                },
+                "method": "POST",
+                "path": "/api/v1/json/images"
+              },
+              "result": {
+                "json": {
+                  "aspectRatio": "/image/aspect_ratio",
+                  "commentCount": "/image/comment_count",
+                  "createdAt": "/image/created_at",
+                  "downvotes": "/image/downvotes",
+                  "faves": "/image/faves",
+                  "height": "/image/height",
+                  "hiddenFromUsers": "/image/hidden_from_users",
+                  "id": "/image/id",
+                  "mimeType": "/image/mime_type",
+                  "representations": {
+                    "from": "/image/representations",
+                    "map": {
+                      "full": {
+                        "as": "url",
+                        "from": "/full"
+                      },
+                      "large": {
+                        "as": "url",
+                        "from": "/large"
+                      },
+                      "medium": {
+                        "as": "url",
+                        "from": "/medium"
+                      },
+                      "small": {
+                        "as": "url",
+                        "from": "/small"
+                      },
+                      "tall": {
+                        "as": "url",
+                        "from": "/tall"
+                      },
+                      "thumb": {
+                        "as": "url",
+                        "from": "/thumb"
+                      },
+                      "thumbSmall": {
+                        "as": "url",
+                        "from": "/thumb_small"
+                      },
+                      "thumbTiny": {
+                        "as": "url",
+                        "from": "/thumb_tiny"
+                      }
+                    }
+                  },
+                  "score": "/image/score",
+                  "sourceUrls": "/image/source_urls",
+                  "spoilered": "/image/spoilered",
+                  "tagCount": "/image/tag_count",
+                  "tags": "/image/tags",
+                  "upvotes": "/image/upvotes",
+                  "width": "/image/width"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/images/{id}": {
       "get": {
         "operationId": "getImage",
@@ -5615,6 +5775,147 @@
                   "q": "{q|*}",
                   "sd": "{sd|desc}",
                   "sf": "{sf|created_at}"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/search/reverse": {
+      "post": {
+        "operationId": "reverseSearch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "distance": {
+                    "type": "number"
+                  },
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "url": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReverseSearchResults"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Find images that look like the one at a URL.",
+        "tags": [
+          "images"
+        ],
+        "x-philomena": {
+          "auth": "api-key-optional",
+          "cacheSeconds": 0,
+          "routes": [
+            "POST /api/v1/json/search/reverse"
+          ],
+          "strategies": [
+            {
+              "kind": "form",
+              "request": {
+                "body": {
+                  "distance": "{distance}",
+                  "limit": "{limit}",
+                  "url": "{url}"
+                },
+                "method": "POST",
+                "path": "/api/v1/json/search/reverse"
+              },
+              "result": {
+                "json": {
+                  "items": {
+                    "from": "/images",
+                    "map": {
+                      "aspectRatio": "/aspect_ratio",
+                      "commentCount": "/comment_count",
+                      "createdAt": "/created_at",
+                      "downvotes": "/downvotes",
+                      "faves": "/faves",
+                      "height": "/height",
+                      "hiddenFromUsers": "/hidden_from_users",
+                      "id": "/id",
+                      "mimeType": "/mime_type",
+                      "representations": {
+                        "from": "/representations",
+                        "map": {
+                          "full": {
+                            "as": "url",
+                            "from": "/full"
+                          },
+                          "large": {
+                            "as": "url",
+                            "from": "/large"
+                          },
+                          "medium": {
+                            "as": "url",
+                            "from": "/medium"
+                          },
+                          "small": {
+                            "as": "url",
+                            "from": "/small"
+                          },
+                          "tall": {
+                            "as": "url",
+                            "from": "/tall"
+                          },
+                          "thumb": {
+                            "as": "url",
+                            "from": "/thumb"
+                          },
+                          "thumbSmall": {
+                            "as": "url",
+                            "from": "/thumb_small"
+                          },
+                          "thumbTiny": {
+                            "as": "url",
+                            "from": "/thumb_tiny"
+                          }
+                        }
+                      },
+                      "score": "/score",
+                      "sourceUrls": "/source_urls",
+                      "spoilered": "/spoilered",
+                      "tagCount": "/tag_count",
+                      "tags": "/tags",
+                      "upvotes": "/upvotes",
+                      "width": "/width"
+                    }
+                  },
+                  "total": "/total"
                 }
               }
             }

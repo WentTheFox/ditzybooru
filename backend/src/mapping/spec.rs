@@ -334,8 +334,9 @@ pub struct FormStrategy {
     /// Restricts the strategy to these upstream flavors.
     #[serde(default)]
     pub flavors: Vec<String>,
-    /// Where the CSRF token comes from.
-    pub form: FormPage,
+    /// Where the CSRF token comes from. Absent for the site's JSON API, which
+    /// takes a key instead of a session and has no token to send.
+    pub form: Option<FormPage>,
     /// The submission. Methods other than `POST` are sent as a `POST` with a
     /// `_method` field, which is how the pages themselves do it.
     pub request: UpstreamRequest,

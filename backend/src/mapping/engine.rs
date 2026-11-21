@@ -503,13 +503,19 @@ async fn fetch_form(
     form: &FormStrategy,
     params: &BTreeMap<String, String>,
 ) -> Result<Responses> {
-    let page = fill(&form.form.page, params)?
-        .ok_or_else(|| anyhow!("missing parameter in {:?}", form.form.page))?;
-    let Sent::Body(page_html) = send(client, throttle, ctx, &page, None, false).await? else {
-        bail!("{page} redirected, so there is no form to fill");
+    let token = match &form.form {
+        Some(source) => {
+            let page = fill(&source.page, params)?
+                .ok_or_else(|| anyhow!("missing parameter in {:?}", source.page))?;
+            let Sent::Body(page_html) = send(client, throttle, ctx, &page, None, false).await?
+            else {
+                bail!("{page} redirected, so there is no form to fill");
+            };
+            html::attribute(&page_html, &source.csrf.sel, &source.csrf.attr)?
+                .ok_or_else(|| anyhow!("no CSRF token on {page}"))?
+        }
+        None => String::new(),
     };
-    let token = html::attribute(&page_html, &form.form.csrf.sel, &form.form.csrf.attr)?
-        .ok_or_else(|| anyhow!("no CSRF token on {page}"))?;
 
     let payload = if form.request.encoding.as_deref() == Some("json") {
         let mut object = serde_json::Map::new();
@@ -528,7 +534,10 @@ async fn fetch_form(
         (None, Some(Value::Object(object).to_string()))
     } else {
         // Form values go out percent-encoded; `fill` encodes the ones it fills.
-        let mut fields = vec![("_csrf_token".to_owned(), percent_encode(&token))];
+        let mut fields = vec![];
+        if form.form.is_some() {
+            fields.push(("_csrf_token".to_owned(), percent_encode(&token)));
+        }
         // Phoenix reads the real verb of a form from `_method`.
         if form.request.method != "POST" {
             fields.push(("_method".to_owned(), percent_encode(&form.request.method)));

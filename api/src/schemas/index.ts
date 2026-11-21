@@ -442,6 +442,7 @@ export const schemas = {
     perPage: s.int(),
     interactions: s.array(s.ref('Interaction')),
   }),
+  ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),
   PostResults: results('Post'),
