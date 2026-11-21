@@ -190,8 +190,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "deleteAvatar"
+    ],
     "note": ""
   },
   "DELETE /channels/:channel_id/subscription": {
@@ -458,8 +460,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "removeGalleryImage"
+    ],
     "note": ""
   },
   "DELETE /galleries/:gallery_id/subscription": {
@@ -486,8 +490,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "deleteGallery"
+    ],
     "note": ""
   },
   "DELETE /images/:image_id/anonymous": {
@@ -1792,8 +1798,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateAvatar"
+    ],
     "note": ""
   },
   "GET /channels": {
@@ -1934,8 +1942,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportConversation"
+    ],
     "note": ""
   },
   "GET /conversations/:id": {
@@ -1962,8 +1972,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createConversation"
+    ],
     "note": ""
   },
   "GET /deactivations": {
@@ -2271,8 +2283,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportPost"
+    ],
     "note": ""
   },
   "GET /forums/:forum_id/topics/new": {
@@ -2329,8 +2343,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportGallery"
+    ],
     "note": ""
   },
   "GET /galleries/:id": {
@@ -2357,8 +2373,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateGallery"
+    ],
     "note": ""
   },
   "GET /galleries/new": {
@@ -2370,8 +2388,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createGallery"
+    ],
     "note": ""
   },
   "GET /images": {
@@ -2442,8 +2462,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportComment"
+    ],
     "note": ""
   },
   "GET /images/:image_id/comments/:id": {
@@ -2539,8 +2561,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportImage"
+    ],
     "note": ""
   },
   "GET /images/:image_id/scratchpad/edit": {
@@ -3019,8 +3043,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportCommission"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/description/edit": {
@@ -3032,8 +3058,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateDescription"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/details": {
@@ -3083,8 +3111,10 @@
     "class": "html-form",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportProfile"
+    ],
     "note": ""
   },
   "GET /profiles/:profile_id/scratchpad/edit": {
@@ -3688,8 +3718,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateAvatar"
+    ],
     "note": ""
   },
   "PATCH /channels/:id": {
@@ -3841,8 +3873,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateGallery"
+    ],
     "note": ""
   },
   "PATCH /images/:image_id/comments/:id": {
@@ -4053,8 +4087,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateDescription"
+    ],
     "note": ""
   },
   "PATCH /profiles/:profile_id/scratchpad": {
@@ -4576,8 +4612,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createConversation"
+    ],
     "note": ""
   },
   "POST /conversations/:conversation_id/hide": {
@@ -4604,8 +4642,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "sendMessage"
+    ],
     "note": ""
   },
   "POST /conversations/:conversation_id/messages/:message_id/approve": {
@@ -4645,8 +4685,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportConversation"
+    ],
     "note": ""
   },
   "POST /dnp": {
@@ -4944,8 +4986,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportPost"
+    ],
     "note": ""
   },
   "POST /forums/:forum_id/topics/:topic_id/read": {
@@ -5000,8 +5044,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "createGallery"
+    ],
     "note": ""
   },
   "POST /galleries/:gallery_id/images": {
@@ -5013,8 +5059,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "addGalleryImage"
+    ],
     "note": ""
   },
   "POST /galleries/:gallery_id/read": {
@@ -5041,8 +5089,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportGallery"
+    ],
     "note": ""
   },
   "POST /galleries/:gallery_id/subscription": {
@@ -5175,8 +5225,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportComment"
+    ],
     "note": ""
   },
   "POST /images/:image_id/delete": {
@@ -5298,8 +5350,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportImage"
+    ],
     "note": ""
   },
   "POST /images/:image_id/subscription": {
@@ -5487,8 +5541,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportCommission"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/reports": {
@@ -5500,8 +5556,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "reportProfile"
+    ],
     "note": ""
   },
   "POST /profiles/:profile_id/tag_changes/revert": {
@@ -5848,8 +5906,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateAvatar"
+    ],
     "note": ""
   },
   "PUT /channels/:id": {
@@ -6001,8 +6061,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateGallery"
+    ],
     "note": ""
   },
   "PUT /images/:image_id/comments/:id": {
@@ -6213,8 +6275,10 @@
     "class": "mutation",
     "area": "public",
     "phase": 6,
-    "status": "todo",
-    "operations": [],
+    "status": "verified",
+    "operations": [
+      "updateDescription"
+    ],
     "note": ""
   },
   "PUT /profiles/:profile_id/scratchpad": {

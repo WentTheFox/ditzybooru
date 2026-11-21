@@ -528,6 +528,13 @@ fn form_payload(
                 object.insert(name.clone(), typed);
             }
         }
+        // The site's scripts name the real verb in the body, as its forms do.
+        if form.request.method != "POST" {
+            object.insert(
+                "_method".to_owned(),
+                Value::String(form.request.method.clone()),
+            );
+        }
         (None, Some(Value::Object(object).to_string()))
     } else {
         // Form values go out percent-encoded; `fill` encodes the ones it fills.

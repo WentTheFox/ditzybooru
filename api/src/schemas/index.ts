@@ -643,6 +643,7 @@ export const schemas = {
   FilterSaved: s.object({ message: s.optional(s.string()), id: s.optional(s.nullable(s.int())) }),
   CommentPosted: s.object({ comments: s.array(s.ref('RenderedPost')) }),
   PostPreview: s.object({ bodyHtml: s.string() }),
+  GallerySaved: s.object({ message: s.optional(s.string()), id: s.optional(s.nullable(s.int())) }),
   ReverseSearchResults: s.object({ items: s.array(s.ref('Media')), total: s.int() }),
   TagResults: results('Tag'),
   CommentResults: results('Comment'),

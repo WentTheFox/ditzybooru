@@ -1155,6 +1155,26 @@
         ],
         "type": "object"
       },
+      "GallerySaved": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
       "ImageBox": {
         "additionalProperties": false,
         "properties": {
@@ -2998,6 +3018,204 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/avatar": {
+      "delete": {
+        "operationId": "deleteAvatar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Remove the visitor’s avatar.",
+        "tags": [
+          "profiles"
+        ],
+        "x-examples": {},
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /avatar"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/avatar/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/avatar"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "put": {
+        "operationId": "updateAvatar",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "url": {
+                    "format": "uri-reference",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Set the visitor’s avatar from an image the site fetches from a URL. A file upload is not mapped yet.",
+        "tags": [
+          "profiles"
+        ],
+        "x-examples": {
+          "url": "http://web/img/view/2026/11/2/4.jpg"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /avatar",
+            "PATCH /avatar",
+            "GET /avatar/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/avatar/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "scraper_cache": "{url}",
+                  "user[scraper_url]": ""
+                },
+                "method": "PUT",
+                "path": "/avatar"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/channels": {
       "get": {
         "operationId": "listChannels",
@@ -4189,6 +4407,120 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createConversation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "recipient": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipient",
+                  "title",
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Start a private conversation with another user.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "body": "Hello from the verifier.",
+          "recipient": "Administrator",
+          "title": "Verifier chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /conversations",
+            "GET /conversations/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "conversation[messages][0][body]": "{body}",
+                  "conversation[recipient]": "{recipient}",
+                  "conversation[title]": "{title}"
+                },
+                "method": "POST",
+                "path": "/conversations"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/conversations/{slug}": {
@@ -4522,6 +4854,120 @@
         }
       }
     },
+    "/conversations/{slug}/messages": {
+      "post": {
+        "operationId": "sendMessage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "body"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Reply in a private conversation.",
+        "tags": [
+          "inbox"
+        ],
+        "x-examples": {
+          "body": "A reply from the verifier.",
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /conversations/:conversation_id/messages"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "message[body]": "{body}"
+                },
+                "method": "POST",
+                "path": "/conversations/{slug}/messages"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/conversations/{slug}/read": {
       "delete": {
         "operationId": "markConversationUnread",
@@ -4703,6 +5149,174 @@
                 "body": {},
                 "method": "POST",
                 "path": "/conversations/{slug}/read"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/conversations/{slug}/reports": {
+      "post": {
+        "operationId": "reportConversation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a private conversation (staff can then read all of it) to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "reason": "Reported by the verifier.",
+          "rule": "2",
+          "slug": "verification-chat"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /conversations/:conversation_id/reports",
+            "GET /conversations/:conversation_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/conversations/{slug}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/conversations/{slug}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/conversations/{slug}/reports"
               },
               "result": {
                 "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
@@ -7836,6 +8450,192 @@
         }
       }
     },
+    "/forums/{forum}/topics/{topic}/posts/{id}/reports": {
+      "post": {
+        "operationId": "reportPost",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "forum",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "topic",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a forum post to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "forum": "dis",
+          "id": 1,
+          "reason": "Reported by the verifier.",
+          "rule": "2",
+          "topic": "example-topic"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /forums/:forum_id/topics/:topic_id/posts/:post_id/reports",
+            "GET /forums/:forum_id/topics/:topic_id/posts/:post_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/{topic}/posts/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/posts/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/forums/{forum}/topics/{topic}/posts/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/forums/{forum}/topics/{topic}/posts/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/forums/{forum}/topics/{topic}/posts/{post}": {
       "get": {
         "operationId": "getPost",
@@ -8411,9 +9211,242 @@
             }
           ]
         }
+      },
+      "post": {
+        "operationId": "createGallery",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "reverseOrder": {
+                    "type": "boolean"
+                  },
+                  "spoilerWarning": {
+                    "type": "string"
+                  },
+                  "thumbnailId": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GallerySaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Create a gallery. Answers the site’s message and the new gallery’s id.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "description": "Made by the verifier.",
+          "thumbnailId": 1,
+          "title": "Verifier gallery"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /galleries",
+            "GET /galleries/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/galleries/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "gallery[anonymous]": "{anonymous|false}",
+                  "gallery[description]": "{description}",
+                  "gallery[order_position_asc]": "{reverseOrder|false}",
+                  "gallery[spoiler_warning]": "{spoilerWarning}",
+                  "gallery[thumbnail_id]": "{thumbnailId}",
+                  "gallery[title]": "{title}"
+                },
+                "method": "POST",
+                "path": "/galleries"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       }
     },
     "/galleries/{id}": {
+      "delete": {
+        "operationId": "deleteGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Delete one of the visitor’s own galleries.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "id": 9999
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /galleries/:id"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/galleries/{id}"
+              },
+              "kind": "form",
+              "request": {
+                "body": {},
+                "method": "DELETE",
+                "path": "/galleries/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
       "get": {
         "operationId": "getGallery",
         "parameters": [
@@ -8599,6 +9632,340 @@
             }
           ]
         }
+      },
+      "put": {
+        "operationId": "updateGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "anonymous": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "reverseOrder": {
+                    "type": "boolean"
+                  },
+                  "spoilerWarning": {
+                    "type": "string"
+                  },
+                  "thumbnailId": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GallerySaved"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change one of the visitor’s own galleries.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "description": "Edited by the verifier.",
+          "id": 3,
+          "thumbnailId": 1,
+          "title": "Verifier gallery"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /galleries/:id",
+            "PATCH /galleries/:id",
+            "GET /galleries/:id/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/galleries/{id}/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "gallery[anonymous]": "{anonymous|false}",
+                  "gallery[description]": "{description}",
+                  "gallery[order_position_asc]": "{reverseOrder|false}",
+                  "gallery[spoiler_warning]": "{spoilerWarning}",
+                  "gallery[thumbnail_id]": "{thumbnailId}",
+                  "gallery[title]": "{title}"
+                },
+                "method": "PUT",
+                "path": "/galleries/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "id": {
+                      "as": "lastInt",
+                      "attr": "href",
+                      "optional": true,
+                      "sel": "a[href$=\"/edit\"]"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/galleries/{id}/images": {
+      "delete": {
+        "operationId": "removeGalleryImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "imageId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "imageId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Take an image out of one of the visitor’s galleries.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "id": 3,
+          "imageId": 2
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "DELETE /galleries/:gallery_id/images"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "image_id": "{imageId}"
+                },
+                "encoding": "json",
+                "method": "DELETE",
+                "path": "/galleries/{id}/images"
+              },
+              "result": {
+                "json": {}
+              }
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "addGalleryImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "imageId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "imageId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Done"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Add an image to one of the visitor’s galleries.",
+        "tags": [
+          "galleries"
+        ],
+        "x-examples": {
+          "id": 3,
+          "imageId": 2
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /galleries/:gallery_id/images"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "image_id": "{imageId}"
+                },
+                "encoding": "json",
+                "method": "POST",
+                "path": "/galleries/{id}/images"
+              },
+              "result": {
+                "json": {}
+              }
+            }
+          ]
+        }
       }
     },
     "/galleries/{id}/read": {
@@ -8671,6 +10038,174 @@
                 "page": "",
                 "select": {
                   "fields": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/galleries/{id}/reports": {
+      "post": {
+        "operationId": "reportGallery",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a gallery to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "id": 1,
+          "reason": "Reported by the verifier.",
+          "rule": "2"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /galleries/:gallery_id/reports",
+            "GET /galleries/:gallery_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/galleries/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/galleries/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/galleries/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/galleries/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
                 }
               }
             }
@@ -10033,6 +11568,174 @@
         }
       }
     },
+    "/images/{id}/reports": {
+      "post": {
+        "operationId": "reportImage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report an image to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "id": 1,
+          "reason": "Reported by the verifier.",
+          "rule": "2"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images/:image_id/reports",
+            "GET /images/:image_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/images/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/images/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "/images/{id}/subscription": {
       "delete": {
         "operationId": "unsubscribeImage",
@@ -10580,6 +12283,183 @@
                 },
                 "method": "PUT",
                 "path": "/images/{imageId}/comments/{id}"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/images/{imageId}/comments/{id}/reports": {
+      "post": {
+        "operationId": "reportComment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "imageId",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report an image comment to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "id": 1,
+          "imageId": 1,
+          "reason": "Reported by the verifier.",
+          "rule": "2"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /images/:image_id/comments/:comment_id/reports",
+            "GET /images/:image_id/comments/:comment_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{imageId}/comments/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/images/{imageId}/comments/{id}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/images/{imageId}/comments/{id}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/images/{imageId}/comments/{id}/reports"
               },
               "result": {
                 "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
@@ -12451,6 +14331,461 @@
                 }
               },
               "template": "lib/philomena_web/templates/profile/commission/show.html.slime"
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/commission/reports": {
+      "post": {
+        "operationId": "reportCommission",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a commission listing to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "reason": "Reported by the verifier.",
+          "rule": "2",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /profiles/:profile_id/commission/reports",
+            "GET /profiles/:profile_id/commission/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/commission/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/commission/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/commission/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/description": {
+      "put": {
+        "operationId": "updateDescription",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "personalTitle": {
+                    "type": "string"
+                  }
+                },
+                "required": [],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Change the about text and title of the visitor’s own profile.",
+        "tags": [
+          "profiles"
+        ],
+        "x-examples": {
+          "description": "The dev user.",
+          "personalTitle": "Dev",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "PUT /profiles/:profile_id/description",
+            "PATCH /profiles/:profile_id/description",
+            "GET /profiles/:profile_id/description/edit"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena",
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/description/edit"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "user[description]": "{description}",
+                  "user[personal_title]": "{personalTitle}"
+                },
+                "method": "PUT",
+                "path": "/profiles/{slug}/description"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "/profiles/{slug}/reports": {
+      "post": {
+        "operationId": "reportProfile",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "captchaToken": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  },
+                  "rule": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rule"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Error"
+          }
+        },
+        "summary": "Report a user’s profile to the staff. The site allows three open reports at a time.",
+        "tags": [
+          "reports"
+        ],
+        "x-examples": {
+          "reason": "Reported by the verifier.",
+          "rule": "2",
+          "slug": "Pleb"
+        },
+        "x-philomena": {
+          "auth": "session",
+          "routes": [
+            "POST /profiles/:profile_id/reports",
+            "GET /profiles/:profile_id/reports/new"
+          ],
+          "strategies": [
+            {
+              "flavors": [
+                "philomena"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[reason]": "{reason}",
+                  "report[rule_id]": "{rule}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "flavors": [
+                "furbooru"
+              ],
+              "form": {
+                "csrf": {
+                  "attr": "content",
+                  "sel": "meta[name=csrf-token]"
+                },
+                "page": "/profiles/{slug}/reports/new"
+              },
+              "kind": "form",
+              "request": {
+                "body": {
+                  "h-captcha-response": "{captchaToken}",
+                  "report[category]": "{rule}",
+                  "report[reason]": "{reason}",
+                  "report[user_agent]": "ditzybooru"
+                },
+                "method": "POST",
+                "path": "/profiles/{slug}/reports"
+              },
+              "result": {
+                "errors": ".flash--warning, .flash--danger, .flash--error, .alert, .help-block",
+                "follow": true,
+                "must": [
+                  "/_took"
+                ],
+                "page": "/",
+                "select": {
+                  "fields": {
+                    "_took": {
+                      "exists": true,
+                      "sel": ".flash--success"
+                    },
+                    "message": {
+                      "optional": true,
+                      "sel": ".flash--success",
+                      "text": true
+                    }
+                  }
+                }
+              }
             }
           ]
         }

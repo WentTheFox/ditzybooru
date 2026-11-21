@@ -6,6 +6,7 @@ import * as discussion from './operations/discussion.ts';
 import * as directories from './operations/directories.ts';
 import * as forums from './operations/forums.ts';
 import * as histories from './operations/histories.ts';
+import * as galleries from './operations/galleries.ts';
 import * as images from './operations/images.ts';
 import * as inbox from './operations/inbox.ts';
 import * as interactions from './operations/interactions.ts';
@@ -15,6 +16,8 @@ import * as pages from './operations/pages.ts';
 import * as uploads from './operations/uploads.ts';
 import * as watching from './operations/watching.ts';
 import * as preferences from './operations/preferences.ts';
+import * as profile from './operations/profile.ts';
+import * as reports from './operations/reports.ts';
 import * as session from './operations/session.ts';
 import * as search from './operations/search.ts';
 
@@ -36,5 +39,8 @@ export const operations: Operation[] = [
   ...Object.values(watching),
   ...Object.values(preferences),
   ...Object.values(discussion),
+  ...Object.values(galleries),
+  ...Object.values(reports),
+  ...Object.values(profile),
   ...Object.values(uploads),
 ];
