@@ -264,20 +264,20 @@ export const listTopicPosts = defineOperation({
 
 export const getPost = defineOperation({
   operationId: 'getPost',
-  path: '/forums/{forum}/topics/{topic}/posts/{post}',
+  path: '/forums/{forum}/topics/{topic}/posts/{id}',
   method: 'get',
   summary: 'One forum post.',
   tags: ['forums'],
-  params: [forumParam, topicParam, { name: 'post', in: 'path', schema: s.int(), required: true }],
+  params: [forumParam, topicParam, { name: 'id', in: 'path', schema: s.int(), required: true }],
   response: s.ref('Post'),
-  examples: { forum: 'dis', topic: 'example-topic', post: 1 },
+  examples: { forum: 'dis', topic: 'example-topic', id: 1 },
   philomena: {
     routes: ['GET /api/v1/json/forums/:forum_id/topics/:topic_id/posts/:id'],
     auth: 'none',
     strategies: [
       {
         kind: 'json',
-        request: { method: 'GET', path: '/api/v1/json/forums/{forum}/topics/{topic}/posts/{post}' },
+        request: { method: 'GET', path: '/api/v1/json/forums/{forum}/topics/{topic}/posts/{id}' },
         map: under('/post', postMap),
       },
     ],

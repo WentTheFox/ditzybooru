@@ -379,3 +379,11 @@ fn respond(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn the_router_builds() {
+        super::router().expect("router builds");
+    }
+}
