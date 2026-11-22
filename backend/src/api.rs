@@ -384,6 +384,6 @@ fn respond(
 mod tests {
     #[test]
     fn the_router_builds() {
-        super::router().expect("router builds");
+        let _router = super::router().expect("router builds");
     }
 }
