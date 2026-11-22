@@ -64,7 +64,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # `sha-<sha7>` goes last so it only exists once both architectures do.
+      # `latest` (moving convenience tag, deployments pin sha-) then `sha-<sha7>` go last so they only exist once both architectures do.
       - name: Merge into one multi-arch tag
         run: |
           repo="${GITHUB_REPOSITORY,,}"
@@ -73,6 +73,9 @@ jobs:
           docker buildx imagetools create \
             --tag "$image:$sha7" \
             "$image:$sha7-amd64" "$image:$sha7-arm64"
+          docker buildx imagetools create \
+            --tag "$image:latest" \
+            "$image:$sha7"
           docker buildx imagetools create \
             --tag "$image:sha-$sha7" \
             "$image:$sha7"
